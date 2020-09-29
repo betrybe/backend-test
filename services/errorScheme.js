@@ -1,7 +1,7 @@
-function CommonError({ message, status }) {
+function CommonValidationError({ message, status }) {
   this.name = 'GeneralError';
   this.message = message || 'Mensagem de erro padrão';
-  this.status = status || 500;
+  this.status = status || 400;
 }
 
 function UserAlreadyRegistered() {
@@ -11,6 +11,6 @@ function UserAlreadyRegistered() {
 }
 
 module.exports = {
-  CommonError,
+  CommonValidationError,
   UserAlreadyRegistered,
 };
