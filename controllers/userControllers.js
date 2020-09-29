@@ -1,21 +1,18 @@
 const rescue = require('express-rescue');
-const { userValidation } = require('../services/joiValidation')
+const { userValidation } = require('../services/joiValidation');
+const { CommonError } = require('../services/errorScheme');
 const { UserModel } = require('../models');
-const error = require('../services/errorScheme');
+
 
 const addUser = rescue(async (req, res) => {
-  await userValidation.validateAsync(req.body)
-    .then(() => {
-      const { displayName, email, password, image } = req.body;
-      UserModel.create({ displayName, email, password, image })
-        .then((user) => res.status(200).json(user))
-        .catch((e) => {
-          console.log(e.message);
-          res.status(500).send({ message: 'Algo deu errado' });
-        });
+  const { body } = req;
+  console.log(body, typeof body);
+  return userValidation.validateAsync(body)
+    .then(async () => {
+      res.send('sucess');
     })
     .catch((err) => {
-      throw error.GeneralError(err);
+      throw new CommonError(err.message, err.status);
     });
 });
 
