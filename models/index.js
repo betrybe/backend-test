@@ -9,7 +9,12 @@ const config = require('../config/config').development;
 const basename = path.basename(__filename);
 const db = {};
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+  ...config,
+  define: {
+    timestamps: false,
+  },
+});
 
 fs
   .readdirSync(__dirname)

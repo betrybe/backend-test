@@ -4,7 +4,7 @@ module.exports = {
       'Users',
       [
         {
-          id: '401465483996',
+          id: 401465483996,
           displayName: 'Brett Wiltshire',
           email: 'brett@email.com',
           password: '123456',

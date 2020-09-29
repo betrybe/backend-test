@@ -3,9 +3,9 @@ module.exports = {
     const UsersTable = queryInterface.createTable('Users', {
       id: {
         allowNull: false,
-        autoIncrement: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.STRING,
+        type: Sequelize.BIGINT,
       },
       displayName: {
         allowNull: false,

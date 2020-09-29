@@ -1,4 +1,4 @@
-function CommonError(message, status) {
+function CommonError({ message, status }) {
   this.name = 'GeneralError';
   this.message = message || 'Mensagem de erro padrão';
   this.status = status || 500;
