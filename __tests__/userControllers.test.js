@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable arrow-body-style */
 const axios = require('axios');
 const { addUser } = require('../controllers/userControllers');
@@ -54,11 +55,12 @@ describe('User creation tests', () => {
 
   it('creats users with proper params', () => {
     expect.assertions(2);
+    const addUserMock = jest.fn(addUser);
     const randomNumber = Math.floor(Math.random() * 1000);
     const req = mockRequest({ displayName: 'Mateus Talles', email: `user${randomNumber}@gma`, password: 'testestest' });
     const res = mockResponse();
     const next = jest.fn();
-    return addUser(req, res, next).then(() => {
+    return addUserMock(req, res, next).then(() => {
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.send).toHaveBeenCalledWith('token');
     })
