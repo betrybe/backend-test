@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node index.js",
     "debug": "nodemon node index.js",
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "lint": "eslint ."
   },
   "devDependencies": {

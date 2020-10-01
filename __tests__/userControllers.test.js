@@ -28,7 +28,8 @@ describe('User creation tests', () => {
     return createUserRequest()
       .then(() => null)
       .catch((err) => {
-        expect(err.response.status).toBe(400);
+        console.error(err.response.data.error);
+        expect(err.response.data.error.status).toBe(400);
         expect(err.response.data.error.message).toBe('\"displayName\" is required');
       });
   });
@@ -38,17 +39,17 @@ describe('User creation tests', () => {
     return createUserRequest({ displayName: 'Mateus Talles' })
       .then(() => null)
       .catch((err) => {
-        expect(err.response.status).toBe(400);
+        expect(err.response.data.error.status).toBe(400);
         expect(err.response.data.error.message).toBe('\"email\" is required');
       });
   });
 
   it('doesnt create users without password', () => {
-    expect.assertions(2);
+    // expect.assertions(2);
     return createUserRequest({ displayName: 'Mateus Talles', email: 'mateustalles@gma' })
       .then(() => null)
       .catch((err) => {
-        expect(err.response.status).toBe(400);
+        expect(err.response.data.error.status).toBe(400);
         expect(err.response.data.error.message).toBe('\"password\" is required');
       });
   });

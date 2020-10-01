@@ -1,12 +1,12 @@
 const jwt = require('jsonwebtoken');
-const error = require('../services/errorScheme');
-const userControllers = require('../controllers/userControllers');
 const { Users } = require('../models');
+const CustomError = require('../services/errorScheme');
+
 
 const validateJWT = async (req, res, next) => {
   const token = req.headers.authorization;
 
-  if (!token) throw new error.TokenNotFound();
+  if (!token) throw new CustomError({ message: 'Token não encontrado', status: 401 });
 
   const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
@@ -15,13 +15,13 @@ const validateJWT = async (req, res, next) => {
   const user = await Users.findByPk(id)
     .then((data) => data.dataValues)
     .catch((err) => {
-      throw new error.GeneralError(err);
+      throw new CustomError({ message: err.message, status: 500 });
     });
   
-  if (!user) throw new error.UserNotFound();
+  if (!user) throw new CustomError({ message: 'Usuário não encontrado', status: 404 });
 
   req.user = user;
-  
+
   next();
 };
 
