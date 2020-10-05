@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
 const userRouter = require('./routers/userRouter');
 const CustomError = require('./services/errorScheme');
+const postsRouter = require('./routers/postsRouter');
 const { login } = require('./controllers/userControllers');
 const { validateJWT } = require('./middlewares/auth');
 
@@ -15,7 +16,9 @@ app.use(bodyParser.json());
 
 app.use('/user', userRouter);
 
-app.post('/login', rescue(validateJWT), login);
+app.use('/post', postsRouter);
+
+app.post('/login', login);
 
 app.use(rescue.from(
   CustomError,
@@ -28,8 +31,7 @@ app.use(rescue.from(
 ));
 
 app.use((err, req, res, next) => {
-  const { message: { message, code } } = err;
-  res.status(code).send({ error: { message, code } });
+  res.status(500).send({ error: { message: err.message, code: 500 } });
   next();
 });
 
