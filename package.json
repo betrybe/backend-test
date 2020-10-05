@@ -12,7 +12,7 @@
   "scripts": {
     "start": "node index.js",
     "debug": "nodemon node index.js",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -29,6 +29,7 @@
     "nodemon": "^2.0.4",
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0",
+    "sequelize-mock": "^0.10.2",
     "supertest": "^4.0.2"
   }
 }
