@@ -17,7 +17,7 @@ const validateJWT = async (req, res, next) => {
     .catch((err) => {
       throw new CustomError({ message: err.message, status: 500 });
     });
-  
+
   if (!user) throw new CustomError({ message: 'Usuário não encontrado', status: 404 });
 
   req.user = user;
