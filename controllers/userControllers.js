@@ -42,7 +42,7 @@ const findAllUsers = rescue(async (req, res) =>
     }));
 
 const findUserById = rescue(async (req, res) =>
-  Users.findByPk(req.params.id).then(
+  Users.findOne({ where: { id: req.params.id } }).then(
     (user) => {
       if (!user) throw new CustomError({ message: 'Usuário não encontrado', status: 404 });
       res.status(200).send(user);
