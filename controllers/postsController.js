@@ -1,8 +1,11 @@
 const rescue = require('express-rescue');
+const Sequelize = require('sequelize');
 const CustomError = require('../services/errorScheme');
 const { postValidation } = require('../services/joiValidation');
 const { BlogPosts } = require('../models');
 const { Users } = require('../models');
+
+const { Op } = Sequelize;
 
 const createPost = rescue(async (req, res) => {
   const { body: { title, content }, user } = req;
@@ -21,7 +24,10 @@ const createPost = rescue(async (req, res) => {
 const getPosts = rescue(async (req, res) => {
   const { id: postId } = req.params ? req.params : null;
   const posts = await BlogPosts
-    .findAll(postId ? { where: { id: postId } } : undefined).then((data) => data);
+    .findAll(postId ? { where: { id: postId } } : undefined).then((data) => data)
+    .catch((err) => {
+      throw new CustomError({ message: err.message, code: 500 });
+    });
 
   if (postId && posts.length === 0) throw new CustomError({ message: 'Nenhum post encontrado', code: 404 });
 
@@ -31,7 +37,10 @@ const getPosts = rescue(async (req, res) => {
       const userData = async () => Users.findOne(
         { where: { id: userId } },
       );
-      const { displayName, email, image } = await userData();
+      const { displayName, email, image } = await userData()
+        .catch((err) => {
+          throw new CustomError({ message: err.message, code: 500 });
+        });
       const user = { userId, displayName, email, image };
       const newPost = { id, published, updated, title, content, user };
       return newPost;
@@ -66,8 +75,29 @@ const updatePost = rescue(async (req, res) => {
     });
 });
 
+const searchPosts = rescue(async (req, res) => {
+  const { query: { q } } = req;
+
+  const posts = await BlogPosts.findAll(
+    {
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `${q}%` } },
+          { content: { [Op.like]: `${q}%` } },
+        ],
+      },
+    },
+  ).then((data) => data.map(({ dataValues }) => dataValues))
+    .catch((err) => {
+      throw new CustomError({ message: err.message, code: 500 });
+    });
+
+  return res.status(200).send(posts);
+});
+
 module.exports = {
   createPost,
   getPosts,
   updatePost,
+  searchPosts,
 };
