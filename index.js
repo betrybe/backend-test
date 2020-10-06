@@ -8,7 +8,6 @@ const userRouter = require('./routers/userRouter');
 const CustomError = require('./services/errorScheme');
 const postsRouter = require('./routers/postsRouter');
 const { login } = require('./controllers/userControllers');
-const { validateJWT } = require('./middlewares/auth');
 
 const app = express();
 app.use(cors());
