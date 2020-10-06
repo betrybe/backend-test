@@ -19,7 +19,12 @@ const createPost = rescue(async (req, res) => {
 });
 
 const getPosts = rescue(async (req, res) => {
-  const posts = await BlogPosts.findAll().then((data) => data);
+  const { id: postId } = req.params ? req.params : null;
+  const posts = await BlogPosts
+    .findAll(postId ? { where: { id: postId } } : undefined).then((data) => data);
+
+  if (postId && posts.length === 0) throw new CustomError({ message: 'Nenhum post encontrado', code: 404 });
+
   const postData = posts.map((post) => post.dataValues);
   const fetchUserData = postData.map(
     async ({ id, published, updated, title, content, user_id: userId }) => {
