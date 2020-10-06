@@ -95,9 +95,37 @@ const searchPosts = rescue(async (req, res) => {
   return res.status(200).send(posts);
 });
 
+const deletePosts = rescue(async (req, res) => {
+  const { id: postId } = req.params ? req.params : null;
+  if (!postId) throw new CustomError({ message: 'Nenhum ID foi especificado', code: 400 });
+
+  const posts = await BlogPosts
+    .findAll({ where: { id: postId } }).then((data) => data)
+    .catch((err) => {
+      throw new CustomError({ message: err.message, code: 500 });
+    });
+
+  if (postId && posts.length === 0) throw new CustomError({ message: 'Nenhum post encontrado', code: 404 });
+
+  const { user: { id: userId } } = req;
+
+  const { user_id: currentAuthorId } = await BlogPosts.findOne(
+    { where: { id: postId } },
+  ).then((data) => data.dataValues);
+
+  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode deletar posts.', code: 403 });
+
+  await BlogPosts.destroy({ where: { id: postId } })
+    .then(() => res.status(200).send({ message: 'Post deletado com sucesso' }))
+    .catch((err) => {
+      throw new CustomError({ message: err.message, code: err.code });
+    });
+});
+
 module.exports = {
   createPost,
   getPosts,
   updatePost,
   searchPosts,
+  deletePosts,
 };
