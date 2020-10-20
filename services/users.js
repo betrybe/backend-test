@@ -3,15 +3,15 @@ const Joi = require('joi');
 const { User } = require('../models');
 const shapes = require('../utils/shapes');
 
-const validateUser = async ({ displayName, email, password }) => Joi
-  .object({
-    displayName: shapes.name,
-    email: shapes.email,
-    password: shapes.password,
-  })
+const validateUserRegister = async ({ displayName, email, password }) => Joi
+  .object({ displayName: shapes.name, email: shapes.email, password: shapes.password })
   .validateAsync({ displayName, email, password })
-  .catch((error, value) => ({ message: error && error.message, value }))
-// .catch(console.log);
+  .catch((error, value) => ({ message: error && error.message, value }));
+
+const validateUserLogin = async ({ email, password }) => Joi
+  .object({ email: shapes.email, password: shapes.password })
+  .validateAsync({ email, password })
+  .catch((error, value) => ({ message: error && error.message, value }));
 
 const createUser = async (displayName, email, password, image) =>
   User.create(displayName, email, password, image)
@@ -20,8 +20,16 @@ const createUser = async (displayName, email, password, image) =>
 const isEmailAvaible = async (email) => User.findOne({ where: { email } })
   .then((res) => !res || { message: 'Usuário já existente' });
 
+const getUserByEmail = async (email) => User.findOne({ where: { email } })
+  .then((res) => {
+    if (res) return res.dataValues;
+    return { message: 'Usuário não existe' };
+  });
+
 module.exports = {
   createUser,
-  validateUser,
+  validateUserRegister,
   isEmailAvaible,
+  validateUserLogin,
+  getUserByEmail,
 };

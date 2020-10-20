@@ -2,27 +2,42 @@ const rescue = require('express-rescue');
 const Boom = require('boom');
 const { User } = require('../services');
 
-const register = rescue(
-  async (req, res, next) => {
-    const { displayName, email, image, password } = req.body;
-    console.log('passou por ak', displayName, email, image, password);
+const validate = (type = 'login') => rescue(async (req, res, next) => {
+  const { displayName, email, password } = req.body;
 
-    const { message: validateMessage, value } = await User.validateUser({ displayName, email, password });
+  const officialType = `validateUser${type[0].toUpperCase() + type.slice(1)}`;
 
-    console.log('passou por ak', value, validateMessage);
+  const { message } = await User[officialType]({ email, password, displayName });
 
-    if (validateMessage) return next(Boom.badData(validateMessage));
+  if (message) return next(Boom.badData(message));
 
-    const { message } = await User.isEmailAvaible(email);
+  next();
+});
 
-    if (message) return next(Boom.conflict(message));
+const register = rescue(async (req, _res, next) => {
+  const { displayName, email, image, password } = req.body;
+  const { message } = await User.isEmailAvaible(email);
 
-    const user = await User.createUser({ displayName, email, image, password });
+  if (message) return next(Boom.conflict(message));
 
-    return res.status(200).json({ ...user });
-  },
-);
+  const user = await User.createUser({ displayName, email, image, password });
+
+  req.user = user;
+  return next();
+});
+
+const getUserByEmail = rescue(async (req, _res, next) => {
+  const { email } = req.body;
+
+  const user = User.getUserByEmail(email);
+
+  req.user = user;
+
+  next();
+});
 
 module.exports = {
   register,
+  validate,
+  getUserByEmail,
 };
