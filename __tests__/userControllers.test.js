@@ -28,9 +28,8 @@ const mockResponse = () => {
 };
 
 // afterEach(() => {
-//   jest.resetModules() 
-// });    
-
+//   jest.resetModules()
+// });
 
 jest.mock('../models/UserModel', () => () => {
   const SequelizeMock = require('sequelize-mock');
