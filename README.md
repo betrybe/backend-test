@@ -73,7 +73,7 @@ Para manter a integridade e segurança de uma aplicação, nada melhor do que te
 
 ### Data de Entrega
 
-O projeto tem até a seguinte data: `DD/MM/YYYY - 14:00h`. Para ser entregue a avaliação final.
+O projeto tem até a seguinte data: `29/10/2020 - 14:00h`. Para ser entregue a avaliação final.
 
 ---
 
