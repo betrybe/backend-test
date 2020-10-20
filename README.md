@@ -125,7 +125,7 @@ module.exports = {
 };
 ```
 
-**(Neste arquivo e obrigatório deixar o nome do database como `"database": 'blogs_api'`)**
+**(Neste arquivo é obrigatório deixar o nome do database como `"database": 'blogs_api'`)**
 
 **É essencial usar essas 3 variávies no arquivo acima:**
 
