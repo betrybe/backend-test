@@ -1,0 +1,42 @@
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  evaluator_job:
+    name: Evaluator Job
+    runs-on: ubuntu-18.04
+    services:
+      mysql:
+        image: mysql:8.0.21
+        env:
+          MYSQL_ROOT_PASSWORD: 'password'
+        ports:
+          - 3306:3306
+          - 33060:33060
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1.4.3	
+        with:	
+          node-version: '12'
+      - name: Static code analysis step
+        uses: betrybe/eslint-linter-action@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Evaluator step
+        id: evaluator
+        uses: betrybe/jest-evaluator-action@v6
+        with:
+          repository-test-name: 'betrybe/sd-0x-project-blogs-api-tests'
+          repository-test-branch: 'master'
+          npm-start: true
+        env:
+          MYSQL_USER: 'root'
+          MYSQL_PASSWORD: 'password'
+          HOSTNAME: 'mysql'
+      - name: Store evaluation step
+        uses: betrybe/store-evaluation-action@v2
+        with:
+          evaluation-data: ${{ steps.evaluator.outputs.result }}
+          environment: staging
+          pr-number: ${{ github.event.number }}
