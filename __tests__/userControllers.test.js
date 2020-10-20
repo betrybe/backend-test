@@ -1,12 +1,12 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable arrow-body-style */
 const axios = require('axios');
-const MockAdapter = require('axios-mock-adapter');
-const { addUser, findAllUsers, findUserById } = require('../controllers/userControllers');
+// const MockAdapter = require('axios-mock-adapter');
+const { addUser, findAllUsers } = require('../controllers/userControllers');
 const { userValidation } = require('../services/joiValidation');
 const UserModel = require('../models');
 
-//Sequelize mocking ref: https://medium.com/@kvr2277/sequelize-mocking-with-jest-and-node-933c1f439579
+// Sequelize mocking ref: https://medium.com/@kvr2277/sequelize-mocking-with-jest-and-node-933c1f439579
 
 const mockRequest = (params) => {
   return {
@@ -14,11 +14,11 @@ const mockRequest = (params) => {
   };
 };
 
-const mockRequestParams = (params) => {
-  return {
-    params: { ...params },
-  };
-};
+// const mockRequestParams = (params) => {
+//   return {
+//     params: { ...params },
+//   };
+// };
 
 const mockResponse = () => {
   const res = {};
