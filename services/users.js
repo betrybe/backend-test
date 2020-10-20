@@ -10,7 +10,8 @@ const validateUser = async ({ displayName, email, password }) => Joi
     password: shapes.password,
   })
   .validateAsync({ displayName, email, password })
-  .then(({ error, value }) => ({ message: error && error.message, value }));
+  .catch((error, value) => ({ message: error && error.message, value }))
+// .catch(console.log);
 
 const createUser = async (displayName, email, password, image) =>
   User.create(displayName, email, password, image)

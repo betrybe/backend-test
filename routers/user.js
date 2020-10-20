@@ -3,9 +3,7 @@ const { usersControllers } = require('../controllers');
 
 const usersRouter = express.Router();
 
-module.exports = ({ User }) => {
-  usersRouter
-    .post('/', usersControllers.register(User));
+usersRouter
+  .post('/', usersControllers.register);
 
-  return usersRouter;
-};
+module.exports = usersRouter;

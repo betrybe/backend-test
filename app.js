@@ -3,12 +3,10 @@ const bodyParser = require('body-parser');
 
 const middlewares = require('./middlewares');
 const Routers = require('./routers');
-const models = require('./services');
 
 const start = async () => {
   const app = express();
 
-  console.log(Object.keys(models));
   app.use(bodyParser.json());
 
   const { PORT = 3000 } = process.env;
@@ -16,7 +14,7 @@ const start = async () => {
   // não remova esse endpoint, e para o avaliador funcionar
   app.get('/', (_request, response) => response.send());
 
-  app.use('/user', Routers.users(models));
+  app.use('/user', Routers.users);
 
   app.use(middlewares.error);
 
