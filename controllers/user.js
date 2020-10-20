@@ -1,14 +1,23 @@
 const rescue = require('express-rescue');
+const Boom = require('boom');
 
-const register = ({ User }) => rescue(async (req, res) => {
-  const { displayName, email, image, password } = req.body;
+const register = ({ createUser, validateUser, isEmailAvaible }) => rescue(
+  async (req, res, next) => {
+    const { displayName, email, image, password } = req.body;
 
-  const { dataValues } = await User.create({ displayName, email, image, password });
+    const { message: validateMessage } = await validateUser({ displayName, email, password });
 
-  const { password: p, ...user } = dataValues;
+    if (validateMessage) return next(Boom.badData(validateMessage));
 
-  return res.status(200).json({ ...user });
-});
+    const { message } = await isEmailAvaible(email);
+
+    if (message) return next(Boom.conflict(message));
+
+    const user = await createUser({ displayName, email, image, password });
+
+    return res.status(200).json({ ...user });
+  },
+);
 
 module.exports = {
   register,

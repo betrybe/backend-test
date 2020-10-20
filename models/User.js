@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       displayName: DataTypes.STRING,
       password: DataTypes.STRING,
-      email: DataTypes.STRING,
+      email: { unique: true, type: DataTypes.STRING },
       image: { type: DataTypes.STRING, defaultValue: null },
     },
     { timestamps: false },

@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const middlewares = require('./middlewares');
 const Routers = require('./routers');
-const models = require('./models');
+const models = require('./services');
 
 const start = async () => {
   const app = express();
@@ -16,6 +17,8 @@ const start = async () => {
   app.get('/', (_request, response) => response.send());
 
   app.use('/user', Routers.users(models));
+
+  app.use(middlewares.error);
 
   return [app.listen(PORT, () => console.log(`ouvindo porta ${PORT}!`)), app];
 };
