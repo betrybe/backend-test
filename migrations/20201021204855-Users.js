@@ -16,13 +16,19 @@ module.exports = {
         type: DataTypes.STRING(30),
         unique: true,
       },
-      passowrd: {
+      password: {
         allowNull: true,
         type: DataTypes.INTEGER,
 
       },
       image: {
         type: DataTypes.STRING(255),
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
       },
     });
     return UsersTable;
