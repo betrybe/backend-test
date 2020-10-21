@@ -1,10 +1,10 @@
 const express = require('express');
-const bodyParse = require('body-parse');
+const bodyParser = require('body-parser');
 
 const { createNew } = require('./controllers/UsersController');
 
 const app = express();
-app.use(bodyParse.json());
+app.use(bodyParser.json());
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
 
