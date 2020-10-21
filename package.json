@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@mysql/xdevapi": "^8.0.22",
+    "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-rescue": "^1.1.30",
     "mysql2": "^2.1.0",
     "sequelize": "^6.3.4",
     "shelljs": "^0.8.4"
@@ -26,6 +30,7 @@
     "jest": "^26.0.1",
     "frisby": "^2.1.2",
     "sequelize-cli": "^6.2.0",
+    "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
   }
 }
