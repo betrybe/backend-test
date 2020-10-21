@@ -15,6 +15,13 @@ module.exports = {
         password: '123456',
         image: 'https://sportbuzz.uol.com.br/media/_versions/gettyimages-52491565_widelg.jpg',
       },
+      {
+        id: 401465483996,
+        displayName: 'Brett Wiltshire',
+        email: 'brett@email.com',
+        password: '123456',
+        image: 'http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png',
+      },
       ], { timestamps: false });
   },
 
