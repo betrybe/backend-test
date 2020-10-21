@@ -5,10 +5,11 @@ const shapes = require('../utils/shapes');
 
 const validate = ({ title, content }) => Joi
   .object({ title: shapes.title, content: shapes.content })
-  .validateAsync({ title, content });
-// .catch((error, value) => ({ message: error.message, value }));
+  .validateAsync({ title, content })
+  .catch((error, value) => ({ message: error.message, value }));
 
-const createPost = async ({ title, content }) => Post.create({ title, content })
+const createPost = async ({ title, content, userId }) => Post
+  .create({ title, content, userId })
   .then(({ dataValues: { updated, published, id, ...post } }) => post);
 
 const getAllPosts = async () => Post.findAll(
@@ -22,15 +23,19 @@ const getPostById = (id) => Post.findByPk(id)
       const { dataValues: { updated, published, id: i, ...post } } = res.dataValues;
       return post;
     }
-    return null;
+    return { message: 'Post não existe' };
   });
 
-const updatePostById = (id, { title, content }) => Post.findByPk(id)
-  .then((post) => post.update({ title, content }))
-  .then((updatedPost) => {
-    const user = updatedPost.getUser().then(({ password, ...creater }) => creater);
+const updatePostById = (id, { title, content }, userId) => Post.findByPk(id)
+  .then((post) => {
+    const user = post.getUser().then(({ password, ...creater }) => creater);
+    const updatedPost = user.id === userId && post.update({ title, content });
+    if (!updatedPost) return { message: 'Usuário não autorizado' };
+
     return { ...updatedPost.dataValues, user };
   });
+
+const deletePostById = (id) => Post.destroy({ where: { id } });
 
 module.exports = {
   validate,
@@ -38,4 +43,5 @@ module.exports = {
   getAllPosts,
   getPostById,
   updatePostById,
+  deletePostById,
 };
