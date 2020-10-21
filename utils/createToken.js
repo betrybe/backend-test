@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
+const SECRET = require('./SECRET');
 require('dotenv').config();
 
 const createToken = (displayName, email, image) => {
   const userObject = { displayName, email, image };
-  const token = jwt.sign(userObject, process.env.SECRET, {
+  const token = jwt.sign(userObject, SECRET, {
     expiresIn: '30m',
     algorithm: 'HS256',
   });
