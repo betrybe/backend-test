@@ -1,4 +1,12 @@
+const Joi = require('joi');
+
 const { User, Post } = require('../models');
+const shapes = require('../utils/shapes');
+
+const validate = ({ title, content }) => Joi
+  .object({ title: shapes.title, content: shapes.content })
+  .validateAsync({ title, content });
+// .catch((error, value) => ({ message: error.message, value }));
 
 const createPost = async ({ title, content }) => Post.create({ title, content })
   .then(({ dataValues: { updated, published, id, ...post } }) => post);
@@ -8,7 +16,7 @@ const getAllPosts = async () => Post.findAll(
 )
   .then((res) => res && res.map(({ dataValues }) => dataValues));
 
-const getPostById = (id) => Post.getByPk(id)
+const getPostById = (id) => Post.findByPk(id)
   .then((res) => {
     if (res) {
       const { dataValues: { updated, published, id: i, ...post } } = res.dataValues;
@@ -17,17 +25,15 @@ const getPostById = (id) => Post.getByPk(id)
     return null;
   });
 
-const getUserIdFromPostById = async (id) => Post.getByPk(id)
-  .then((res) => {
-    if (res) return res.dataValues.user_id;
-    return { message: 'No post' };
+const updatePostById = (id, { title, content }) => Post.findByPk(id)
+  .then((post) => post.update({ title, content }))
+  .then((updatedPost) => {
+    const user = updatedPost.getUser().then(({ password, ...creater }) => creater);
+    return { ...updatedPost.dataValues, user };
   });
 
-const updatePostById = (id) => Post.update({ where: { id } })
-  .then((post) => post && post.getUser()
-    .then(({ password, ...user }) => user));
-
 module.exports = {
+  validate,
   createPost,
   getAllPosts,
   getPostById,

@@ -5,7 +5,7 @@ module.exports = {
     content: { allowNull: false, type: Sequelize.STRING },
     updated: { allowNull: false, type: Sequelize.DATE },
     published: { allowNull: false, defaultValue: Sequelize.NOW, type: Sequelize.TEXT },
-    user_id: {
+    userId: {
       allowNull: false,
       type: Sequelize.INTEGER,
       foreignKey: true,
