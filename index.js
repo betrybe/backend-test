@@ -29,8 +29,8 @@ app.use(rescue.from(
   },
 ));
 
-app.use((err, req, res, next) => {
-  res.status(500).json({ error: { message: err.message, code: 500 } });
+app.use((err, _req, res, next) => {
+  res.status(err.code).json({ error: { message: err.message } });
   next();
 });
 

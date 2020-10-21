@@ -1,11 +1,16 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const postsController = require('../controllers/postsController');
+const CustomError = require('../services/errorScheme');
 const { validateJWT } = require('../middlewares/auth');
 
 const router = express.Router();
 
 router.use(rescue(validateJWT));
+
+router.use((err, req, res, next) => {
+  throw new CustomError({ message: err.message, code: 401 });
+});
 
 router.get('/search', postsController.searchPosts);
 
