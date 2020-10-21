@@ -17,7 +17,7 @@ const addUser = rescue(async (req, res) => userValidation.validateAsync(req.body
     return Users.create({ displayName, email, password, image })
       .then((user) => {
         const newToken = token(user.dataValues);
-        return res.status(201).send({ token: newToken });
+        return res.status(201).json({ token: newToken });
       })
       .catch((err) => {
         if (err.parent && err.parent.errno === 1062) {
@@ -34,7 +34,7 @@ const findAllUsers = rescue(async (req, res) =>
   Users.findAll().then(
     (users) => {
       if (!users) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
-      return res.status(200).send(users);
+      return res.status(200).json(users);
     },
   )
     .catch((err) => {
@@ -45,7 +45,7 @@ const findUserById = rescue(async (req, res) =>
   Users.findOne({ where: { id: req.params.id } }).then(
     (user) => {
       if (!user) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
-      res.status(200).send(user);
+      res.status(200).json(user);
     },
   )
     .catch((err) => {
@@ -57,7 +57,7 @@ const deleteUser = rescue(async (req, res) => {
   if (!id) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
   return Users.destroy({ where: { id } })
     .then((data) => {
-      if (data === 1) return res.status(200).send('Usuário deletado.');
+      if (data === 1) return res.status(200).json('Usuário deletado.');
       throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
     })
     .catch((err) => {
@@ -71,7 +71,7 @@ const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
       if (!data) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
       if (data && data.dataValues) {
         const newToken = token(data.dataValues);
-        return res.status(200).send({ token: newToken });
+        return res.status(200).json({ token: newToken });
       }
       throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
     });

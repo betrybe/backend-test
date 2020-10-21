@@ -2,7 +2,7 @@ const rescue = require('express-rescue');
 const Sequelize = require('sequelize');
 const CustomError = require('../services/errorScheme');
 const { postValidation } = require('../services/joiValidation');
-const { BlogPosts } = require('../models');
+const { Posts } = require('../models');
 const { Users } = require('../models');
 
 const { Op } = Sequelize;
@@ -11,8 +11,8 @@ const createPost = rescue(async (req, res) => {
   const { body: { title, content }, user } = req;
   const { id: userId } = user;
   return postValidation.validateAsync({ title, content })
-    .then(() => BlogPosts.create({ title, content, user_id: userId })
-      .then((data) => res.status(200).send(data.dataValues))
+    .then(() => Posts.create({ title, content, userId })
+      .then((data) => res.status(200).json(data.dataValues))
       .catch((err) => {
         throw new CustomError({ message: err.message, code: err.code });
       }))
@@ -23,7 +23,7 @@ const createPost = rescue(async (req, res) => {
 
 const getPosts = rescue(async (req, res) => {
   const { id: postId } = req.params ? req.params : null;
-  const posts = await BlogPosts
+  const posts = await Posts
     .findAll(postId ? { where: { id: postId } } : undefined).then((data) => data)
     .catch((err) => {
       throw new CustomError({ message: err.message, code: 500 });
@@ -33,7 +33,7 @@ const getPosts = rescue(async (req, res) => {
 
   const postData = posts.map((post) => post.dataValues);
   const fetchUserData = postData.map(
-    async ({ id, published, updated, title, content, user_id: userId }) => {
+    async ({ id, published, updated, title, content, userId }) => {
       const userData = async () => Users.findOne(
         { where: { id: userId } },
       );
@@ -47,7 +47,7 @@ const getPosts = rescue(async (req, res) => {
     },
   );
   const postWithUserData = await Promise.all(fetchUserData).then((data) => data);
-  res.status(200).send(postWithUserData);
+  res.status(200).json(postWithUserData);
 });
 
 const updatePost = rescue(async (req, res) => {
@@ -55,18 +55,18 @@ const updatePost = rescue(async (req, res) => {
   const { id: userId } = user;
   const { id: postId } = req.params;
 
-  const { user_id: currentAuthorId } = await BlogPosts.findOne(
+  const { user_id: currentAuthorId } = await Posts.findOne(
     { where: { id: postId } },
   ).then((data) => data.dataValues);
 
   if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode editar posts.', code: 403 });
 
   return postValidation.validateAsync({ title, content })
-    .then(() => BlogPosts.update(
-      { title, content, user_id: userId },
+    .then(() => Posts.update(
+      { title, content, userId },
       { where: { id: postId } },
     )
-      .then(() => res.status(200).send({ message: 'Post atualizado com sucesso.' }))
+      .then(() => res.status(200).json({ message: 'Post atualizado com sucesso.' }))
       .catch((err) => {
         throw new CustomError({ message: err.message, code: err.code });
       }))
@@ -78,7 +78,7 @@ const updatePost = rescue(async (req, res) => {
 const searchPosts = rescue(async (req, res) => {
   const { query: { q } } = req;
 
-  const posts = await BlogPosts.findAll(
+  const posts = await Posts.findAll(
     {
       where: {
         [Op.or]: [
@@ -92,14 +92,14 @@ const searchPosts = rescue(async (req, res) => {
       throw new CustomError({ message: err.message, code: 500 });
     });
 
-  return res.status(200).send(posts);
+  return res.status(200).json(posts);
 });
 
 const deletePosts = rescue(async (req, res) => {
   const { id: postId } = req.params ? req.params : null;
   if (!postId) throw new CustomError({ message: 'Nenhum ID foi especificado', code: 400 });
 
-  const posts = await BlogPosts
+  const posts = await Posts
     .findAll({ where: { id: postId } }).then((data) => data)
     .catch((err) => {
       throw new CustomError({ message: err.message, code: 500 });
@@ -109,14 +109,14 @@ const deletePosts = rescue(async (req, res) => {
 
   const { user: { id: userId } } = req;
 
-  const { user_id: currentAuthorId } = await BlogPosts.findOne(
+  const { user_id: currentAuthorId } = await Posts.findOne(
     { where: { id: postId } },
   ).then((data) => data.dataValues);
 
   if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode deletar posts.', code: 403 });
 
-  await BlogPosts.destroy({ where: { id: postId } })
-    .then(() => res.status(200).send({ message: 'Post deletado com sucesso' }))
+  await Posts.destroy({ where: { id: postId } })
+    .then(() => res.status(200).json({ message: 'Post deletado com sucesso' }))
     .catch((err) => {
       throw new CustomError({ message: err.message, code: err.code });
     });

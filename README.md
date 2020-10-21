@@ -87,7 +87,7 @@ Há um arquivo `index.js` no repositório. Não remova, nele, o seguinte trecho 
 
 ```javascript
 app.get('/', (request, response) => {
-  response.send();
+  response.json();
 });
 ```
 

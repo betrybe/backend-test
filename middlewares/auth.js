@@ -5,7 +5,7 @@ const CustomError = require('../services/errorScheme');
 const validateJWT = async (req, res, next) => {
   const token = req.headers.authorization;
 
-  if (!token) throw new CustomError({ message: 'Token não encontrado', code: 401 });
+  if (!token || token.length === 0) throw new CustomError({ message: 'Token não encontrado', code: 401 });
 
   const decoded = jwt.verify(token, process.env.SECRET_KEY);
 

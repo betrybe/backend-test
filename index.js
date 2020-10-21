@@ -24,13 +24,13 @@ app.use(rescue.from(
   (err, req, res, next) => {
     const { message: { message, code } } = err;
     console.log(message, code);
-    res.status(code).send({ error: message });
+    res.status(code).json({ error: message });
     next();
   },
 ));
 
 app.use((err, req, res, next) => {
-  res.status(500).send({ error: { message: err.message, code: 500 } });
+  res.status(500).json({ error: { message: err.message, code: 500 } });
   next();
 });
 
@@ -38,5 +38,5 @@ app.listen(3000, () => console.log('ouvindo porta 3000!'));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (request, response) => {
-  response.send();
+  response.json();
 });
