@@ -6,6 +6,6 @@ module.exports = (err, _req, res, _next) => {
     console.log(payload);
     return res.status(statusCode).json({ message: payload.message });
   }
-
-  return res.status(500).json({ message: err });
+  console.log(err);
+  return res.status(500).json({ message: err.message });
 };

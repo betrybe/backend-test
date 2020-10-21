@@ -29,10 +29,21 @@ const getUserByEmail = async (email) => User.findOne({ where: { email } })
     return { message: 'Usuário não existe' };
   });
 
+const getUserById = async (id) => User.findByPk(id)
+  .then((res) => {
+    if (res) return res.dataValues;
+    return { message: 'Usuário não existe' };
+  });
+
+const getAllUsers = async () => User.findAll()
+  .then((res) => res && res.map(({ dataValues: { password, ...user } }) => user));
+
 module.exports = {
   createUser,
   validateUserRegister,
   isEmailAvaible,
   validateUserLogin,
   getUserByEmail,
+  getAllUsers,
+  getUserById,
 };

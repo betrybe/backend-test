@@ -24,6 +24,39 @@ const register = rescue(async (req, res, next) => {
   }
 });
 
+const getUserByEmail = rescue(async (req, res, next) => {
+  const { email } = req.body;
+
+  const { message } = await User.validateUserEmail({ email });
+
+  if (!message) return next(Boom.badRequest(message));
+
+  const user = await User.getUserByEmail(email);
+
+  if (!user) return Boom.notFound('Usuário não encontrado');
+
+  return res.status(200).json({ ...user });
+});
+
+const getUserById = rescue(async (req, res, next) => {
+  const { id } = req.body;
+
+  const user = await User.getUserById(id);
+
+  if (user.message) return next(Boom.notFound('Usuário não existe'));
+
+  return res.status(200).json({ ...user });
+});
+
+const getAll = rescue(async (_req, res) => {
+  const users = await User.getAllUsers();
+  console.log('users', users);
+  return res.status(200).json(users);
+});
+
 module.exports = {
   register,
+  getUserByEmail,
+  getUserById,
+  getAll,
 };
