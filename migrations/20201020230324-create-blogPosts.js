@@ -1,4 +1,4 @@
-// 'use strict';
+// use strict';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -11,7 +11,7 @@ module.exports = {
       },
       title: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       content: {
         allowNull: false,
