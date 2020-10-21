@@ -1,21 +1,25 @@
-const jwt = require('jsonwebtoken');
 const rescue = require('express-rescue');
 const Boom = require('boom');
 
-const { SECRET = 'preguicadecriarumsegredo' } = process.env;
+const { Token, User } = require('../services');
 
-const config = { expiresIn: '1d', algorithm: 'HS256' };
+module.exports = rescue(async (req, res, next) => {
+  const { email, password } = req.body;
 
-module.exports = (status) => rescue(async (req, res, next) => {
-  const { user } = req;
-  console.log(user);
+  const { message } = await User.validateUserLogin({ email, password });
+  if (message) return next(Boom.badRequest(message));
 
-  if (!user) return next(Boom.badRequest('Campos inválidos'));
+  const user = await User.getUserByEmail(email);
+
+  if (user.message) return next(Boom.badRequest('Campos inválidos'));
+
+  const { password: p, ...filteredUser } = user;
+  // p apenas para não confitar com a variavel que vem de req
 
   try {
-    const token = jwt.sign({ data: user }, SECRET, config);
+    const token = Token.generate(filteredUser);
 
-    return res.status(status).json({ token });
+    return res.status(200).json({ token });
   } catch (err) {
     return res.status.json({ message: 'algo deu errado' });
   }
