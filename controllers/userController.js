@@ -105,6 +105,7 @@ const getUserById = rescue(async (req, res) => {
     ? res.status(404).json({ message: 'Usuário não existe' })
     : res.status(200).json(user)));
 });
+
 module.exports = {
   createNewUser,
   userLogin,
