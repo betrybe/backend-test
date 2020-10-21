@@ -9,7 +9,15 @@ app.use(bodyParser.json());
 
 app.use('/user', validateData, userRouters);
 
-// app.use((err, _req, res, _next) => res.status(400).json({ err }));
+app.use((err, _req, res, _next) => {
+  switch (err.original.errno) {
+    case 1062:
+      return res.status(409).json({ message: 'Usuário já existe' });
+
+    default:
+      break;
+  }
+});
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
 
