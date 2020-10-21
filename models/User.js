@@ -3,8 +3,11 @@ const User = (sequelize, DataTypes) => {
     'User',
     {
       displayName: DataTypes.STRING,
-      email: DataTypes.STRING,
-      password: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        validate: { isEmail: true },
+      },
+      password: { type: DataTypes.STRING, validate: { len: [6, 6] } },
       image: DataTypes.STRING,
     },
     {
