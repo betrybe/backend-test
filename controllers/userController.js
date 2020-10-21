@@ -100,9 +100,15 @@ const getAllUsers = rescue(async (_req, res) => {
   Users.findAll({ raw: true }).then((users) => res.status(200).json(users));
 });
 
+const getUserById = rescue(async (req, res) => {
+  await Users.findByPk(req.params.id).then((user) => ((!user)
+    ? res.status(404).json({ message: 'Usuário não existe' })
+    : res.status(200).json(user)));
+});
 module.exports = {
   createNewUser,
   userLogin,
   secret,
   getAllUsers,
+  getUserById,
 };
