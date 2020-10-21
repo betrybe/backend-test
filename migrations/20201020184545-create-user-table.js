@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => queryInterface.createTable('Users', {
     id: { primaryKey: true, autoIncrement: true, allowNull: false, type: Sequelize.INTEGER },

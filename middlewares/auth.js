@@ -4,7 +4,7 @@ const Boom = require('boom');
 
 const { SECRET = 'preguicadecriarumsegredo' } = process.env;
 
-module.exports = (required = true) => rescue(
+module.exports = () => rescue(
   async (req, _res, next) => {
     const { authorization: token } = req.headers;
 
