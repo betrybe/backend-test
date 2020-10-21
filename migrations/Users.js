@@ -9,13 +9,11 @@ module.exports = {
       },
       displayName: {
         allowNull: false,
-        type: DataTypes.STRING,
-        varchar: 100,
+        type: DataTypes.STRING(100),
       },
       email: {
         allowNull: false,
-        type: DataTypes.STRING,
-        varchar: 30,
+        type: DataTypes.STRING(30),
         unique: true,
       },
       passowrd: {
@@ -24,8 +22,7 @@ module.exports = {
 
       },
       image: {
-        type: DataTypes.STRING,
-        varchar: 150,
+        type: DataTypes.STRING(255),
       },
     });
     return UsersTable;
