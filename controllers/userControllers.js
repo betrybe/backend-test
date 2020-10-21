@@ -9,7 +9,7 @@ const jwtConfig = {
   algorithm: 'HS256',
 };
 
-const token = (user) => jwt.sign({ data: user }, process.env.SECRET_KEY, jwtConfig);
+const token = (user) => jwt.sign({ data: user }, 'chavesecreta', jwtConfig);
 
 const addUser = rescue(async (req, res) => userValidation.validateAsync(req.body)
   .then(async () => {

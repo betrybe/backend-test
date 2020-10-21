@@ -7,7 +7,7 @@ const validateJWT = async (req, res, next) => {
 
   if (!token || token.length === 0) throw new CustomError({ message: 'Token não encontrado', code: 401 });
 
-  const decoded = jwt.verify(token, process.env.SECRET_KEY);
+  const decoded = jwt.verify(token, 'chavesecreta');
 
   const { data: { id } } = decoded;
 
