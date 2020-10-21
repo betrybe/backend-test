@@ -54,9 +54,16 @@ const getAll = rescue(async (_req, res) => {
   return res.status(200).json(users);
 });
 
+const deleteUser = rescue(async (req, res) => {
+  const { id } = req.user;
+  await User.deleteUser(id);
+  res.status(204).end();
+});
+
 module.exports = {
   register,
   getUserByEmail,
   getUserById,
   getAll,
+  deleteUser,
 };

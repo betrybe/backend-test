@@ -38,6 +38,9 @@ const getUserById = async (id) => User.findByPk(id)
 const getAllUsers = async () => User.findAll()
   .then((res) => res && res.map(({ dataValues: { password, ...user } }) => user));
 
+const deleteUser = async (id) => User.destroy({ where: { id } })
+  .catch((res) => res);
+
 module.exports = {
   createUser,
   validateUserRegister,
@@ -46,4 +49,5 @@ module.exports = {
   getUserByEmail,
   getAllUsers,
   getUserById,
+  deleteUser,
 };
