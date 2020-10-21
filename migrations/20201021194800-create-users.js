@@ -21,7 +21,7 @@ module.exports = {
         allowNull: false,
       },
       image: {
-        type: Sequelize.BLOB, // based on https://grokonez.com/node-js/nodejs-save-file-image-to-mysql-by-sequelize-with-blob-type
+        type: Sequelize.STRING,
         allowNull: true,
       },
     });
