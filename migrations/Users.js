@@ -9,7 +9,7 @@ module.exports = {
       },
       displayName: {
         allowNull: false,
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
       },
       email: {
         allowNull: false,
