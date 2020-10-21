@@ -18,6 +18,7 @@ module.exports = {
       userId: {
         allowNull: true,
         type: DataTypes.INTEGER,
+        reference: { model: 'user', key: 'id' },
       },
       published: {
         type: DataTypes.DATE,
