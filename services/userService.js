@@ -5,9 +5,12 @@ const createUser = ({ Users }, generateJWT, config) => async (
   image,
 ) => {
   try {
-    const user = await Users.create({ displayName, email, password, image });
+    const user = await Users.create(
+      { displayName, email, password, image },
+      { raw: true },
+    );
 
-    const { _password, ...data } = user;
+    const { _password, ...data } = user[0];
 
     return generateJWT(data, config);
   } catch (err) {
@@ -24,12 +27,12 @@ const userLogin = ({ Users }, generateJWT, config) => async (email) => {
     return { errors: { message: 'Campos inválidos' } };
   }
 
-  const { _password, ...data } = user;
+  const { _password, ...data } = user[0];
 
   return generateJWT(data, config);
 };
 
-const getAllUsers = ({ Users }) => async () => Users.findAll();
+const getAllUsers = ({ Users }) => async () => Users.findAll({ raw: true });
 
 const getUserService = (models, generateJWT, config) => ({
   createUser: createUser(models, generateJWT, config),

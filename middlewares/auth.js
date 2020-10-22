@@ -6,7 +6,7 @@ const generateJWT = (data, { secret, jwtConfig }) => {
   return { token };
 };
 
-const validateJWT = ({ User }, { secret }) =>
+const validateJWT = ({ Users }, { secret }) =>
   rescue(async (req, res, next) => {
     const token = req.headers.authorization;
 
@@ -16,10 +16,12 @@ const validateJWT = ({ User }, { secret }) =>
       const decoded = jwt.verify(token, secret);
 
       const {
-        data: { id },
+        data: { email },
       } = decoded;
 
-      const user = await User.findByPk(id);
+      const user = await Users.findAll({ where: { email } });
+
+      console.log('user', user);
 
       if (!user) {
         return res.status(401).json({ message: 'Token expirado ou inválido' });
