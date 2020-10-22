@@ -9,7 +9,6 @@ const validateData = (req, res, next) => {
     '"password" is required',
     '"password" length must be 6 characters long',
   ];
-  console.log('validarEmail', validateEmail(email));
   if (!email) return res.status(400).json({ message: errMessages[2] });
   if (!validateEmail(email)) return res.status(400).json({ message: errMessages[1] });
   if (!password) return res.status(400).json({ message: errMessages[3] });

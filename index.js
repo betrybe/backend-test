@@ -1,12 +1,15 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const loginController = require('./controllers/loginController');
 const validateData = require('./controllers/validateData');
+const validateLogin = require('./controllers/validateLogin');
 const userRouters = require('./routers/userRouters');
 
 const app = express();
 
 app.use(bodyParser.json());
 
+app.post('/login', validateLogin, loginController);
 app.use('/user', validateData, userRouters);
 
 app.use((err, _req, res, _next) => {
@@ -15,7 +18,7 @@ app.use((err, _req, res, _next) => {
       return res.status(409).json({ message: 'Usuário já existe' });
 
     default:
-      break;
+      return res.status(400).json(err);
   }
 });
 

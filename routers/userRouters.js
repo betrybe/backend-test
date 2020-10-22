@@ -6,14 +6,17 @@ module.exports = (() => {
   router.post('/', async (req, res, next) => {
     try {
       const { displayName, email, password, image } = req.body;
-      await User.create({
+      const createUser = await User.create({
         displayName,
         email,
         password,
         image,
       });
-      const token = createToken({ displayName, email, image });
-      return res.status(201).json({ token });
+      if (createUser) {
+        const token = createToken({ email });
+        req.token = token;
+        return res.status(201).json({ token });
+      }
     } catch (error) {
       next(error);
     }
