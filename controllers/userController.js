@@ -1,21 +1,16 @@
 const { Router } = require('express');
 const JWT = require('jsonwebtoken');
 const { User } = require('../models');
+const configValidade = require('./userConfig');
+const { secret } = require('../auth/authConfig');
+const authMiddleware = require('../auth/authMiddleware');
 
 const jwtConfig = {
   expiresIn: '1d',
   algorithm: 'HS256',
 };
 
-const secret = 'Marco Barbosa 2020 147258';
-
 const userActions = Router();
-
-const configValidade = {
-  passwordLength: 6,
-  minCharLength: 8,
-  regex: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-};
 
 const validateDisplayName = (minCharLength, displayName) => {
   if (displayName.length < minCharLength) {
@@ -88,11 +83,21 @@ userActions.post('/', async (req, res) => {
     });
 });
 
+userActions.get('/', authMiddleware, async (req, res) => {
+  User.findAll()
+    .then((result) => res.status(200).send(result))
+    .catch((e) => {
+      console.log(e.message);
+      res.status(500).send({ message: 'Algo deu errado' });
+    });
+});
+
 module.exports = {
+  configValidade,
+  secret,
   userActions,
+  validateDisplayName,
   validateEmail,
   validatePassword,
-  validateDisplayName,
   verifyRegistedEmail,
-  configValidade,
 };
