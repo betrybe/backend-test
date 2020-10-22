@@ -8,7 +8,8 @@ const { getUserService } = require('./services/userService');
 const {
   getValidateJWT,
   generateJWT,
-  validateEntries,
+  validateCreateUserEntries,
+  validateUserLoginEntries,
 } = require('./middlewares');
 
 const factory = async (config) => {
@@ -21,7 +22,8 @@ const factory = async (config) => {
   const validateJWT = getValidateJWT(models, config);
 
   app.get('/user', validateJWT, userController.createUser);
-  app.post('/user', validateEntries, userController.createUser);
+  app.post('/user', validateCreateUserEntries, userController.createUser);
+  app.post('/login', validateUserLoginEntries, userController.userLogin);
 
   return app;
 };

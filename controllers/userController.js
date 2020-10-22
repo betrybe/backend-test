@@ -13,8 +13,22 @@ const createUser = (service) =>
     res.status(201).json(user);
   });
 
+const userLogin = (service) =>
+  rescue(async (req, res) => {
+    const { email } = req.body;
+
+    const user = await service.userLogin(email);
+
+    if (user.errors) {
+      return res.status(400).json(user.errors);
+    }
+
+    res.status(200).json(user);
+  });
+
 const getUserController = (service) => ({
   createUser: createUser(service),
+  userLogin: userLogin(service),
 });
 
 module.exports = { getUserController };

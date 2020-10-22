@@ -1,4 +1,4 @@
-const validateEntries = (req, res, next) => {
+const validateCreateUserEntries = (req, res, next) => {
   const { displayName, email, password } = req.body;
 
   const regexEmail = /^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
@@ -34,4 +34,4 @@ const validateEntries = (req, res, next) => {
   next();
 };
 
-module.exports = { validateEntries };
+module.exports = { validateCreateUserEntries };
