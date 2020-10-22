@@ -1,16 +1,18 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const loginController = require('./controllers/loginController');
-const validateData = require('./controllers/validateData');
+const validateUser = require('./controllers/validateUser');
 const validateLogin = require('./controllers/validateLogin');
 const userRouters = require('./routers/userRouters');
+const validateToken = require('./utils/validateToken');
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.post('/login', validateLogin, loginController);
-app.use('/user', validateData, userRouters);
+app.get('/user', validateToken, userRouters);
+app.use('/user', validateUser, userRouters);
 
 app.use((err, _req, res, _next) => {
   switch (err.original.errno) {

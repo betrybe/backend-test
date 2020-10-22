@@ -21,5 +21,14 @@ module.exports = (() => {
       next(error);
     }
   });
+  router.get('/', (req, res) => {
+    User.findAll({ attributes: { exclude: ['password'] } })
+      .then((users) => {
+        res.status(200).json(users);
+      })
+      .catch((_e) => {
+        res.status(401).json({ message: 'Token não encontrado' });
+      });
+  });
   return router;
 })();

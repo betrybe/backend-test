@@ -1,6 +1,8 @@
 const validateEmail = require('../utils/validateEmail');
+const verifyObjectLength = require('../utils/verifyObjectLength');
 
-const validateData = (req, res, next) => {
+const validateUser = (req, res, next) => {
+  if (verifyObjectLength(req.body)) return next();
   const { displayName, email, password } = req.body;
   const errMessages = [
     '"displayName" length must be at least 8 characters long',
@@ -10,7 +12,9 @@ const validateData = (req, res, next) => {
     '"password" length must be 6 characters long',
   ];
   if (!email) return res.status(400).json({ message: errMessages[2] });
-  if (!validateEmail(email)) return res.status(400).json({ message: errMessages[1] });
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: errMessages[1] });
+  }
   if (!password) return res.status(400).json({ message: errMessages[3] });
   if (email.split('')[0] === '@') {
     return res.status(400).json({ message: errMessages[1] });
@@ -24,4 +28,4 @@ const validateData = (req, res, next) => {
   next();
 };
 
-module.exports = validateData;
+module.exports = validateUser;
