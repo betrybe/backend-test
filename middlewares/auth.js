@@ -5,9 +5,14 @@ const CustomError = require('../services/errorScheme');
 const validateJWT = async (req, res, next) => {
   const token = req.headers.authorization;
 
-  if (!token || token.length === 0) throw new CustomError({ message: 'Token não encontrado', code: 401 });
+  if (!token
+    || token.length === 0
+    || token === undefined) throw new CustomError({ message: 'Token não encontrado', code: 401 });
 
   const decoded = jwt.verify(token, 'chavesecreta');
+
+  if (decoded === 'invalid signature 401'
+    || decoded === 'jwt malformed 401') throw new CustomError({ message: { message: 'Token expirado ou inválido', code: 401 } });
 
   const { data: { id } } = decoded;
 

@@ -21,7 +21,7 @@ const addUser = rescue(async (req, res) => userValidation.validateAsync(req.body
       })
       .catch((err) => {
         if (err.parent && err.parent.errno === 1062) {
-          throw new CustomError({ message: 'Usuário já registrado', code: 400 });
+          throw new CustomError({ message: 'Usuário já registrado', code: 409 });
         }
         throw new CustomError({ message: err.message, code: 500 });
       });
@@ -57,7 +57,7 @@ const deleteUser = rescue(async (req, res) => {
   if (!id) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
   return Users.destroy({ where: { id } })
     .then((data) => {
-      if (data === 1) return res.status(200).json('Usuário deletado.');
+      if (data === 1) return res.status(204).json('Usuário deletado.');
       throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
     })
     .catch((err) => {
@@ -76,8 +76,8 @@ const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
       throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
     });
   })
-  .catch(() => {
-    throw new CustomError({ message: 'Campos inválidos', code: 400 });
+  .catch((err) => {
+    throw new CustomError({ message: err.message, code: 400 });
   }));
 
 module.exports = {

@@ -5,10 +5,10 @@ module.exports = {
         allowNull: false, autoIncrement: true, primaryKey: true, type: Sequelize.BIGINT,
       },
       published: {
-        allowNull: false, type: Sequelize.STRING,
+        allowNull: false, type: Sequelize.DATE,
       },
       updated: {
-        allowNull: false, type: Sequelize.STRING,
+        allowNull: false, type: Sequelize.DATE,
       },
       title: {
         allowNull: false, type: Sequelize.STRING,

@@ -12,7 +12,7 @@ const createPost = rescue(async (req, res) => {
   const { id: userId } = user;
   return postValidation.validateAsync({ title, content })
     .then(() => Posts.create({ title, content, userId })
-      .then((data) => res.status(200).json(data.dataValues))
+      .then((data) => res.status(201).json(data.dataValues))
       .catch((err) => {
         throw new CustomError({ message: err.message, code: err.code });
       }))
@@ -24,14 +24,16 @@ const createPost = rescue(async (req, res) => {
 const getPosts = rescue(async (req, res) => {
   const { id: postId } = req.params ? req.params : null;
   const posts = await Posts
-    .findAll(postId ? { where: { id: postId } } : undefined).then((data) => data)
+    .findAll(postId ? { where: { id: postId } } : undefined)
+    .then((data) => data)
     .catch((err) => {
       throw new CustomError({ message: err.message, code: 500 });
     });
 
-  if (postId && posts.length === 0) throw new CustomError({ message: 'Nenhum post encontrado', code: 404 });
+  if (postId && posts.length === 0) throw new CustomError({ message: 'Post não existe', code: 404 });
 
   const postData = posts.map((post) => post.dataValues);
+
   const fetchUserData = postData.map(
     async ({ id, published, updated, title, content, userId }) => {
       const userData = async () => Users.findOne(
@@ -41,13 +43,15 @@ const getPosts = rescue(async (req, res) => {
         .catch((err) => {
           throw new CustomError({ message: err.message, code: 500 });
         });
-      const user = { userId, displayName, email, image };
+      const user = { id: userId, displayName, email, image };
       const newPost = { id, published, updated, title, content, user };
       return newPost;
     },
   );
   const postWithUserData = await Promise.all(fetchUserData).then((data) => data);
-  res.status(200).json(postWithUserData);
+  res.status(200).json(postWithUserData.length === 1
+    ? postWithUserData[0]
+    : postWithUserData);
 });
 
 const updatePost = rescue(async (req, res) => {
@@ -55,15 +59,15 @@ const updatePost = rescue(async (req, res) => {
   const { id: userId } = user;
   const { id: postId } = req.params;
 
-  const { user_id: currentAuthorId } = await Posts.findOne(
+  const { userId: currentAuthorId } = await Posts.findOne(
     { where: { id: postId } },
   ).then((data) => data.dataValues);
 
-  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode editar posts.', code: 403 });
+  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode editar posts.', code: 401 });
 
   return postValidation.validateAsync({ title, content })
     .then(() => Posts.update(
-      { title, content, userId },
+      { title, content },
       { where: { id: postId } },
     )
       .then(() => res.status(200).json({ message: 'Post atualizado com sucesso.' }))
@@ -109,14 +113,14 @@ const deletePosts = rescue(async (req, res) => {
 
   const { user: { id: userId } } = req;
 
-  const { user_id: currentAuthorId } = await Posts.findOne(
+  const { userId: currentAuthorId } = await Posts.findOne(
     { where: { id: postId } },
   ).then((data) => data.dataValues);
 
-  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode deletar posts.', code: 403 });
+  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode deletar posts.', code: 401 });
 
   await Posts.destroy({ where: { id: postId } })
-    .then(() => res.status(200).json({ message: 'Post deletado com sucesso' }))
+    .then(() => res.status(204).json({ message: 'Post deletado com sucesso' }))
     .catch((err) => {
       throw new CustomError({ message: err.message, code: err.code });
     });

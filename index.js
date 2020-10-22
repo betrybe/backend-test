@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const rescue = require('express-rescue');
+const { JsonWebTokenError } = require('jsonwebtoken');
 const userRouter = require('./routers/userRouter');
 const CustomError = require('./services/errorScheme');
 const postsRouter = require('./routers/postsRouter');
@@ -20,17 +21,23 @@ app.use('/post', postsRouter);
 app.post('/login', login);
 
 app.use(rescue.from(
-  CustomError,
+  JsonWebTokenError,
   (err, req, res, next) => {
-    const { message: { message, code } } = err;
-    console.log(message, code);
-    res.status(code).json({ error: message });
+    res.status(401).json({ message: 'Token expirado ou inválido', code: 401 });
     next();
   },
 ));
 
-app.use((err, _req, res, next) => {
-  res.status(err.code).json({ error: { message: err.message } });
+app.use(rescue.from(
+  CustomError,
+  (err, req, res, next) => {
+    res.status(err.code).json(err);
+    next();
+  },
+));
+
+app.use((err, req, res, next) => {
+  res.status(err).json(err);
   next();
 });
 
