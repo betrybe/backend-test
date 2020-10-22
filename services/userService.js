@@ -18,7 +18,9 @@ const createUser = ({ Users }, generateJWT, config) => async (
 const userLogin = ({ Users }, generateJWT, config) => async (email) => {
   const user = await Users.findAll({ where: { email }, raw: true });
 
-  if (!user[0].id) {
+  const userExists = user.length > 0;
+
+  if (!userExists) {
     return { errors: { message: 'Campos inválidos' } };
   }
 
