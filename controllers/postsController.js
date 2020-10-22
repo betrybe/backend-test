@@ -73,7 +73,7 @@ const updatePost = rescue(async (req, res) => {
         throw new CustomError({ message: err.message, code: err.code });
       }))
     .catch((err) => {
-      throw new CustomError({ message: err.message, code: err.code });
+      throw new CustomError({ message: err.message, code: err.code || 400 });
     });
 });
 

@@ -72,7 +72,7 @@ const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
         const newToken = token(data.dataValues);
         return res.status(200).json({ token: newToken });
       }
-      throw new CustomError({ message: 'Usuário não existe', code: 400 });
+      throw new CustomError({ message: 'Campos inválidos', code: 400 });
     })
     .catch((err) => {
       throw new CustomError({ message: err.message, code: err.code });
