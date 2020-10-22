@@ -8,7 +8,8 @@ usersRouter
   .post('/', usersControllers.register)
   // .get('/', usersControllers.getUserByEmail)
   .get('/', middlewares.auth(), usersControllers.getAll)
-  .get('/:id', middlewares.auth(), usersControllers.getUserById)
-  .delete('/me', middlewares.auth(), usersControllers.deleteUser);
+  .delete('/me', middlewares.auth(), usersControllers.deleteUser)
+  .get('/test', (req, res) => res.status(200).json(null))
+  .get('/:id', middlewares.auth(), usersControllers.getUserById);
 
 module.exports = usersRouter;

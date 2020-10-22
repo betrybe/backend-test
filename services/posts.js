@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const { User, Post } = require('../models');
 const shapes = require('../utils/shapes');
+const { getDataValues } = require('../utils/models');
 
 const validate = ({ title, content }) => Joi
   .object({ title: shapes.title, content: shapes.content })
@@ -17,13 +18,15 @@ const getAllPosts = async () => Post.findAll(
 )
   .then((res) => res && res.map(({ dataValues }) => dataValues));
 
+const getUserFromPost = async (post) => post.getUser()
+  .then(({ dataValues: { password, ...user } }) => user);
+
 const getPostById = (id) => Post.findByPk(id)
-  .then((res) => {
-    if (res) {
-      const { dataValues: { updated, published, id: i, ...post } } = res.dataValues;
-      return post;
-    }
-    return { message: 'Post não existe' };
+  .then(async (post) => post && ({ ...getDataValues(post, ['userId']), user: await getUserFromPost(post) }))
+  .then((post) => {
+    if (!post) return { message: 'Post não existe' };
+    const { userId, ...filteredPost } = post;
+    return filteredPost;
   });
 
 const updatePostById = (id, { title, content }, userId) => Post.findByPk(id)
