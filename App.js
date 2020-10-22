@@ -15,7 +15,7 @@ const start = async () => {
   });
 
   app.use('/user', Routers.users);
-  // app.use('/login', Routers.login);
+  app.use('/login', Routers.login);
   // app.use('/post', Routers.post);
 
   app.use(middlewares.error);
