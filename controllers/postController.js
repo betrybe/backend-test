@@ -69,7 +69,7 @@ const updatePost = rescue(async (req, res, next) => {
   return res.status(200).json(updatedPost[0].dataValues);
 });
 
-const getPostsByQuery = rescue(async (req, res, next) => {
+const getPostsByQuery = rescue(async (req, res, _next) => {
   const { q } = req.query;
 
   const getAllByQuery = await Posts.findAll({
