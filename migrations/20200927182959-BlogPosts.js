@@ -17,7 +17,11 @@ module.exports = {
         allowNull: false, type: Sequelize.TEXT,
       },
       userId: {
-        allowNull: false, type: Sequelize.STRING,
+        allowNull: false,
+        type: Sequelize.BIGINT,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        references: { model: 'Users', key: 'id' },
       },
     });
 

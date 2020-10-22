@@ -12,7 +12,7 @@ const validateJWT = async (req, res, next) => {
   const decoded = jwt.verify(token, 'chavesecreta');
 
   if (decoded === 'invalid signature 401'
-    || decoded === 'jwt malformed 401') throw new CustomError({ message: { message: 'Token expirado ou inválido', code: 401 } });
+    || decoded === 'jwt malformed 401') throw new CustomError({ message: 'Token expirado ou inválido', code: 401 });
 
   const { data: { id } } = decoded;
 

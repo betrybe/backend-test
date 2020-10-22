@@ -23,8 +23,14 @@ const createPost = rescue(async (req, res) => {
 
 const getPosts = rescue(async (req, res) => {
   const { id: postId } = req.params ? req.params : null;
+  const attributes = { include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] };
   const posts = await Posts
-    .findAll(postId ? { where: { id: postId } } : undefined)
+    .findAll(
+      (postId
+        ? { where: { id: postId }, ...attributes }
+        : { ...attributes }
+      ),
+    )
     .then((data) => data)
     .catch((err) => {
       throw new CustomError({ message: err.message, code: 500 });
@@ -32,26 +38,26 @@ const getPosts = rescue(async (req, res) => {
 
   if (postId && posts.length === 0) throw new CustomError({ message: 'Post não existe', code: 404 });
 
-  const postData = posts.map((post) => post.dataValues);
+  // const postData = posts.map((post) => post.dataValues);
 
-  const fetchUserData = postData.map(
-    async ({ id, published, updated, title, content, userId }) => {
-      const userData = async () => Users.findOne(
-        { where: { id: userId } },
-      );
-      const { displayName, email, image } = await userData()
-        .catch((err) => {
-          throw new CustomError({ message: err.message, code: 500 });
-        });
-      const user = { id: userId, displayName, email, image };
-      const newPost = { id, published, updated, title, content, user };
-      return newPost;
-    },
-  );
-  const postWithUserData = await Promise.all(fetchUserData).then((data) => data);
-  res.status(200).json(postWithUserData.length === 1
-    ? postWithUserData[0]
-    : postWithUserData);
+  // const fetchUserData = postData.map(
+  //   async ({ id, published, updated, title, content, userId }) => {
+  //     const userData = async () => Users.findOne(
+  //       { where: { id: userId } },
+  //     );
+  //     const { displayName, email, image } = await userData()
+  //       .catch((err) => {
+  //         throw new CustomError({ message: err.message, code: 500 });
+  //       });
+  //     const user = { id: userId, displayName, email, image };
+  //     const newPost = { id, published, updated, title, content, user };
+  //     return newPost;
+  //   },
+  // );
+  // const postWithUserData = await Promise.all(fetchUserData).then((data) => data);
+  res.status(200).json(posts.length === 1
+    ? posts[0]
+    : posts);
 });
 
 const updatePost = rescue(async (req, res) => {

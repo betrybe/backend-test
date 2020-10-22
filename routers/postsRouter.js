@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.use(rescue(validateJWT));
 
-router.use((err, req, res, next) => {
+router.use((err, _req, _res, _next) => {
   throw new CustomError({ message: err.message, code: 401 });
 });
 

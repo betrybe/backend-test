@@ -31,6 +31,9 @@ app.use(rescue.from(
 app.use(rescue.from(
   CustomError,
   (err, req, res, next) => {
+    if (err.message === 'jwt malformed'
+      || err.message === 'invalid signature') return res.status(401).json({ message: 'Token expirado ou inválido', code: 401 });
+
     res.status(err.code).json(err);
     next();
   },
