@@ -60,10 +60,10 @@ const deletePost = rescue(async (req, res) => {
   return res.status(204).end();
 });
 
-const search = rescue(async () => {
+const search = rescue(async (req, res) => {
   const { q } = req.query;
-
-  if ()
+  const posts = await Post.search(q);
+  return res.status(200).json(posts);
 });
 
 module.exports = {

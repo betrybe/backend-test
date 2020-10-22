@@ -6,7 +6,6 @@ const usersRouter = express.Router();
 
 usersRouter
   .post('/', usersControllers.register)
-  // .get('/', usersControllers.getUserByEmail)
   .get('/', middlewares.auth(), usersControllers.getAll)
   .delete('/me', middlewares.auth(), usersControllers.deleteUser)
   .get('/test', (req, res) => res.status(200).json(null))
