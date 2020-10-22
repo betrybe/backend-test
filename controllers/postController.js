@@ -1,4 +1,5 @@
 const rescue = require('express-rescue');
+const sequelize = require('sequelize');
 const { Users } = require('../models');
 const { Posts } = require('../models');
 
@@ -53,9 +54,25 @@ const updatePost = rescue(async (req, res) => {
   const { id: uId } = (await Users.findAll({ where: { email } }))[0];
   if (userId !== uId) return res.status(401).json({ message: 'Usuário não autorizado' });
   const isPostValid = validatePost(title, content);
-  if (isPostValid) return res.status(isPostValid.code).json({message: isPostValid.message});
+  if (isPostValid) return res.status(isPostValid.code).json({ message: isPostValid.message });
   Posts.update({ title, content }, { where: { id } })
     .then(() => res.status(200).json({ title, content, userId: uId }));
+});
+
+const searchTerm = rescue(async (req, res) => {
+  const { Op } = sequelize;
+  const { q } = req.query;
+  const allPosts = await Posts.findAll();
+
+  if (!q) return res.status(200).json(allPosts);
+
+  const searchTermByTitle = (await Posts.findAll({ where: { title: { [Op.like]: q } } }));
+  if (searchTermByTitle) return res.status(200).json(searchTermByTitle);
+
+  const searchTermByContent = (await Posts.findAll({ where: { content: { [Op.like]: q } } }));
+  if (searchTermByContent) return res.status(200).json(searchTermByContent);
+  console.log('title', searchTermByTitle);
+  if (!searchTermByTitle && !searchTermByContent) return res.status(200).json([]);
 });
 
 module.exports = {
@@ -63,4 +80,5 @@ module.exports = {
   getAllPosts,
   getPostById,
   updatePost,
+  searchTerm,
 };
