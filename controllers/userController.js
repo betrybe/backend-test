@@ -65,7 +65,7 @@ userActions.post('/', async (req, res) => {
     .then((response) => response)
     .catch((e) => {
       console.log(e.message);
-      res.status(500).send({ message: 'Algo deu errado' });
+      return res.status(500).send({ message: 'Algo deu errado' });
     });
   if (emailAlreadyExists) {
     return res.status(409).send({ message: 'Usuário já existe' });
@@ -75,11 +75,11 @@ userActions.post('/', async (req, res) => {
   User.create({ displayName, email, password, image })
     .then(() => {
       const token = JWT.sign({ email, password }, secret, jwtConfig);
-      res.status(201).json({ token });
+      return res.status(201).json({ token });
     })
     .catch((e) => {
       console.log(e.message);
-      res.status(500).send({ message: 'Algo deu errado' });
+      return res.status(500).send({ message: 'Algo deu errado' });
     });
 });
 
@@ -88,7 +88,7 @@ userActions.get('/', authMiddleware, async (req, res) => {
     .then((result) => res.status(200).send(result))
     .catch((e) => {
       console.log(e.message);
-      res.status(500).send({ message: 'Algo deu errado' });
+      return res.status(500).send({ message: 'Algo deu errado' });
     });
 });
 
@@ -103,7 +103,16 @@ userActions.get('/:id', authMiddleware, async (req, res) => {
     })
     .catch((e) => {
       console.log(e.message);
-      res.status(500).send({ message: 'Algo deu errado' });
+      return res.status(500).send({ message: 'Algo deu errado' });
+    });
+});
+
+userActions.delete('/me', authMiddleware, async (req, res) => {
+  User.destroy({ where: { email: req.user.email } })
+    .then(() => res.status(204).end())
+    .catch((e) => {
+      console.log(e.message);
+      return res.status(500).send({ message: 'Algo deu errado' });
     });
 });
 
