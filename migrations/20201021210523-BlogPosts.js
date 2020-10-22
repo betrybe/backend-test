@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, DataTypes) => {
-    const BlogPostsTable = queryInterface.createTable('BlogPosts', {
+    const BlogPostsTable = queryInterface.createTable('Posts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,7 +18,9 @@ module.exports = {
       userId: {
         allowNull: true,
         type: DataTypes.INTEGER,
-        reference: { model: 'user', key: 'id' },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        references: { model: 'Users', key: 'id' },
       },
       published: {
         type: DataTypes.DATE,
@@ -30,7 +32,5 @@ module.exports = {
     return BlogPostsTable;
   },
 
-  down: (queryInterface) => {
-    queryInterface.dropTable('BlogPosts');
-  },
+  down: (queryInterface) => queryInterface.dropTable('Posts'),
 };
