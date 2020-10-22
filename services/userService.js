@@ -29,9 +29,12 @@ const userLogin = ({ Users }, generateJWT, config) => async (email) => {
   return generateJWT(data, config);
 };
 
+const getAllUsers = ({ Users }) => async () => Users.findAll();
+
 const getUserService = (models, generateJWT, config) => ({
   createUser: createUser(models, generateJWT, config),
   userLogin: userLogin(models, generateJWT, config),
+  getAllUsers: getAllUsers(models),
 });
 
 module.exports = { getUserService };

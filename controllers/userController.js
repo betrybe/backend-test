@@ -26,9 +26,17 @@ const userLogin = (service) =>
     res.status(200).json(user);
   });
 
+const getAllUsers = (service) =>
+  rescue(async (_req, res) => {
+    const users = await service.getAllUsers();
+
+    res.status(200).json(users);
+  });
+
 const getUserController = (service) => ({
   createUser: createUser(service),
   userLogin: userLogin(service),
+  getAllUsers: getAllUsers(service),
 });
 
 module.exports = { getUserController };

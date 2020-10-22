@@ -21,7 +21,7 @@ const factory = async (config) => {
   const userController = getUserController(userService);
   const validateJWT = getValidateJWT(models, config);
 
-  app.get('/user', validateJWT, userController.createUser);
+  app.get('/user', validateJWT, userController.getAllUsers);
   app.post('/user', validateCreateUserEntries, userController.createUser);
   app.post('/login', validateUserLoginEntries, userController.userLogin);
 
