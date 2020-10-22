@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 
 const { User, Post } = require('../models');
 const shapes = require('../utils/shapes');
