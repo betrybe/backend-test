@@ -48,23 +48,32 @@ const updatePost = rescue(async (req, res) => {
   const { id: userId } = user;
   const { id: postId } = req.params;
 
-  const { userId: currentAuthorId } = await Posts.findOne(
+  const getPost = () => Posts.findOne(
     { where: { id: postId } },
-  ).then((data) => data.dataValues);
+  )
+    .then((data) => {
+      if (!data) throw new CustomError({ message: 'Post não existe', code: 404 });
+      return data.dataValues;
+    })
+    .catch((err) => {
+      throw new CustomError({ message: err.message, code: err.code });
+    });
 
-  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode editar posts.', code: 401 });
+  const postData = await getPost();
+
+  if (Number(postData.userId) !== Number(userId)) throw new CustomError({ message: 'Usuário não autorizado', code: 401 });
 
   return postValidation.validateAsync({ title, content })
     .then(() => Posts.update(
       { title, content },
       { where: { id: postId } },
     )
-      .then(() => res.status(200).json({ message: 'Post atualizado com sucesso.' }))
+      .then(async () => res.status(200).json(await getPost()))
       .catch((err) => {
         throw new CustomError({ message: err.message, code: err.code });
       }))
     .catch((err) => {
-      throw new CustomError({ message: err.message, code: 400 });
+      throw new CustomError({ message: err.message, code: err.code });
     });
 });
 
@@ -83,12 +92,10 @@ const searchPosts = rescue(async (req, res) => {
     },
   ).then((data) => data.map(({ dataValues }) => dataValues))
     .catch((err) => {
-      throw new CustomError({ message: err.message, code: 500 });
+      throw new CustomError({ message: err.message, code: err.code });
     });
 
-  return res.status(200).json(posts.length === 1
-    ? posts[0]
-    : posts);
+  return res.status(200).json(posts);
 });
 
 const deletePosts = rescue(async (req, res) => {
@@ -101,7 +108,7 @@ const deletePosts = rescue(async (req, res) => {
       throw new CustomError({ message: err.message, code: 500 });
     });
 
-  if (postId && posts.length === 0) throw new CustomError({ message: 'Nenhum post encontrado', code: 404 });
+  if (postId && posts.length === 0) throw new CustomError({ message: 'Post não existe', code: 404 });
 
   const { user: { id: userId } } = req;
 
@@ -109,7 +116,7 @@ const deletePosts = rescue(async (req, res) => {
     { where: { id: postId } },
   ).then((data) => data.dataValues);
 
-  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Só o autor pode deletar posts.', code: 401 });
+  if (Number(currentAuthorId) !== Number(userId)) throw new CustomError({ message: 'Usuário não autorizado', code: 401 });
 
   await Posts.destroy({ where: { id: postId } })
     .then(() => res.status(204).json({ message: 'Post deletado com sucesso' }))

@@ -21,19 +21,19 @@ const addUser = rescue(async (req, res) => userValidation.validateAsync(req.body
       })
       .catch((err) => {
         if (err.parent && err.parent.errno === 1062) {
-          throw new CustomError({ message: 'Usuário já registrado', code: 409 });
+          throw new CustomError({ message: 'Usuário já existe', code: 409 });
         }
-        throw new CustomError({ message: err.message, code: 500 });
+        throw new CustomError({ message: err.message, code: err.code });
       });
   })
-  .catch(({ message }) => {
-    throw new CustomError({ message, code: 400 });
+  .catch(({ message, code }) => {
+    throw new CustomError({ message, code });
   }));
 
 const findAllUsers = rescue(async (req, res) =>
   Users.findAll().then(
     (users) => {
-      if (!users) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
+      if (!users) throw new CustomError({ message: 'Usuário não existe', code: 404 });
       return res.status(200).json(users);
     },
   )
@@ -44,7 +44,7 @@ const findAllUsers = rescue(async (req, res) =>
 const findUserById = rescue(async (req, res) =>
   Users.findOne({ where: { id: req.params.id } }).then(
     (user) => {
-      if (!user) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
+      if (!user) throw new CustomError({ message: 'Usuário não existe', code: 404 });
       res.status(200).json(user);
     },
   )
@@ -54,11 +54,11 @@ const findUserById = rescue(async (req, res) =>
 
 const deleteUser = rescue(async (req, res) => {
   const { user: { id } } = req;
-  if (!id) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
+  if (!id) throw new CustomError({ message: 'Usuário não existe', code: 404 });
   return Users.destroy({ where: { id } })
     .then((data) => {
       if (data === 1) return res.status(204).json('Usuário deletado.');
-      throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
+      throw new CustomError({ message: 'Usuário não existe', code: 404 });
     })
     .catch((err) => {
       throw new CustomError({ message: err.message, code: 500 });
@@ -66,18 +66,20 @@ const deleteUser = rescue(async (req, res) => {
 });
 
 const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
-  .then(() => {
-    Users.findOne({ where: { email: req.body.email } }).then((data) => {
-      if (!data) throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
+  .then(() => Users.findOne({ where: { email: req.body.email } })
+    .then((data) => {
+      if (!data) throw new CustomError({ message: 'Usuário não existe', code: 400 });
       if (data && data.dataValues) {
         const newToken = token(data.dataValues);
         return res.status(200).json({ token: newToken });
       }
-      throw new CustomError({ message: 'Usuário não encontrado', code: 404 });
-    });
-  })
+      throw new CustomError({ message: 'Usuário não existe', code: 400 });
+    })
+    .catch((err) => {
+      throw new CustomError({ message: err.message, code: err.code });
+    }))
   .catch((err) => {
-    throw new CustomError({ message: err.message, code: 400 });
+    throw new CustomError({ message: err.message, code: err.code });
   }));
 
 module.exports = {

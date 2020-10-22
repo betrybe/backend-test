@@ -8,7 +8,10 @@ const userValidation = Joi.object({
   email: Joi.string()
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}.*$'))
     .required()
-    .error(new Error('"email" must be a valid email')),
+    .messages({
+      'string.pattern': '"email" must be a valid email',
+      'any.required': '"email" is reuqired',
+    }),
 
   password: Joi.string()
     .min(6)
