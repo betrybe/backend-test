@@ -1,9 +1,9 @@
 const express = require('express');
-const middlewares = require('../middlewares');
-// const { usersControllers } = require('../controllers');
 
-const login = express.Router();
+const makeRouter = (_, middlewares) => {
+  const login = express.Router();
+  login.post('/', middlewares.login);
+  return login;
+};
 
-login.post('/', middlewares.login);
-
-module.exports = login;
+module.exports = makeRouter;

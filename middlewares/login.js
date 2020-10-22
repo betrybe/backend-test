@@ -1,9 +1,7 @@
 const rescue = require('express-rescue');
 const Boom = require('boom');
 
-const { Token, User } = require('../services');
-
-module.exports = rescue(async (req, res, next) => {
+module.exports = ({ User, Token }) => rescue(async (req, res, next) => {
   const { email, password } = req.body;
 
   const { message } = await User.validateUserLogin({ email, password });

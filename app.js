@@ -1,10 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const middlewares = require('./middlewares');
-const Routers = require('./routers');
-
-const start = async () => {
+const start = async (Routers, config, middlewares) => {
   const app = express();
 
   app.use((req, _res, next) => {
@@ -15,7 +12,7 @@ const start = async () => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  const { PORT = 3000 } = process.env;
+  const { PORT = 3000 } = config;
 
   // não remova esse endpoint, e para o avaliador funcionar
   app.get('/', (_request, response) => response.send());
