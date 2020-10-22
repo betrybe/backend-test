@@ -13,6 +13,7 @@ const start = async () => {
   });
 
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   const { PORT = 3000 } = process.env;
 

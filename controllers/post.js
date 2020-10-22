@@ -35,8 +35,7 @@ const updatePost = rescue(async (req, res, next) => {
   const { message } = await Post.validate({ title, content });
   if (message) return next(Boom.badRequest(message));
 
-  const updatedPost = await Post.updatePostById(id, { title, content });
-  if (updatedPost.message) return next(Boom.unauthorized(updatedPost.message));
+  await Post.updatePostById(id, { title, content });
 
   return res.status(203).json({ title, content, userId });
 });
@@ -61,6 +60,12 @@ const deletePost = rescue(async (req, res) => {
   return res.status(204).end();
 });
 
+const search = rescue(async () => {
+  const { q } = req.query;
+
+  if ()
+});
+
 module.exports = {
   createPost,
   getAllPosts,
@@ -68,4 +73,5 @@ module.exports = {
   updatePost,
   deletePost,
   userOwnerShip,
+  search,
 };
