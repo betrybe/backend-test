@@ -92,6 +92,21 @@ userActions.get('/', authMiddleware, async (req, res) => {
     });
 });
 
+userActions.get('/:id', authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  User.findOne({ where: { id } })
+    .then((result) => {
+      if (result) {
+        return res.status(200).send(result);
+      }
+      return res.status(404).send({ message: 'Usuário não existe' });
+    })
+    .catch((e) => {
+      console.log(e.message);
+      res.status(500).send({ message: 'Algo deu errado' });
+    });
+});
+
 module.exports = {
   configValidade,
   secret,
