@@ -6,11 +6,10 @@ const userValidation = Joi.object({
     .required(),
 
   email: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}.*$'))
+    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}.*$')).message('"email" must be a valid email')
     .required()
     .messages({
-      'string.pattern': '"email" must be a valid email',
-      'any.required': '"email" is reuqired',
+      'any.required': '"email" is required',
     }),
 
   password: Joi.string()
@@ -18,6 +17,7 @@ const userValidation = Joi.object({
     .required()
     .messages({
       'string.min': '"password" length must be {#limit} characters long',
+      'any.required': '"password" is required',
     }),
 
   image: Joi.string()
@@ -27,12 +27,19 @@ const userValidation = Joi.object({
 
 const loginValidation = Joi.object({
   email: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}.*$'))
-    .required(),
+    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}@[a-zA-Z0-9]{3,30}.*$')).message('"email" must be a valid email')
+    .required()
+    .messages({
+      'any.required': '"email" is required',
+    }),
 
   password: Joi.string()
     .min(6)
-    .required(),
+    .required()
+    .messages({
+      'string.min': '"password" length must be {#limit} characters long',
+      'any.required': '"password" is required',
+    }),
 });
 
 const postValidation = Joi.object({
