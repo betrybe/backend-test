@@ -60,11 +60,11 @@ const deletePost = rescue(async (req, res) => {
   return res.status(204).end();
 });
 
-// const search = rescue(async () => {
-//   const { q } = req.query;
-
-//   if ()
-// });
+const search = rescue(async (req, res) => {
+  const { q } = req.query;
+  const posts = await Post.search(q);
+  res.status(200).json(posts);
+});
 
 module.exports = {
   createPost,
@@ -73,5 +73,5 @@ module.exports = {
   updatePost,
   deletePost,
   userOwnerShip,
-  // search,
+  search,
 };
