@@ -106,10 +106,16 @@ const getUserById = rescue(async (req, res) => {
     : res.status(200).json(user)));
 });
 
+const deleteSelfUser = rescue(async (req, res) => {
+  const { email } = req.user;
+  Users.destroy({ where: { email } }).then(() => res.status(204).json());
+});
+
 module.exports = {
   createNewUser,
   userLogin,
   secret,
   getAllUsers,
   getUserById,
+  deleteSelfUser,
 };
