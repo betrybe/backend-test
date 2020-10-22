@@ -1,13 +1,22 @@
-const createUser = ({ User }) => (displayName, email, password, image) => {
-  const user = User.create({ displayName, email, password, image });
+const createUser = ({ Users }, generateJWT, config) => async (
+  displayName,
+  email,
+  password,
+  image,
+) => {
+  try {
+    const user = await Users.create({ displayName, email, password, image });
 
-  console.log(user);
+    const { _password, ...data } = user;
 
-  return user;
+    return generateJWT(data, config);
+  } catch (err) {
+    return err;
+  }
 };
 
-const getUserService = (models) => ({
-  createUser: createUser(models),
+const getUserService = (models, generateJWT, config) => ({
+  createUser: createUser(models, generateJWT, config),
 });
 
 module.exports = { getUserService };

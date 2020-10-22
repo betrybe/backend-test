@@ -6,6 +6,10 @@ const createUser = (service) =>
 
     const user = await service.createUser(displayName, email, password, image);
 
+    if (user.errors) {
+      return res.status(409).json({ message: 'Usuário já existe' });
+    }
+
     res.status(201).json(user);
   });
 

@@ -2,7 +2,7 @@ const app = require('./app');
 const config = require('./config');
 
 app
-  .factory()
+  .factory(config)
   .then((appIntance) => {
     appIntance.listen(config.port, () => {
       console.log(`Ouvindo a porta ${config.port}`);
