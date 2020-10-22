@@ -3,9 +3,10 @@ const SECRET = require('./SECRET');
 
 const validateToken = (req, res, next) => {
   try {
-    const header = req.headers.authorization;
-    const bearer = header.split(' ');
-    const token = bearer[1];
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'Token não encontrado' });
+    }
     jwt.verify(token, SECRET, (err, userData) => {
       if (err) {
         return res.status(401).json({ message: 'Token expirado ou inválido' });
