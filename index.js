@@ -7,6 +7,11 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (request, response) => {
+  response.send();
+});
+
 app.post('/user', controllers.userController.registerUser);
 app.post('/login', controllers.userController.userLogin);
 app.get('/user/:id', jwtMiddleware, controllers.userController.getUserById);
@@ -23,8 +28,3 @@ app.all('*', (_req, res) => res.status(404).json({ message: 'page not found' }))
 app.use(errorMiddleware);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
-
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (request, response) => {
-  response.send();
-});
