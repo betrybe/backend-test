@@ -26,5 +26,6 @@ module.exports = rescue(async (req, _res, next) => {
   if (!user) return next(Boom.notFound('Usuário não encontrado!'));
 
   req.user = user[0].dataValues;
+
   next();
 });
