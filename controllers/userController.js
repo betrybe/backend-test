@@ -39,7 +39,7 @@ const getUserByEmail = rescue(async (req, res, next) => {
 });
 
 const getUserById = rescue(async (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   const user = await User.getUserById(id);
 
