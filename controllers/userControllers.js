@@ -23,11 +23,11 @@ const addUser = rescue(async (req, res) => userValidation.validateAsync(req.body
         if (err.parent && err.parent.errno === 1062) {
           throw new CustomError({ message: 'Usuário já existe', code: 409 });
         }
-        throw new CustomError({ message: err.message, code: err.code });
+        throw new CustomError({ message: err.message, code: 500 });
       });
   })
   .catch(({ message, code }) => {
-    throw new CustomError({ message, code });
+    throw new CustomError({ message, code: code || 400 });
   }));
 
 const findAllUsers = rescue(async (req, res) =>
@@ -76,10 +76,10 @@ const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
       throw new CustomError({ message: 'Usuário não existe', code: 400 });
     })
     .catch((err) => {
-      throw new CustomError({ message: err.message, code: err.code });
+      throw new CustomError({ message: err.message, code: 500 });
     }))
   .catch((err) => {
-    throw new CustomError({ message: err.message, code: err.code });
+    throw new CustomError({ message: err.message, code: err.code || 400 });
   }));
 
 module.exports = {
