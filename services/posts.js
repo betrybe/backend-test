@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const { Op } = require("sequelize");
 
 const { User, Post } = require('../models');
 const shapes = require('../utils/shapes');
@@ -33,17 +32,7 @@ const getPostById = (id) => Post.findByPk(id)
 const updatePostById = (id, { title: t, content: c }) => Post
   .update({ title: t, content: c }, { where: { id } });
 
-const deletePostById = async (id) => Post.destroy({ where: { id } });
-
-const search = async (q) => {
-  const condition = { [Op.substring]: q };
-  return Post.findAll({
-    where: {
-      [Op.or]: [{ title: condition }, { content: condition }],
-    },
-    include: { model: User, as: 'user', attributes: { exclude: ['password'] } },
-  }).then((posts) => posts.map(({ dataValues }) => dataValues));
-};
+const deletePostById = (id) => Post.destroy({ where: { id } });
 
 module.exports = {
   validate,
@@ -52,5 +41,4 @@ module.exports = {
   getPostById,
   updatePostById,
   deletePostById,
-  search,
 };
