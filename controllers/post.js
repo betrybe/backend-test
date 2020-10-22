@@ -21,25 +21,24 @@ const getAllPosts = rescue(async (_req, res) => {
 
 const getPostById = rescue(async (req, res, next) => {
   const { id } = req.params;
-
   const post = await Post.getPostById(id);
-  if (post.message) return next(Boom.badRequest(post.message));
+  if (post.message) return next(Boom.notFound(post.message));
 
-  return res.status(200).json({ post });
+  return res.status(200).json({ ...post });
 });
 
 const updatePost = rescue(async (req, res, next) => {
-  const { id: userId } = req.user;
   const { id } = req.params;
   const { title, content } = req.body;
+  const { user: { id: userId } } = req.post;
 
   const { message } = await Post.validate({ title, content });
   if (message) return next(Boom.badRequest(message));
 
-  const updatedPost = await Post.updatePostById(id, { title, content }, userId);
+  const updatedPost = await Post.updatePostById(id, { title, content });
   if (updatedPost.message) return next(Boom.unauthorized(updatedPost.message));
 
-  return res.status(203).json({ ...updatedPost });
+  return res.status(203).json({ title, content, userId });
 });
 
 const userOwnerShip = (restrict = true) => rescue(async (req, _res, next) => {
@@ -47,7 +46,7 @@ const userOwnerShip = (restrict = true) => rescue(async (req, _res, next) => {
   const { id } = req.params;
 
   const post = await Post.getPostById(id);
-  if (!post) return next(Boom.notFound(post.message));
+  if (post.message) return next(Boom.notFound(post.message));
   if (post.user.id !== userId && restrict) {
     return next(Boom.unauthorized('Usuário não autorizado'));
   }

@@ -6,11 +6,9 @@ const register = rescue(async (req, res, next) => {
   const { displayName, email, image, password } = req.body;
 
   const { message } = await User.validateUserRegister({ email, password, displayName });
-
   if (message) return next(Boom.badRequest(message));
 
   const { message: errMessageEmail } = await User.isEmailAvaible(email);
-
   if (errMessageEmail) return next(Boom.conflict(errMessageEmail));
 
   const user = await User.createUser({ displayName, email, image, password });
@@ -28,18 +26,16 @@ const getUserByEmail = rescue(async (req, res, next) => {
   const { email } = req.body;
 
   const { message } = await User.validateUserEmail({ email });
-
   if (!message) return next(Boom.badRequest(message));
 
   const user = await User.getUserByEmail(email);
-
   if (!user) return Boom.notFound('Usuário não encontrado');
 
   return res.status(200).json({ ...user });
 });
 
 const getUserById = rescue(async (req, res, next) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   const user = await User.getUserById(id);
 
@@ -56,6 +52,7 @@ const getAll = rescue(async (_req, res) => {
 
 const deleteUser = rescue(async (req, res) => {
   const { id } = req.user;
+  console.log('user delete controller', req.user);
   await User.deleteUser(id);
   res.status(204).end();
 });

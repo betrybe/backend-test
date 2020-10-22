@@ -7,6 +7,11 @@ const Routers = require('./routers');
 const start = async () => {
   const app = express();
 
+  app.use((req, _res, next) => {
+    console.log(req.method, req.path);
+    next();
+  });
+
   app.use(bodyParser.json());
 
   const { PORT = 3000 } = process.env;

@@ -9,7 +9,9 @@ module.exports = {
       allowNull: false,
       type: Sequelize.INTEGER,
       foreignKey: true,
-      references: { model: 'Users', key: 'id', onUpdate: 'CASCADE', onDelete: 'CASCADE' },
+      onUpdate: 'cascade',
+      onDelete: 'cascade',
+      references: { model: 'Users', key: 'id' },
     },
   }),
 

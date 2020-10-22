@@ -29,14 +29,8 @@ const getPostById = (id) => Post.findByPk(id)
     return filteredPost;
   });
 
-const updatePostById = (id, { title, content }, userId) => Post.findByPk(id)
-  .then((post) => {
-    const user = post.getUser().then(({ password, ...creater }) => creater);
-    const updatedPost = user.id === userId && post.update({ title, content });
-    if (!updatedPost) return { message: 'Usuário não autorizado' };
-
-    return { ...updatedPost.dataValues, user };
-  });
+const updatePostById = (id, { title: t, content: c }) => Post
+  .update({ title: t, content: c }, { where: { id } });
 
 const deletePostById = (id) => Post.destroy({ where: { id } });
 
