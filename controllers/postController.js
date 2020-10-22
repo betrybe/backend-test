@@ -35,7 +35,17 @@ const getAllPosts = rescue(async (req, res) => {
   res.status(200).json(allPosts);
 });
 
+const getPostById = rescue(async (req, res) => {
+  const getPostedById = (await Posts.findAll({ where: { id: req.params.id }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }))[0];
+
+  if (!getPostedById) {
+    res.status(404).json({ message: 'Post não existe' });
+  }
+  res.status(200).json(getPostedById);
+});
+
 module.exports = {
   createPost,
   getAllPosts,
+  getPostById,
 };

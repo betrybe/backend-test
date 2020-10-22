@@ -13,6 +13,7 @@ app.get('/user/:id', auth, userController.getUserById);
 app.get('/user', auth, userController.getAllUsers);
 app.delete('/user/me', auth, userController.deleteSelfUser);
 app.post('/post', auth, postController.createPost);
+app.get('/post/:id', auth, postController.getPostById);
 app.get('/post', auth, postController.getAllPosts);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
