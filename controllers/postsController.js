@@ -38,23 +38,6 @@ const getPosts = rescue(async (req, res) => {
 
   if (postId && posts.length === 0) throw new CustomError({ message: 'Post não existe', code: 404 });
 
-  // const postData = posts.map((post) => post.dataValues);
-
-  // const fetchUserData = postData.map(
-  //   async ({ id, published, updated, title, content, userId }) => {
-  //     const userData = async () => Users.findOne(
-  //       { where: { id: userId } },
-  //     );
-  //     const { displayName, email, image } = await userData()
-  //       .catch((err) => {
-  //         throw new CustomError({ message: err.message, code: 500 });
-  //       });
-  //     const user = { id: userId, displayName, email, image };
-  //     const newPost = { id, published, updated, title, content, user };
-  //     return newPost;
-  //   },
-  // );
-  // const postWithUserData = await Promise.all(fetchUserData).then((data) => data);
   res.status(200).json(posts.length === 1
     ? posts[0]
     : posts);
@@ -96,13 +79,16 @@ const searchPosts = rescue(async (req, res) => {
           { content: { [Op.like]: `${q}%` } },
         ],
       },
+      include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }],
     },
   ).then((data) => data.map(({ dataValues }) => dataValues))
     .catch((err) => {
       throw new CustomError({ message: err.message, code: 500 });
     });
 
-  return res.status(200).json(posts);
+  return res.status(200).json(posts.length === 1
+    ? posts[0]
+    : posts);
 });
 
 const deletePosts = rescue(async (req, res) => {
