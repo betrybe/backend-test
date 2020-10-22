@@ -9,10 +9,11 @@ async function Auth(req, res, next) {
 
   try {
     const objToken = jwt.verify(token, SECRET);
-    const tokenToUser; // call in bank to check user exist?
-    if (!tokenToUser) res.status(401).json({ message: 'user not found' });
+
+    if (!objToken) res.status(401).json({ message: 'token invalid' });
 
     req.user = token;
+
     next();
   } catch (err) {
     return res.status(401).json({ message: 'jwt malformed' });

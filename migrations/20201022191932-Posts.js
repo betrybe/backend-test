@@ -1,32 +1,33 @@
-// script sql cria tabela, indices, colunas
-// npx sequelize --name create-nome-desejado
-
 module.exports = {
   up: async (queryInterface, Sequelize) =>
-    queryInterface.createTable('Users', {
+    queryInterface.createTable('Posts', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      displayName: {
+      title: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
+      content: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      image: {
+      userId: {
         type: Sequelize.STRING,
+        allowNull: false,
+
+      },
+      published: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updated: {
+        type: Sequelize.DATE,
         allowNull: false,
       },
     }),
-  down: async (queryInterface) => queryInterface.dropTable('Users'),
+  down: async (queryInterface) => queryInterface.dropTable('Posts'),
 };
