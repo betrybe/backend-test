@@ -44,8 +44,23 @@ const getPostById = rescue(async (req, res) => {
   res.status(200).json(getPostedById);
 });
 
+const updatePost = rescue(async (req, res) => {
+  const { title, content } = req.body;
+  const { id } = req.params;
+  const getPostedById = (await Posts.findAll({ where: { id }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }))[0];
+  const { user: { id: userId } } = getPostedById;
+  const { user: { email } } = req;
+  const { id: uId } = (await Users.findAll({ where: { email } }))[0];
+  if (userId !== uId) return res.status(401).json({ message: 'Usuário não autorizado' });
+  const isPostValid = validatePost(title, content);
+  if (isPostValid) return res.status(isPostValid.code).json({message: isPostValid.message});
+  Posts.update({ title, content }, { where: { id } })
+    .then(() => res.status(200).json({ title, content, userId: uId }));
+});
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
+  updatePost,
 };
