@@ -1,62 +1,69 @@
-const boom = require('@hapi/boom');
-const { Router } = require('express');
 const rescue = require('express-rescue');
+const boom = require('@hapi/boom');
+const { User, Token } = require('../services');
 
-const { User } = require('../models');
+const register = rescue(async (req, res, next) => {
+  const { displayName, email, image, password } = req.body;
 
-const users = Router();
+  const { message } = await User.validateUserRegister({ email, password, displayName });
 
-users.get('/', rescue(async (_req, res) => {
-  await User.findAll().then((result) => res.status(200).json(result));
-}));
+  if (message) return next(boom.badRequest(message));
 
-users.get('/:id', rescue(async (req, res, next) => {
-  const { id } = req.params;
+  const { message: errMessageEmail } = await User.isEmailAvaible(email);
 
-  const user = await User.findByPk(id);
+  if (errMessageEmail) return next(boom.conflict(errMessageEmail));
 
-  if (user.error) {
-    return next(boom.notFound(user.message));
+  const user = await User.createUser({ displayName, email, image, password });
+
+  try {
+    const token = Token.generate(user);
+
+    return res.status(201).json({ token });
+  } catch (err) {
+    return res.status.json({ message: 'algo deu errado' });
   }
+});
 
-  return res.status(200).json(user);
-}));
+const getUserByEmail = rescue(async (req, res, next) => {
+  const { email } = req.body;
 
-users.post('/', rescue(async (req, res, next) => {
-  const { displayName, email, password, image } = req.body;
+  const { message } = await User.validateUserEmail({ email });
 
-  const user = await User.create({ displayName, email, password, image });
+  if (!message) return next(boom.badRequest(message));
 
-  if (user.error) {
-    return next(boom.badData(user.message));
-  }
+  const user = await User.getUserByEmail(email);
 
-  return res.status(201).json(user);
-}));
+  if (!user) return boom.notFound('Usuário não encontrado');
 
-users.put('/:id', rescue(async (req, res, next) => {
-  const { id } = req.params;
-  const { displayName, email, password, image } = req.body;
+  return res.status(200).json({ ...user });
+});
 
-  const newuser = await User.update({ displayName, email, password, image }, { where: { id } });
+const getUserById = rescue(async (req, res, next) => {
+  const { id } = req.body;
 
-  if (newuser.error) {
-    const error = newuser.code === 'not_found'
-      ? boom.notFound(newuser.message)
-      : boom.badData(newuser.message);
+  const user = await User.getUserById(id);
 
-    return next(error);
-  }
+  if (user.message) return next(boom.notFound('Usuário não existe'));
 
-  return res.status(200).json(newuser);
-}));
+  return res.status(200).json({ ...user });
+});
 
-users.delete('/:id', rescue(async (req, res) => {
-  const { id } = req.params;
+const getAll = rescue(async (_req, res) => {
+  const users = await User.getAllUsers();
+  console.log('users', users);
+  return res.status(200).json(users);
+});
 
-  await User.destroy({ where: { id } });
+const deleteUser = rescue(async (req, res) => {
+  const { id } = req.user;
+  await User.deleteUser(id);
+  res.status(204).end();
+});
 
-  return res.status(204).end();
-}));
-
-module.exports = users;
+module.exports = {
+  register,
+  getUserByEmail,
+  getUserById,
+  getAll,
+  deleteUser,
+};
