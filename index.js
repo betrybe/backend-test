@@ -9,12 +9,15 @@ app.use(bodyParser.json());
 
 app.post('/user', controllers.userController.registerUser);
 app.post('/login', controllers.userController.userLogin);
-app.get('/user/:id', jwtMiddleware(true), controllers.userController.getUserById);
-app.delete('/user/me', jwtMiddleware(true), controllers.userController.deleteUserMe);
-app.get('/user', jwtMiddleware(true), controllers.userController.getAllUsers);
-app.post('/post', jwtMiddleware(true), controllers.postController.createPost);
-app.get('/post', jwtMiddleware(true), controllers.postController.getAllPostWithOwner);
-app.get('/post/:id', jwtMiddleware(true), controllers.postController.getPostById);
+app.get('/user/:id', jwtMiddleware, controllers.userController.getUserById);
+app.delete('/user/me', jwtMiddleware, controllers.userController.deleteUserMe);
+app.get('/user', jwtMiddleware, controllers.userController.getAllUsers);
+app.post('/post', jwtMiddleware, controllers.postController.createPost);
+app.get('/post', jwtMiddleware, controllers.postController.getAllPostWithOwner);
+app.get('/post/search', jwtMiddleware, controllers.postController.getPostsByQuery);
+app.get('/post/:id', jwtMiddleware, controllers.postController.getPostById);
+app.put('/post/:id', jwtMiddleware, controllers.postController.updatePost);
+app.delete('/post/:id', jwtMiddleware, controllers.postController.deletePostById);
 
 app.all('*', (_req, res) => res.status(404).json({ message: 'page not found' }));
 app.use(errorMiddleware);

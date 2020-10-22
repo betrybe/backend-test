@@ -10,7 +10,7 @@ const jwtTokenSchema = Joi.string() // regex: https://github.com/sideway/joi/iss
 
 const secret = 'meu1segredo2seguro3';
 
-module.exports = (isNecessary = true) => rescue(async (req, _res, next) => {
+module.exports = rescue(async (req, _res, next) => {
   const token = req.headers.authorization;
 
   if (!token) return next(Boom.unauthorized('Token não encontrado'));

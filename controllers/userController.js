@@ -40,7 +40,7 @@ const userLogin = rescue(async (req, res, next) => {
   return res.status(200).json({ token });
 });
 
-const getAllUsers = rescue(async (req, res, next) => {
+const getAllUsers = rescue(async (_req, res, _next) => {
   const allUsers = await Users.findAll({});
 
   return res.status(200).json(allUsers);
