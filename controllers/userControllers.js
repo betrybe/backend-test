@@ -68,7 +68,6 @@ const deleteUser = rescue(async (req, res) => {
 const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
   .then(() => Users.findOne({ where: { email: req.body.email } })
     .then((data) => {
-      if (!data) throw new CustomError({ message: 'Usuário não existe', code: 400 });
       if (data && data.dataValues) {
         const newToken = token(data.dataValues);
         return res.status(200).json({ token: newToken });
@@ -76,7 +75,7 @@ const login = rescue(async (req, res) => loginValidation.validateAsync(req.body)
       throw new CustomError({ message: 'Usuário não existe', code: 400 });
     })
     .catch((err) => {
-      throw new CustomError({ message: err.message, code: 500 });
+      throw new CustomError({ message: err.message, code: err.code });
     }))
   .catch((err) => {
     throw new CustomError({ message: err.message, code: err.code || 400 });
