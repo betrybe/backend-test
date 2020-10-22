@@ -36,16 +36,6 @@ const updatePostById = (id, { title: t, content: c }) => Post
 const deletePostById = async (id) => Post.destroy({ where: { id } });
 
 const search = async (q) => {
-  const condition = { [Op.substring]: q };
-  return Post.findAll({
-    where: {
-      [Op.or]: [{ title: condition }, { content: condition }],
-    },
-    include: { model: User, as: 'user', attributes: { exclude: ['password'] } },
-  }).then((posts) => posts.map(({ dataValues }) => dataValues));
-};
-
-const search = async (q) => {
   const toSearch = { [Op.substring]: q };
   const where = { [Op.or]: [{ title: toSearch }, { content: toSearch }] };
   const include = { model: User, as: 'user', attributes: { exclude: ['password'] } };
