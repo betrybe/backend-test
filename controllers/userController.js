@@ -79,7 +79,7 @@ userActions.post('/', async (req, res) => {
   // Se passou em todos os testes e validações, cadastre o novo usuário
   User.create({ displayName, email, password, image })
     .then(() => {
-      const token = JWT.sign({ displayName, email, password, image }, secret, jwtConfig);
+      const token = JWT.sign({ email, password }, secret, jwtConfig);
       res.status(201).json({ token });
     })
     .catch((e) => {
@@ -88,4 +88,11 @@ userActions.post('/', async (req, res) => {
     });
 });
 
-module.exports = userActions;
+module.exports = {
+  userActions,
+  validateEmail,
+  validatePassword,
+  validateDisplayName,
+  verifyRegistedEmail,
+  configValidade,
+};
