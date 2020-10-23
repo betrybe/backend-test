@@ -19,7 +19,6 @@ module.exports = {
       password: {
         allowNull: true,
         type: DataTypes.INTEGER,
-
       },
       image: {
         type: DataTypes.STRING(255),

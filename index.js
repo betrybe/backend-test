@@ -1,9 +1,9 @@
 const express = require('express');
+const controllers = require('./controllers');
 const bodyParser = require('body-parser');
 
-const { createNew } = require('./controllers/UserController');
-
 const app = express();
+app.use(express.json());
 app.use(bodyParser.json());
 
 app.set('port', (process.env.PORT || 3000));
@@ -11,10 +11,10 @@ app.listen(app.get('port'), () => {
   console.log('ouvindo na porta 3000');
 });
 
-app.post('/user', (req, res) => {
-  const newUser = req.body.User;
-  const creatNewUser = createNew.createNewUser(newUser);
-  res.send(creatNewUser);
+app.use('/user', controllers.userController);
+
+app.use((err, _req, res, _next) => {
+  res.status(err.status).json({ message: err.message });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
