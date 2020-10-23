@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../models');
 const createToken = require('../utils/createToken');
+const validateToken = require('../utils/validateToken');
 
 module.exports = (() => {
   router.post('/', async (req, res, next) => {
@@ -21,7 +22,7 @@ module.exports = (() => {
       next(error);
     }
   });
-  router.get('/', (req, res) => {
+  router.get('/', validateToken, (req, res) => {
     User.findAll({ attributes: { exclude: ['password'] } })
       .then((users) => {
         res.status(200).json(users);
