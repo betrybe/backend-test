@@ -62,17 +62,21 @@ const updatePost = rescue(async (req, res) => {
 const searchTerm = rescue(async (req, res) => {
   const { Op } = sequelize;
   const { q } = req.query;
-  const allPosts = await Posts.findAll();
+  const allPosts = await Posts.findAll({ include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] });
 
   if (!q) return res.status(200).json(allPosts);
 
-  const searchTermByTitle = (await Posts.findAll({ where: { title: { [Op.like]: q } } }));
-  if (searchTermByTitle) return res.status(200).json(searchTermByTitle);
+  const searchTermByTitle = (await Posts.findAll({ where: { title: { [Op.like]: `%${q}%` } }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }));
 
-  const searchTermByContent = (await Posts.findAll({ where: { content: { [Op.like]: q } } }));
-  if (searchTermByContent) return res.status(200).json(searchTermByContent);
-  console.log('title', searchTermByTitle);
-  if (!searchTermByTitle && !searchTermByContent) return res.status(200).json([]);
+  const searchTermByContent = (await Posts.findAll({ where: { content: { [Op.like]: `%${q}%` } }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }));
+
+  console.log('Content', searchTermByContent.length);
+  if (searchTermByTitle.length > 0) return res.status(200).json(searchTermByTitle);
+  if (searchTermByContent.length > 0) return res.status(200).json(searchTermByContent);
+
+  if (searchTermByTitle.length === 0 && searchTermByContent.length === 0) {
+    return res.status(200).json([]);
+  }
 });
 
 module.exports = {
