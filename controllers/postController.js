@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { Op } = require('sequelize');
 const { User } = require('../models');
 const { Post } = require('../models');
 const authMiddleware = require('../auth/authMiddleware');
@@ -36,6 +37,33 @@ postActions.get('/', authMiddleware, async (req, res) => {
     }],
   })
     .then((result) => res.status(200).send(result))
+    .catch((e) => {
+      console.log(e.message);
+      return res.status(500).send({ message: 'Algo deu errado' });
+    });
+});
+
+postActions.get('/search', authMiddleware, async (req, res) => {
+  const { q } = req.query;
+  Post.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `${q}%` } },
+        { content: { [Op.like]: `${q}%` } },
+      ],
+    },
+    include: [{
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    }],
+  })
+    .then((result) => {
+      if (result) {
+        return res.status(200).send(result);
+      }
+      return res.status(404).send({ message: 'Post não existe' });
+    })
     .catch((e) => {
       console.log(e.message);
       return res.status(500).send({ message: 'Algo deu errado' });
