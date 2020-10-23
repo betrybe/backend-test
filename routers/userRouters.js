@@ -41,5 +41,18 @@ module.exports = (() => {
       })
       .catch((_e) => res.status(500).json({ message: 'Algo deu errado' }));
   });
+  router.delete('/me', validateToken, async (req, res) => {
+    try {
+      const { email } = req.user;
+      await User.destroy({
+        where: {
+          email,
+        },
+      });
+      return res.status(204).json();
+    } catch (error) {
+      return res.status(400).json({ message: 'Algo deu errado' });
+    }
+  });
   return router;
 })();
