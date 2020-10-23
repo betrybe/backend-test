@@ -14,8 +14,8 @@ module.exports = (() => {
         image,
       });
       if (createUser) {
-        const token = createToken({ email });
-        req.token = token;
+        const { id } = createUser;
+        const token = createToken({ id, email });
         return res.status(201).json({ token });
       }
     } catch (error) {
@@ -42,6 +42,7 @@ module.exports = (() => {
       .catch((_e) => res.status(500).json({ message: 'Algo deu errado' }));
   });
   router.delete('/me', validateToken, async (req, res) => {
+    console.log(req.user);
     try {
       const { email } = req.user;
       await User.destroy({
