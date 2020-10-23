@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const rescue = require('express-rescue')
+const rescue = require('express-rescue');
 
 const router = Router();
 const services = require('../services');
