@@ -64,6 +64,38 @@ postActions.get('/:id', authMiddleware, async (req, res) => {
     });
 });
 
+postActions.post('/', authMiddleware, async (req, res) => {
+  const { email } = req.user;
+  const { title, content } = req.body;
+  // Verifica itens obrigatórios
+  if (!title) {
+    return res.status(400).send({ message: '"title" is required' });
+  }
+  if (!content) {
+    return res.status(400).send({ message: '"content" is required' });
+  }
+
+  // Recupera o id do usuário
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    return res.status(404).send({ message: 'Usuário não existe' });
+  }
+
+  // Salva o id em uma constante
+  const userId = user.dataValues.id;
+
+  // Se estiver tudo certo publica o post
+  const published = new Date();
+  Post.create(
+    { published, updated: published, title, content, userId },
+  )
+    .then(() => res.status(201).send({ title, content, userId }))
+    .catch((e) => {
+      console.log(e.message);
+      return res.status(500).send({ message: 'Algo deu errado' });
+    });
+});
+
 postActions.put('/:id', authMiddleware, async (req, res) => {
   const { id } = req.params;
   const { email } = req.user;
@@ -89,8 +121,9 @@ postActions.put('/:id', authMiddleware, async (req, res) => {
   }
 
   // Se estiver tudo certo atualiza o post
+  const updated = new Date();
   Post.update(
-    { title, content },
+    { updated, title, content },
     { where: { id } },
   )
     .then(() => res.status(200).send({ title, content, userId: notAuthToUpdate.loggedUserId }))
