@@ -1,8 +1,5 @@
-const { DataTypes } = require('sequelize/types');
-const { sequelize } = require('.');
-
-const createPosts = (sequelize, DataTypes) => {
-  const Posts = sequelize.define('Posts', {
+const Posts = (sequelize, DataTypes) => {
+  const posts = sequelize.define('Posts', {
     id: { type: DataTypes.INTEGER, primaryKey: true },
     title: DataTypes.STRING,
     content: DataTypes.STRING,
@@ -15,12 +12,12 @@ const createPosts = (sequelize, DataTypes) => {
   });
 
   // Relacionamento 1:1
-  Posts.associate = (models) => {
-    Posts.hasOne(models.Users,
-      { foreignKey: 'id', as: 'users' });
+  posts.associate = (models) => {
+    posts.hasOne(models.Users,
+      { foreignKey: 'id', as: 'user' });
   };
 
-  return Posts;
+  return posts;
 };
 
-module.exports = createPosts;
+module.exports = Posts;

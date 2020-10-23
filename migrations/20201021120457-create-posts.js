@@ -35,6 +35,6 @@ module.exports = {
     return PosTable;
   },
 
-  down: async (queryInterface) => await queryInterface.dropTable('Posts'),
+  down: async (queryInterface) => queryInterface.dropTable('Posts'),
 
 };

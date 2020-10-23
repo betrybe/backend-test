@@ -28,5 +28,5 @@ module.exports = {
     return UserTable;
   },
 
-  down: async (queryInterface) => await queryInterface.dropTable('Users'),
+  down: async (queryInterface) => queryInterface.dropTable('Users'),
 };
