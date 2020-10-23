@@ -4,34 +4,37 @@ class Container {
     this.models = models;
     this.controllers = controllers;
     this.utils = utils;
-    this.startCb = start;
     this.middlewares = middlewares;
+    this.startCb = start;
   }
 
-  makeServices() {
-    this.services = this.services(this.models, this.utils);
+  callInjection(type) { // para uma funcao que retorna o objeto modulo
+    this[type].object = this[type].object(...this.getParams(type));
   }
 
-  makeMiddlewares() {
-    this.middlewares = this.middlewares(this.services);
+  getParams(type) {
+    const { params } = this[type];
+    return params.map((param) => this[param].object);
   }
 
-  injectOnControllers() {
-    const injectedController = Object.entries(this.controllers).reduce((newControllers, [controllerName, objFunctions]) => {
-      newControllers[controllerName] = Object.entries(objFunctions).reduce(
-        (newController, [functioName, func]) => {
-          newController[functioName] = func(this.services, this.utils);
-          return newController;
-        },
-        {},
-      );
-      return newControllers;
-    }, {});
-    this.controllers = injectedController;
+  populate(objFunctions, type) {
+    return Object.entries(objFunctions).reduce((newObj, [functionName, func]) => ({
+      [functionName]: func(...this.getParams(type)),
+      ...newObj,
+    }), {});
   }
 
-  start(Routers, config) {
-    this.startCb(Routers(this.controllers, this.middlewares), config, this.middlewares);
+  injectOn(type) { // para um objeto modulo de itens funcao que retornam objeto
+    this[type].object = Object.entries(this[type].object)
+      .reduce((newObject, [itemName, objFunctions]) => ({
+        [itemName]: this.populate(objFunctions, 'controllers'),
+        ...newObject,
+      }), {});
+  }
+
+  start(getRouters, config) {
+    const Routers = getRouters(this.controllers.object, this.middlewares.object);
+    this.startCb(Routers, config, this.middlewares.object);
   }
 }
 

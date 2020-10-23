@@ -18,15 +18,28 @@ const config = {
 };
 
 const app = new Container(start, {
-  services,
-  models: { Op, ...models },
-  controllers,
-  middlewares,
-  utils,
+  services: {
+    object: services,
+    params: ['models', 'utils'],
+  },
+  models: {
+    object: { Op, ...models },
+  },
+  controllers: {
+    object: controllers,
+    params: ['services', 'utils'],
+  },
+  middlewares: {
+    object: middlewares,
+    params: ['services'],
+  },
+  utils: {
+    object: utils,
+  },
 });
 
-app.makeServices();
-app.makeMiddlewares();
-app.injectOnControllers();
+app.callInjection('services');
+app.callInjection('middlewares');
+app.injectOn('controllers');
 
 app.start(Routers, config);
