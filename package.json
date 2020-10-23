@@ -9,6 +9,7 @@
     "express-rescue": "^1.1.30",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
+    "nodemon": "^2.0.6",
     "sequelize": "^6.3.4",
     "shelljs": "^0.8.4"
   },

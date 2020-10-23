@@ -70,7 +70,6 @@ const searchTerm = rescue(async (req, res) => {
 
   const searchTermByContent = (await Posts.findAll({ where: { content: { [Op.like]: `%${q}%` } }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }));
 
-  console.log('Content', searchTermByContent.length);
   if (searchTermByTitle.length > 0) return res.status(200).json(searchTermByTitle);
   if (searchTermByContent.length > 0) return res.status(200).json(searchTermByContent);
 
@@ -79,10 +78,22 @@ const searchTerm = rescue(async (req, res) => {
   }
 });
 
+const deletePost = rescue(async (req, res) => {
+  const { id } = req.params;
+  const getPostedById = (await Posts.findAll({ where: { id }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }))[0];
+  if (!getPostedById) return res.status(404).json({ message: 'Post não existe' });
+  const { user: { id: userId } } = getPostedById;
+  const { user: { email } } = req;
+  const { id: uId } = (await Users.findAll({ where: { email } }))[0];
+  if (userId !== uId) return res.status(401).json({ message: 'Usuário não autorizado' });
+  Posts.destroy({ where: { id } }).then(() => res.status(204).end());
+});
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
   updatePost,
   searchTerm,
+  deletePost,
 };
