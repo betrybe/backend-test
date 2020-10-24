@@ -14,7 +14,6 @@ module.exports = rescue(async (req, res, next) => {
   }
 
   try {
-    console.log('entrou no try');
     const decoded = jwt.verify(token, secret);
 
     const user = await User.findOne({

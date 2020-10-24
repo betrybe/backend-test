@@ -20,4 +20,11 @@ router.get('/', authMiddleware, rescue(async (req, res) => {
   }
 }));
 
+router.get('/:id', authMiddleware, rescue(async (req, res, next) => {
+  const pk = req.params.id;
+  const response = await services.UserServices.GetUserById(pk);
+  if (response.error) return next(response.error);
+  res.status(200).json(response);
+}));
+
 module.exports = router;
