@@ -16,6 +16,17 @@ const VerifyNameLength = (name, length) => {
 };
 
 const VerifyEmail = (email) => {
+  if (email === '') {
+    const error = {
+      error: {
+        status: 400,
+        message: '"email" is not allowed to be empty',
+      },
+    };
+
+    return error;
+  }
+
   if (!email) {
     const error = {
       error: {
@@ -43,6 +54,17 @@ const VerifyEmail = (email) => {
 };
 
 const VerifyPassword = (password, length) => {
+  if (password === '') {
+    const error = {
+      error: {
+        status: 400,
+        message: '"password" is not allowed to be empty',
+      },
+    };
+
+    return error;
+  }
+
   if (!password) {
     const error = { error: { status: 400, message: '"password" is required' } };
     return error;
@@ -69,9 +91,20 @@ const VerifyDuplicate = async (email) => {
   return false;
 };
 
+const VerifyUserLogin = async (email, password) => {
+  const UserFound = await User.findAll({ where: { email, password } });
+  if (!UserFound.length) {
+    const error = { error: { status: 400, message: 'Campos inválidos' } };
+    return error;
+  }
+
+  return false;
+};
+
 module.exports = {
   VerifyNameLength,
   VerifyEmail,
   VerifyPassword,
   VerifyDuplicate,
+  VerifyUserLogin,
 };

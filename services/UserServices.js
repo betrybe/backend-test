@@ -20,10 +20,30 @@ const CreateUser = async (payload) => {
 
   //* Passando nas validações é inserido no DB e gerado um token com a senha informada.
   await User.create({ displayName, email, password, image });
-  const token = GenerateToken(password);
-  return token;
+  const token = GenerateToken({ email, password });
+  return { token };
+};
+
+const UserLogin = async (payload) => {
+  const { email, password } = payload;
+
+  //* Validações de parâmetros
+  const EmailErr = err.ErrHandler.VerifyEmail(email);
+  const PassErr = err.ErrHandler.VerifyPassword(password, 6);
+
+  if (EmailErr) return EmailErr;
+  if (PassErr) return PassErr;
+
+  //* Validação de dados de login incorretos
+  const LoginErr = await err.ErrHandler.VerifyUserLogin(email, password);
+  if (LoginErr) return LoginErr;
+
+  //* Passando nas validações é gerado o token e devolvido ao usuário.
+  const token = GenerateToken({ email, password });
+  return { token };
 };
 
 module.exports = {
   CreateUser,
+  UserLogin,
 };

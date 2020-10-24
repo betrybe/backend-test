@@ -1,8 +1,0 @@
-
-[4mSequelize CLI [Node: 14.10.1, CLI: 6.2.0, ORM: 6.3.5][24m
-
-Loaded configuration file "config\config.js".
-Using environment "development".
-== 20201022210626-users: reverting =======
-== 20201022210626-users: reverted (0.171s)
-
