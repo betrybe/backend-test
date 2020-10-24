@@ -5,6 +5,8 @@ const {
   PASSWORD_NAME,
   EMAIL_IS_REQUIRED,
   PASSWORD_IS_REQUIRED,
+  EMAIL_EMPTY,
+  PASSWORD_EMPTY,
 } = require('./errorMessage');
 
 const errMessage = (message) => ({ message });
@@ -31,7 +33,13 @@ const dataExists = [
   body('password', errMessage(PASSWORD_IS_REQUIRED)).exists(),
 ];
 
+const dataEmpty = [
+  body('email', errMessage(EMAIL_EMPTY)).notEmpty(),
+  body('password', errMessage(PASSWORD_EMPTY)).notEmpty(),
+];
+
 module.exports = {
   userValidate: validate(dataValidationRules, 400),
   userInfoExist: validate(dataExists, 400),
+  userDataEmpty: validate(dataEmpty, 400),
 };

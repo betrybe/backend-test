@@ -1,14 +1,16 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
-const jwt = require('jsonwebtoken');
-const { userValidate, userInfoExist } = require('../middleware/authUser');
-
-const SECRET = 'DiegoRafael-sd03';
-const jwtConfig = { algorithm: 'HS256', expiresIn: '1h' };
-
+const createToken = require('../../utils/createToken');
+const {
+  userValidate,
+  userInfoExist,
+  userDataEmpty,
+} = require('../middleware/authUser');
+const validateToken = require('../middleware/tokenValidation');
 const { User } = require('../../models');
 
 const user = Router();
+const login = Router();
 
 user.post(
   '/',
@@ -17,11 +19,67 @@ user.post(
   rescue(async (req, res) => {
     const { displayName, email, password, image } = req.body;
 
-    const token = jwt.sign({ email }, SECRET, jwtConfig);
+    User.findAll({ where: { email } })
+      .then((result) => {
+        if (result.length > 0) return res.status(409).json({ message: 'Usuário já existe' });
+      });
 
-    User.create({ displayName, email, password, image }).then((newUser) =>
-      res.status(201).json({ newUser, token }));
+    const token = createToken(email);
+
+    User.create({ displayName, email, password, image })
+      .then(() => res.status(201).json({ token }));
   }),
 );
 
-module.exports = user;
+login.post(
+  '/',
+  userInfoExist,
+  userDataEmpty,
+  rescue(async (req, res) => {
+    const { email } = req.body;
+    const token = createToken(email);
+
+    const userLogin = await User.findAll({ where: { email } });
+    if (userLogin.length <= 0) return res.status(400).json({ message: 'Campos inválidos' });
+
+    return res.status(200).json({ token });
+  }),
+);
+
+user.get(
+  '/:id',
+  validateToken,
+  rescue(async (req, res) => {
+    const { id } = req.params;
+
+    const userById = await User.findAll({ where: { id } });
+
+    if (userById.length <= 0) return res.status(404).json({ message: 'Usuário não existe' });
+
+    res.status(200).json(userById[0]);
+  }),
+);
+
+user.get(
+  '/',
+  validateToken,
+  rescue(async (_req, res) => {
+    const allUsers = await User.findAll({});
+
+    return res.status(200).json(allUsers);
+  }),
+);
+
+user.delete(
+  '/me',
+  validateToken,
+  rescue(async (req, res) => {
+    const { email } = req.user;
+
+    await User.destroy({ where: { email } });
+
+    res.status(204).end();
+  }),
+);
+
+module.exports = { user, login };
