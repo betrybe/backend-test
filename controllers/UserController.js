@@ -27,4 +27,10 @@ router.get('/:id', authMiddleware, rescue(async (req, res, next) => {
   res.status(200).json(response);
 }));
 
+router.delete('/me', authMiddleware, rescue(async (req, res) => {
+  const toDelete = req.user;
+  await services.UserServices.DeleteUser(toDelete.email);
+  res.status(204).json();
+}));
+
 module.exports = router;

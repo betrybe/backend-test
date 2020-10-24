@@ -59,9 +59,15 @@ const GetUserById = async (pk) => {
   return user.dataValues;
 };
 
+const DeleteUser = async (email) => {
+  await User.destroy({ where: { email } });
+  return true;
+};
+
 module.exports = {
   CreateUser,
   UserLogin,
   GetUsers,
   GetUserById,
+  DeleteUser,
 };
