@@ -5,6 +5,7 @@ const isEmailUnique = async (email) => {
   const user = await User.findOne({ where: { email } });
   if (!user) return true;
 };
+
 const validateSchema = (next, { email, displayName, password }) => {
   const schema = Joi.object({
     displayName: Joi.string().min(8).required().error(() => next('invalid_name')),

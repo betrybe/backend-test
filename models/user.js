@@ -9,8 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      console.log(models)
-      this.hasMany(models.Post, { foreignKey: 'userId', sourceKey: 'id' });
+      this.hasMany(models.Post, {
+        foreignKey: 'userId',
+        sourceKey: 'id',
+        onDelete: 'CASCADE',
+      });
     }
   }
   User.init(

@@ -1,5 +1,6 @@
-const express = require('express');
 const bodyParser = require('body-parser');
+const express = require('express');
+const rescue = require('express-rescue');
 
 const models = require('./models');
 
@@ -7,8 +8,12 @@ const getUserController = require('./controllers/userController');
 const getUserService = require('./services/userService');
 const userRouter = require('./routers/userRouter');
 
+const getPostController = require('./controllers/postController');
+const getPostService = require('./services/postService');
+const postRouter = require('./routers/postRouter');
+
+const { errorHandler, validateLogin } = require('./middlewares/index');
 const createToken = require('./helpers/createToken');
-const errorHandler = require('./middlewares/errorHandler');
 
 const factory = async () => {
   const app = express();
@@ -18,6 +23,13 @@ const factory = async () => {
   const userController = getUserController(userService);
 
   app.use('/user', userRouter(userController));
+
+  const postService = getPostService(models);
+  const postController = getPostController(postService);
+
+  app.use('/post', postRouter(postController));
+
+  app.post('/login', rescue(validateLogin), rescue(userController.login));
 
   app.get('/', (_request, response) => {
     response.send();

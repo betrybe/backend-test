@@ -21,14 +21,17 @@ module.exports = {
           key: 'id',
           as: 'userId',
         },
+        onUpdate: 'cascade',
+        onDelete: 'cascade',
       },
       published: {
         type: Sequelize.DATE,
-        default: new Date(),
+        allowNull: false,
       },
       updated: {
         type: Sequelize.DATE,
         default: new Date(),
+        allowNull: false,
       },
     });
   },
