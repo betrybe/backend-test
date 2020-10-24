@@ -10,7 +10,7 @@ const createUser = (service) =>
       return res.status(409).json({ message: 'Usuário já existe' });
     }
 
-    res.status(201).json(user);
+    return res.status(201).json(user);
   });
 
 const userLogin = (service) =>
@@ -23,20 +23,33 @@ const userLogin = (service) =>
       return res.status(400).json(user.errors);
     }
 
-    res.status(200).json(user);
+    return res.status(200).json(user);
   });
 
 const getAllUsers = (service) =>
   rescue(async (_req, res) => {
     const users = await service.getAllUsers();
 
-    res.status(200).json(users);
+    return res.status(200).json(users);
   });
+
+const getUserById = (service) => rescue(async (req, res) => {
+  const { id } = req.params;
+
+  const user = await service.getUserById(id);
+
+  if (user.errors) {
+    return res.status(404).json(user.errors);
+  }
+
+  return res.status(200).json(user);
+});
 
 const getUserController = (service) => ({
   createUser: createUser(service),
   userLogin: userLogin(service),
   getAllUsers: getAllUsers(service),
+  getUserById: getUserById(service),
 });
 
 module.exports = { getUserController };

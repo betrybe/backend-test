@@ -5,12 +5,9 @@ const createUser = ({ Users }, generateJWT, config) => async (
   image,
 ) => {
   try {
-    const user = await Users.create(
-      { displayName, email, password, image },
-      { raw: true },
-    );
+    const user = await Users.create({ displayName, email, password, image });
 
-    const { _password, ...data } = user[0];
+    const { _password, ...data } = user.dataValues;
 
     return generateJWT(data, config);
   } catch (err) {
@@ -34,10 +31,21 @@ const userLogin = ({ Users }, generateJWT, config) => async (email) => {
 
 const getAllUsers = ({ Users }) => async () => Users.findAll({ raw: true });
 
+const getUserById = ({ Users }) => async (id) => {
+  const user = await Users.findByPk(id, { raw: true });
+
+  if (!user) {
+    return { errors: { message: 'Usuário não existe' } };
+  }
+
+  return user;
+};
+
 const getUserService = (models, generateJWT, config) => ({
   createUser: createUser(models, generateJWT, config),
   userLogin: userLogin(models, generateJWT, config),
   getAllUsers: getAllUsers(models),
+  getUserById: getUserById(models),
 });
 
 module.exports = { getUserService };

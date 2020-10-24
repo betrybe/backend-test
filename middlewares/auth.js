@@ -21,8 +21,6 @@ const validateJWT = ({ Users }, { secret }) =>
 
       const user = await Users.findAll({ where: { email } });
 
-      console.log('user', user);
-
       if (!user) {
         return res.status(401).json({ message: 'Token expirado ou inválido' });
       }
