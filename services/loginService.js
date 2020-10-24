@@ -9,7 +9,7 @@ const validateLogin = async (email, password) => {
 
   const findUser = await await User.findAll({ where: { email } });
 
-  if (findUser === []) return createError(400, 'Campos inválidos');
+  if (!findUser.length) return createError(400, 'Campos inválidos');
 
   return findUser;
 };
