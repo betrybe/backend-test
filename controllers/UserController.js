@@ -12,10 +12,12 @@ router.post('/', rescue(async (req, res, next) => {
   res.status(201).json({ token: response.token });
 }));
 
-router.get('/', authMiddleware, rescue(async (req, res, next) => {
+router.get('/', authMiddleware, rescue(async (req, res) => {
   const { dataValues } = req.user;
-  console.log(dataValues);
-  res.status(200).json({ message: 'passou do authMiddleware' });
+  if (dataValues) {
+    const users = await services.UserServices.GetUsers();
+    res.status(200).json(users);
+  }
 }));
 
 module.exports = router;

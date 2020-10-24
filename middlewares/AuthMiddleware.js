@@ -9,12 +9,12 @@ module.exports = rescue(async (req, res, next) => {
   const token = req.headers.authorization;
 
   //* Verificações se existe token e se o token é valido.
-  if (!token) {
-    const error = { error: { status: 401, message: 'Token não encontrado' } };
-    return next(error);
+  if (token === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
 
   try {
+    console.log('entrou no try');
     const decoded = jwt.verify(token, secret);
 
     const user = await User.findOne({

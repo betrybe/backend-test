@@ -43,7 +43,14 @@ const UserLogin = async (payload) => {
   return { token };
 };
 
+const GetUsers = async () => {
+  const users = await User.findAll();
+  const arrUsers = users.map((user) => user.dataValues);
+  return arrUsers;
+};
+
 module.exports = {
   CreateUser,
   UserLogin,
+  GetUsers,
 };
