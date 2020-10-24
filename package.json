@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-rescue": "^1.1.30",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
+    "nodemon": "^2.0.6",
     "sequelize": "^6.3.4",
     "shelljs": "^0.8.4"
   },
@@ -17,7 +22,8 @@
     "test": "jest --runInBand",
     "test-coverage": "jest --runInBand --coverage",
     "debug": "nodemon index.js",
-    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
+    "refresh-all": "npx sequelize db:migrate:undo:all"
   },
   "devDependencies": {
     "eslint": "^7.6.0",
