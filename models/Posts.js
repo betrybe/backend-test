@@ -1,15 +1,15 @@
 const createPost = (sequelize, DataTypes) => {
-  const Posts = sequelize.define('Post', {
+  const Post = sequelize.define('Post', {
     title: DataTypes.STRING,
     content: DataTypes.STRING,
   });
 
-  Posts.associate = (models) => {
-    Posts.belongsTo(models.User,
+  Post.associate = (models) => {
+    Post.belongsTo(models.User,
       { foreignKey: 'id', as: 'user' });
   };
 
-  return Posts;
+  return Post;
 };
 
 module.exports = createPost;
