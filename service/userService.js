@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const { validateUser, findByEmail } = require('../middlewares/valiData');
+const { validateUser } = require('../middlewares/valiData');
 const { Users } = require('../models');
 
 const genericErr = (code, message) => ({
@@ -7,12 +6,8 @@ const genericErr = (code, message) => ({
   message,
 });
 
-// const { JWT_SECRET } = process.env;
-
-const jwtConfig = {
-  expiresIn: '7d',
-  algorithm: 'HS256',
-};
+const findByEmail = (email) => Users.findOne({ where: { email } });
+const findByEmailPass = (email, password) => Users.findOne({ where: { email, password } });
 
 const createUser = async (data) => {
   const { displayName, email, password, image } = data;
@@ -23,12 +18,14 @@ const createUser = async (data) => {
   if (userExists) return genericErr(409, { message: 'Usuário já existe' });
 
   try {
-    const user = await Users.create({ displayName, email, password, image });
-    const token = jwt.sign({ user }, '123deOliveira4', jwtConfig);
-    return { token };
+    return await Users.create({ displayName, email, password, image });
   } catch (e) {
     return genericErr(500, e);
   }
 };
 
-module.exports = createUser;
+module.exports = {
+  createUser,
+  findByEmail,
+  findByEmailPass,
+};

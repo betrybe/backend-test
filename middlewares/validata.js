@@ -1,5 +1,3 @@
-const { Users } = require('../models');
-
 const validateUser = ({ displayName, email, password }) => {
   switch (true) {
     case displayName.length < 8:
@@ -15,9 +13,22 @@ const validateUser = ({ displayName, email, password }) => {
   }
 };
 
-const findByEmail = (email) => Users.findOne({ where: { email } });
+const checkLoginFields = (email, password) => {
+  switch (true) {
+    case !email:
+      return ({ message: '"email" is required' });
+    case !password:
+      return ({ message: '"password" is required' });
+    // case !email.length:
+    //   return ({ message: '"email" is not allowed to be empty' });
+    // case !password.length:
+    //   return ({ message: '"password" is not allowed to be empty' });
+    default:
+      return false;
+  }
+};
 
 module.exports = {
   validateUser,
-  findByEmail,
+  checkLoginFields,
 };
