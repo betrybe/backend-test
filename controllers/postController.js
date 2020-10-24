@@ -17,9 +17,23 @@ const getAllPosts = (service) =>
     return res.status(200).json(posts);
   });
 
+const getPostById = (service) =>
+  rescue(async (req, res) => {
+    const { id } = req.params;
+
+    const post = await service.getPostById(id);
+
+    if (post.errors) {
+      return res.status(404).json(post.errors);
+    }
+
+    return res.status(200).json(post);
+  });
+
 const getPostController = (service) => ({
   createPost: createPost(service),
   getAllPosts: getAllPosts(service),
+  getPostById: getPostById(service),
 });
 
 module.exports = { getPostController };

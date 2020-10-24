@@ -10,9 +10,26 @@ const getAllPosts = ({ Posts, Users }) => async () =>
     },
   });
 
+const getPostById = ({ Posts, Users }) => async (id) => {
+  const post = await Posts.findByPk(id, {
+    include: {
+      model: Users,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+  });
+
+  if (!post) {
+    return { errors: { message: 'Post não existe' } };
+  }
+
+  return post;
+};
+
 const getPostService = (models) => ({
   createPost: createPost(models),
   getAllPosts: getAllPosts(models),
+  getPostById: getPostById(models),
 });
 
 module.exports = { getPostService };
