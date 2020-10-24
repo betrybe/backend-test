@@ -6,7 +6,9 @@ const createUser = rescue(async (req, res) => {
   const { displayName, email, password, image } = req.body;
   const response = await userRegister(displayName, email, password, image);
 
-  if (response.error) return res.status(response.error.status).json(response.error.message);
+  if (response.error) {
+    return res.status(response.error.status).json({ message: response.error.message });
+  }
 
   const token = createToken(displayName, email, image);
 
