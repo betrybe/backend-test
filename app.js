@@ -2,14 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const models = require('./models');
-const { getUserController } = require('./controllers/userController');
-const { getUserService } = require('./services/userService');
+const { getUserService, getPostService } = require('./services');
+const { getUserController, getPostController } = require('./controllers');
 
 const {
   getValidateJWT,
   generateJWT,
-  validateCreateUserEntries,
-  validateUserLoginEntries,
+  validateUserEntries,
+  validateLoginEntries,
+  validatePostEntries,
 } = require('./middlewares');
 
 const factory = async (config) => {
@@ -21,11 +22,21 @@ const factory = async (config) => {
   const userController = getUserController(userService);
   const validateJWT = getValidateJWT(models, config);
 
+  const postService = getPostService(models);
+  const postController = getPostController(postService);
+
   app.get('/user', validateJWT, userController.getAllUsers);
   app.get('/user/:id', validateJWT, userController.getUserById);
-  app.post('/user', validateCreateUserEntries, userController.createUser);
-  app.post('/login', validateUserLoginEntries, userController.userLogin);
+  app.post('/user', validateUserEntries, userController.createUser);
+  app.post('/login', validateLoginEntries, userController.userLogin);
   app.delete('/user/me', validateJWT, userController.deleteUser);
+
+  app.post(
+    '/post',
+    validateJWT,
+    validatePostEntries,
+    postController.createPost,
+  );
 
   return app;
 };

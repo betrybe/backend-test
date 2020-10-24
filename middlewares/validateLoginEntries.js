@@ -1,4 +1,4 @@
-const validateUserLoginEntries = (req, res, next) => {
+const validateLoginEntries = (req, res, next) => {
   const { email, password } = req.body;
 
   if (email === '' || password === '') {
@@ -20,4 +20,4 @@ const validateUserLoginEntries = (req, res, next) => {
   next();
 };
 
-module.exports = { validateUserLoginEntries };
+module.exports = { validateLoginEntries };

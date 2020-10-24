@@ -52,7 +52,7 @@ const deleteUser = (service) =>
 
     await service.deleteUser(id);
 
-    return res.status(204);
+    return res.status(204).end();
   });
 
 const getUserController = (service) => ({
