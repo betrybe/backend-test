@@ -3,12 +3,19 @@ const rescue = require('express-rescue');
 
 const router = Router();
 const services = require('../services');
+const authMiddleware = require('../middlewares/AuthMiddleware');
 
 router.post('/', rescue(async (req, res, next) => {
   const payload = req.body;
   const response = await services.UserServices.CreateUser(payload);
   if (response.error) return next(response.error);
   res.status(201).json({ token: response.token });
+}));
+
+router.get('/', authMiddleware, rescue(async (req, res, next) => {
+  const { dataValues } = req.user;
+  console.log(dataValues);
+  res.status(200).json({ message: 'passou do authMiddleware' });
 }));
 
 module.exports = router;

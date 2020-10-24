@@ -1,6 +1,7 @@
+require('dotenv/config');
 const jwt = require('jsonwebtoken');
 
-const secret = 'issoaquiésegredo';
+const secret = process.env.SECRET;
 const jwtConfig = { algorithm: 'HS256' };
 
 const GenerateToken = (userdata) => {
