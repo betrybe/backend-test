@@ -26,6 +26,8 @@ const userLogin = ({ Users }, generateJWT, config) => async (email) => {
 
   const { _password, ...data } = user[0];
 
+  console.log(data);
+
   return generateJWT(data, config);
 };
 
@@ -41,11 +43,14 @@ const getUserById = ({ Users }) => async (id) => {
   return user;
 };
 
+const deleteUser = ({ Users }) => async (id) => Users.destroy({ where: { id } });
+
 const getUserService = (models, generateJWT, config) => ({
   createUser: createUser(models, generateJWT, config),
   userLogin: userLogin(models, generateJWT, config),
   getAllUsers: getAllUsers(models),
   getUserById: getUserById(models),
+  deleteUser: deleteUser(models),
 });
 
 module.exports = { getUserService };

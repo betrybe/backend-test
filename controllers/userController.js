@@ -33,23 +33,34 @@ const getAllUsers = (service) =>
     return res.status(200).json(users);
   });
 
-const getUserById = (service) => rescue(async (req, res) => {
-  const { id } = req.params;
+const getUserById = (service) =>
+  rescue(async (req, res) => {
+    const { id } = req.params;
 
-  const user = await service.getUserById(id);
+    const user = await service.getUserById(id);
 
-  if (user.errors) {
-    return res.status(404).json(user.errors);
-  }
+    if (user.errors) {
+      return res.status(404).json(user.errors);
+    }
 
-  return res.status(200).json(user);
-});
+    return res.status(200).json(user);
+  });
+
+const deleteUser = (service) =>
+  rescue(async (req, res) => {
+    const { id } = req.user;
+
+    await service.deleteUser(id);
+
+    return res.status(204);
+  });
 
 const getUserController = (service) => ({
   createUser: createUser(service),
   userLogin: userLogin(service),
   getAllUsers: getAllUsers(service),
   getUserById: getUserById(service),
+  deleteUser: deleteUser(service),
 });
 
 module.exports = { getUserController };

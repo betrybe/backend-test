@@ -25,6 +25,7 @@ const factory = async (config) => {
   app.get('/user/:id', validateJWT, userController.getUserById);
   app.post('/user', validateCreateUserEntries, userController.createUser);
   app.post('/login', validateUserLoginEntries, userController.userLogin);
+  app.delete('/user/me', validateJWT, userController.deleteUser);
 
   return app;
 };
