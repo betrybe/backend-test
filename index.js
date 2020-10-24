@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { createUser, getAllUsers, getUserById } = require('./controllers/userController');
+const { createUser, getAllUsers, getUserById, deleteUser } = require('./controllers/userController');
 const { makeLogin } = require('./controllers/loginController');
 const authMiddleware = require('./middlewares/authMiddleware');
 
@@ -11,6 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/user', createUser);
 app.get('/user', authMiddleware, getAllUsers);
+app.delete('/user/me', authMiddleware, deleteUser);
 app.get('/user/:id', authMiddleware, getUserById);
 
 app.post('/login', makeLogin);

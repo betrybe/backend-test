@@ -28,8 +28,14 @@ const findUserById = async (id) => {
   return response;
 };
 
+const deleteUserByEmail = async (email) => {
+  const answer = await User.destroy({ where: { email } });
+  return answer;
+};
+
 module.exports = {
   userRegister,
   findAllUsers,
   findUserById,
+  deleteUserByEmail,
 };
