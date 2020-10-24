@@ -1,6 +1,6 @@
 const { User } = require('../models');
 const { createError } = require('../helpers/errorHelper');
-const { verifyUserInfo } = require('../helpers/userHelpers');
+const { verifyUserInfo } = require('../helpers/helperFunctions');
 
 const userRegister = async (displayName, email, password, image) => {
   const infoValidation = verifyUserInfo(displayName, email, password);

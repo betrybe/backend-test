@@ -1,13 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createUser } = require('./controllers/userController');
+const { makeLogin } = require('./controllers/loginController');
 
 const app = express();
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/user', createUser);
+app.post('/user', createUser);
+app.post('/login', makeLogin);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

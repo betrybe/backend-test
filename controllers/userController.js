@@ -10,7 +10,7 @@ const createUser = rescue(async (req, res) => {
     return res.status(response.error.status).json({ message: response.error.message });
   }
 
-  const token = createToken(displayName, email, image);
+  const token = createToken(email);
 
   return res.status(201).json({ token });
 });
