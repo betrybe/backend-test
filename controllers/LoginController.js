@@ -5,7 +5,7 @@ const login = Router();
 
 login.post('/', authClient(), (req, res) => {
   console.log(req.body);
-  return res.status(201);
+  res.status(201).send('created user');
 });
 
 module.exports = login;
