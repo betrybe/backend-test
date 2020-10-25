@@ -33,9 +33,7 @@ const getPostById = (service) =>
 const updatePost = (service) =>
   rescue(async (req, res) => {
     const { id } = req.params;
-    const {
-      id: userId,
-    } = req.user;
+    const { id: userId } = req.user;
     const { title, content } = req.body;
 
     const post = await service.getPostById(id);
@@ -53,11 +51,30 @@ const updatePost = (service) =>
     return res.status(200).json(updatedPost);
   });
 
+const getPostBySearchTerm = (service) => rescue(async (req, res) => {
+  const { q } = req.query;
+
+  if (q === '') {
+    const allPosts = await service.getAllPosts();
+
+    return res.status(200).json(allPosts);
+  }
+
+  const posts = await service.getPostBySearchTerm(q);
+
+  if (!posts) {
+    return res.status(200).json([]);
+  }
+
+  return res.status(200).json(posts);
+});
+
 const getPostController = (service) => ({
   createPost: createPost(service),
   getAllPosts: getAllPosts(service),
   getPostById: getPostById(service),
   updatePost: updatePost(service),
+  getPostBySearchTerm: getPostBySearchTerm(service),
 });
 
 module.exports = { getPostController };

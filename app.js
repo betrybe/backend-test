@@ -32,6 +32,7 @@ const factory = async (config) => {
   app.delete('/user/me', validateJWT, userController.deleteUser);
 
   app.get('/post', validateJWT, postController.getAllPosts);
+  app.get('/post/search', validateJWT, postController.getPostBySearchTerm);
   app.get('/post/:id', validateJWT, postController.getPostById);
   app.post(
     '/post',
