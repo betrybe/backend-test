@@ -5,7 +5,7 @@ const CreatePost = async (payload, user) => {
   const { title, content } = payload;
   const { id: userId } = user.dataValues;
 
-  // //* Faz as validações em payload
+  //* Faz as validações em payload
   const titleErr = err.ErrHandler.VerifyPostTitle(title);
   const contentErr = err.ErrHandler.VerifyPostContent(content);
 
@@ -17,8 +17,6 @@ const CreatePost = async (payload, user) => {
     title,
     content,
     userId,
-    published: new Date(),
-    updated: new Date(),
   });
 
   return post;
@@ -33,7 +31,7 @@ const GetAllPosts = async () => {
   return posts;
 };
 
-const GetPostById = async(id) => {
+const GetPostById = async (id) => {
   const post = await Post.findAll({
     where: { id },
     include: { model: User, as: 'user' },
@@ -48,8 +46,35 @@ const GetPostById = async(id) => {
   return post[0];
 };
 
+const UpdatePostById = async (payload, user, id) => {
+  //* Verifica se o usuário que pediu update é o mesmo que criou o post.
+  const post = await Post.findOne({ where: { id } });
+  const userAndPostErr = err.ErrHandler.VerifyPostAndUser(post, user);
+
+  if (userAndPostErr) return userAndPostErr;
+
+  //* Faz as validações em payload
+  const titleErr = err.ErrHandler.VerifyPostTitle(payload.title);
+  const contentErr = err.ErrHandler.VerifyPostContent(payload.content);
+
+  if (titleErr) return titleErr;
+  if (contentErr) return contentErr;
+
+  //* Após todas as validações é feito a atualização.
+  const { title, content } = payload;
+  await Post.update({ title, content }, { where: { id } });
+
+  const uptPost = await Post.findOne({
+    where: { id },
+    attributes: { exclude: ['id', 'published', 'updated'] },
+  });
+
+  return uptPost;
+};
+
 module.exports = {
   CreatePost,
   GetAllPosts,
   GetPostById,
+  UpdatePostById,
 };

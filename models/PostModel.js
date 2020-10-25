@@ -5,11 +5,9 @@ const CreatePost = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, primaryKey: true },
       title: DataTypes.STRING,
       content: DataTypes.STRING,
-      published: DataTypes.DATE,
-      updated: DataTypes.DATE,
       userId: { type: DataTypes.INTEGER, foreignKey: true },
     },
-    { timestamps: false },
+    { createdAt: 'published', updatedAt: 'updated' },
   );
 
   Post.associate = (models) => {

@@ -121,6 +121,15 @@ const VerifyPostContent = (content) => {
   return false;
 };
 
+const VerifyPostAndUser = (post, user) => {
+  if (post.dataValues.userId !== user.dataValues.id) {
+    const error = { error: { status: 401, message: 'Usuário não autorizado' } };
+    return error;
+  }
+
+  return false;
+};
+
 module.exports = {
   VerifyNameLength,
   VerifyEmail,
@@ -129,4 +138,5 @@ module.exports = {
   VerifyUserLogin,
   VerifyPostTitle,
   VerifyPostContent,
+  VerifyPostAndUser,
 };

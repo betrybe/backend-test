@@ -30,4 +30,14 @@ router.get('/:id', authMiddleware, rescue(async (req, res, next) => {
   res.status(200).json(response);
 }));
 
+router.put('/:id', authMiddleware, rescue(async (req, res, next) => {
+  const postId = req.params.id;
+  const userData = req.user;
+  const payload = req.body;
+  const response = await services.PostServices.UpdatePostById(payload, userData, postId);
+
+  if (response.error) return next(response.error);
+  res.status(200).json(response);
+}));
+
 module.exports = router;
