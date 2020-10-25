@@ -101,10 +101,32 @@ const VerifyUserLogin = async (email, password) => {
   return false;
 };
 
+//* Validações de Posts a partir daqui -----------------
+
+const VerifyPostTitle = (title) => {
+  if (!title) {
+    const error = { error: { status: 400, message: '"title" is required' } };
+    return error;
+  }
+
+  return false;
+};
+
+const VerifyPostContent = (content) => {
+  if (!content) {
+    const error = { error: { status: 400, message: '"content" is required' } };
+    return error;
+  }
+
+  return false;
+};
+
 module.exports = {
   VerifyNameLength,
   VerifyEmail,
   VerifyPassword,
   VerifyDuplicate,
   VerifyUserLogin,
+  VerifyPostTitle,
+  VerifyPostContent,
 };
