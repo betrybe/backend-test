@@ -26,10 +26,14 @@ const getPostById = ({ Posts, Users }) => async (id) => {
   return post;
 };
 
+const updatePost = ({ Posts }) => async (title, content, id) =>
+  Posts.update({ title, content }, { where: { id } });
+
 const getPostService = (models) => ({
   createPost: createPost(models),
   getAllPosts: getAllPosts(models),
   getPostById: getPostById(models),
+  updatePost: updatePost(models),
 });
 
 module.exports = { getPostService };

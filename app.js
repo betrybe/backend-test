@@ -39,6 +39,12 @@ const factory = async (config) => {
     validatePostEntries,
     postController.createPost,
   );
+  app.put(
+    '/post/:id',
+    validateJWT,
+    validatePostEntries,
+    postController.updatePost,
+  );
 
   return app;
 };

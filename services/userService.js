@@ -26,8 +26,6 @@ const userLogin = ({ Users }, generateJWT, config) => async (email) => {
 
   const { _password, ...data } = user[0];
 
-  console.log(data);
-
   return generateJWT(data, config);
 };
 
