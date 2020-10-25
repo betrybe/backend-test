@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('./SECRET');
 
-const createToken = (email) => {
-  const userObject = { email };
+const createToken = ({ email, id }) => {
+  const userObject = { email, id };
   const token = jwt.sign(userObject, SECRET, {
     expiresIn: '1h',
     algorithm: 'HS256',

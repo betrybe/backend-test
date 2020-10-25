@@ -1,13 +1,19 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
 const createToken = require('../../utils/createToken');
+const validateToken = require('../middleware/tokenValidation');
 const {
   userValidate,
   userInfoExist,
   userDataEmpty,
 } = require('../middleware/authUser');
-const validateToken = require('../middleware/tokenValidation');
-const { User } = require('../../models');
+const {
+  createUser,
+  getUserByEmail,
+  getUserById,
+  getAllUser,
+  deleteUser,
+} = require('../../services');
 
 const user = Router();
 const login = Router();
@@ -19,15 +25,15 @@ user.post(
   rescue(async (req, res) => {
     const { displayName, email, password, image } = req.body;
 
-    User.findAll({ where: { email } })
-      .then((result) => {
-        if (result.length > 0) return res.status(409).json({ message: 'Usuário já existe' });
-      });
+    const dataUser = await getUserByEmail(email);
 
-    const token = createToken(email);
+    if (dataUser.length > 0) return res.status(409).json({ message: 'Usuário já existe' });
 
-    User.create({ displayName, email, password, image })
-      .then(() => res.status(201).json({ token }));
+    await createUser(displayName, email, password, image);
+
+    const token = createToken(dataUser);
+
+    return res.status(201).json({ token });
   }),
 );
 
@@ -39,7 +45,7 @@ login.post(
     const { email } = req.body;
     const token = createToken(email);
 
-    const userLogin = await User.findAll({ where: { email } });
+    const userLogin = await getUserByEmail(email);
     if (userLogin.length <= 0) return res.status(400).json({ message: 'Campos inválidos' });
 
     return res.status(200).json({ token });
@@ -52,7 +58,7 @@ user.get(
   rescue(async (req, res) => {
     const { id } = req.params;
 
-    const userById = await User.findAll({ where: { id } });
+    const userById = await getUserById(id);
 
     if (userById.length <= 0) return res.status(404).json({ message: 'Usuário não existe' });
 
@@ -64,7 +70,7 @@ user.get(
   '/',
   validateToken,
   rescue(async (_req, res) => {
-    const allUsers = await User.findAll({});
+    const allUsers = await getAllUser();
 
     return res.status(200).json(allUsers);
   }),
@@ -76,7 +82,7 @@ user.delete(
   rescue(async (req, res) => {
     const { email } = req.user;
 
-    await User.destroy({ where: { email } });
+    await deleteUser(email);
 
     res.status(204).end();
   }),

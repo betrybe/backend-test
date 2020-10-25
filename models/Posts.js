@@ -1,5 +1,5 @@
 const createPost = (sequelize, DataTypes) => {
-  const posts = sequelize.define('Posts', {
+  const posts = sequelize.define('Post', {
     id: {
       primaryKey: true,
       autoIncrement: true,
@@ -21,7 +21,7 @@ const createPost = (sequelize, DataTypes) => {
   }, { createdAt: 'published', updatedAt: 'updated' });
 
   posts.associate = (models) => {
-    posts.belongsTo(models.Users, { foreignKey: 'userId', as: 'user' });
+    posts.belongsTo(models.User, { foreignKey: 'userId', as: 'Users' });
   };
 
   return posts;
