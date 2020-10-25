@@ -23,6 +23,12 @@ router.get('/', authMiddleware, rescue(async (req, res) => {
   res.status(200).json(response);
 }));
 
+router.get('/search', authMiddleware, rescue(async (req, res) => {
+  const param = req.query;
+  const response = await services.PostServices.GetPostsByQuery(param.q);
+  res.status(200).json(response);
+}));
+
 router.get('/:id', authMiddleware, rescue(async (req, res, next) => {
   const postId = req.params.id;
   const response = await services.PostServices.GetPostById(postId);
