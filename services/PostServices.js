@@ -88,10 +88,29 @@ const GetPostsByQuery = async (q) => {
   return post;
 };
 
+const DeletePostById = async (id, user) => {
+  //* Verifica se o post existe.
+  const post = await Post.findOne({ where: { id } });
+  if (!post) {
+    const error = { error: { status: 404, message: 'Post não existe' } };
+    return error;
+  }
+
+  //* Verifica se o usuário que pediu exclusão é o mesmo que criou o post.
+  const userAndPostErr = err.ErrHandler.VerifyPostAndUser(post, user);
+
+  if (userAndPostErr) return userAndPostErr;
+
+  //* Passando nas validações é feita a exclusão.
+  await Post.destroy({ where: { id } });
+  return true;
+};
+
 module.exports = {
   CreatePost,
   GetAllPosts,
   GetPostById,
   UpdatePostById,
   GetPostsByQuery,
+  DeletePostById,
 };
