@@ -13,8 +13,8 @@ const Posts = (sequelize, DataTypes) => {
 
   // Relacionamento 1:1
   posts.associate = (models) => {
-    posts.hasOne(models.Users,
-      { foreignKey: 'id', as: 'user' });
+    posts.belongsTo(models.Users,
+      { foreignKey: 'userId', as: 'user' });
   };
 
   return posts;

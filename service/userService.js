@@ -6,13 +6,14 @@ const genericErr = (code, message) => ({
   message,
 });
 
+// const findById = (id) => Users.findOne({ where: { id } });
 const findByEmail = (email) => Users.findOne({ where: { email } });
 const findByEmailPass = (email, password) => Users.findOne({ where: { email, password } });
 
 const createUser = async (data) => {
   const { displayName, email, password, image } = data;
   const hasError = await validateUser(data);
-  const userExists = await findByEmail(email);
+  const userExists = await findByEmail(email || '');
 
   if (hasError) return genericErr(400, hasError);
   if (userExists) return genericErr(409, { message: 'Usuário já existe' });
@@ -25,6 +26,7 @@ const createUser = async (data) => {
 };
 
 module.exports = {
+  // findById,
   createUser,
   findByEmail,
   findByEmailPass,
