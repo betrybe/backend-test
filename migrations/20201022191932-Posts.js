@@ -18,7 +18,6 @@ module.exports = {
       userId: {
         type: Sequelize.STRING,
         allowNull: false,
-
       },
       published: {
         type: Sequelize.DATE,

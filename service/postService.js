@@ -1,5 +1,5 @@
-const createPost = (models) => (title, content) =>
-  models.Post.create({ title, content });
+const createPost = (models) => (title, content, userId) =>
+  models.Post.create({ title, content, userId });
 
 const getPosts = (models) => () => models.Post.findAll();
 

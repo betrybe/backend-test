@@ -1,10 +1,11 @@
 const createPosts = (service) => async (req, res) => {
   const { title, content } = req.body;
 
-  if (!title) return res.status(400).json({ message: '\"title\" is required' });
-  if (!content) return res.status(400).json({ message: '\"content\" is required' });
+  if (!title) return res.status(400).json({ message: '"title" is required' });
+  if (!content) return res.status(400).json({ message: '"content" is required' });
 
-  const resultPost = await service.createPost(title, content);
+
+  const resultPost = await service.createPost(title, content, 'userId');
   return res.status(201).json(resultPost);
 };
 

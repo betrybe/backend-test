@@ -31,7 +31,7 @@ async function factory() {
   app.get('/user/:id', userController.getUserById);
   app.delete('user/me', userController.deleteUser);
 
-  app.post('/post', postController.createPosts);
+  app.post('/post', authentication, postController.createPosts);
   app.get('/post', postController.getPosts);
   app.get('/post/:id', postController.getPostsById);
   app.put('/post/:id', postController.putPosts);
