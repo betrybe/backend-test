@@ -52,7 +52,7 @@ const GetUsers = async () => {
 const GetUserById = async (pk) => {
   const user = await User.findByPk(pk);
   if (!user) {
-    const error = { error: { status: 404, message: 'Usuário não existe'}}
+    const error = { error: { status: 404, message: 'Usuário não existe' } };
     return error;
   }
 
