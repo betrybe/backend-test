@@ -69,12 +69,35 @@ const getPostBySearchTerm = (service) => rescue(async (req, res) => {
   return res.status(200).json(posts);
 });
 
+const deletePost = (service) =>
+  rescue(async (req, res) => {
+    const { id } = req.params;
+    const { id: userId } = req.user;
+
+    const post = await service.getPostById(id);
+
+    if (post.errors) {
+      res.status(404).json(post.errors);
+    }
+
+    const postUserId = post.dataValues.user.dataValues.id;
+
+    if (postUserId !== userId) {
+      return res.status(401).json({ message: 'Usuário não autorizado' });
+    }
+
+    await service.deletePost(id);
+
+    return res.status(204).end();
+  });
+
 const getPostController = (service) => ({
   createPost: createPost(service),
   getAllPosts: getAllPosts(service),
   getPostById: getPostById(service),
   updatePost: updatePost(service),
   getPostBySearchTerm: getPostBySearchTerm(service),
+  deletePost: deletePost(service),
 });
 
 module.exports = { getPostController };

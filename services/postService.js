@@ -57,12 +57,15 @@ const getPostBySearchTerm = ({ Posts, Users }) => async (searchTerm) => {
 const updatePost = ({ Posts }) => async (title, content, id) =>
   Posts.update({ title, content }, { where: { id } });
 
+const deletePost = ({ Posts }) => async (id) => Posts.destroy({ where: { id } });
+
 const getPostService = (models) => ({
   createPost: createPost(models),
   getAllPosts: getAllPosts(models),
   getPostById: getPostById(models),
   updatePost: updatePost(models),
   getPostBySearchTerm: getPostBySearchTerm(models),
+  deletePost: deletePost(models),
 });
 
 module.exports = { getPostService };

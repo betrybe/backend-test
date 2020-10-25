@@ -46,6 +46,7 @@ const factory = async (config) => {
     validatePostEntries,
     postController.updatePost,
   );
+  app.delete('/post/:id', validateJWT, postController.deletePost);
 
   return app;
 };
