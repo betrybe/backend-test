@@ -1,5 +1,5 @@
 module.exports = {
-  up: async (queryInterface, Sequelize) => queryInterface.createTable('Users', {
+  up: async (queryInterface, Sequelize) => queryInterface.createTable('Posts', {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -16,12 +16,9 @@ module.exports = {
       allowNull: false,
     },
     userId: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
-      references: {
-        model: { tableName: 'Users' },
-        key: 'id',
-      },
+      references: { model: { tableName: 'Users' }, key: 'id' },
     },
     published: {
       type: Sequelize.DATE,
