@@ -1,4 +1,4 @@
-const { Post } = require('../models');
+const { User, Post } = require('../models');
 const err = require('../errors');
 
 const CreatePost = async (payload, user) => {
@@ -24,6 +24,16 @@ const CreatePost = async (payload, user) => {
   return post;
 };
 
+const GetAllPosts = async () => {
+  const posts = await Post.findAll({
+    include: { model: User, as: 'user' },
+    attributes: { exclude: ['userId'] },
+  });
+
+  return posts;
+};
+
 module.exports = {
   CreatePost,
+  GetAllPosts,
 };

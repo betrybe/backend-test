@@ -18,4 +18,9 @@ router.post('/', authMiddleware, rescue(async (req, res, next) => {
   });
 }));
 
+router.get('/', authMiddleware, rescue(async (req, res) => {
+  const response = await services.PostServices.GetAllPosts();
+  res.status(200).json(response);
+}));
+
 module.exports = router;
