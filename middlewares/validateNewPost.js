@@ -1,5 +1,3 @@
-const validateEmail = require('../utils/validateEmail');
-
 const validateNewPost = (req, res, next) => {
   const { title, content } = req.body;
   const errMsgs = ['"title" is required', '"content" is required'];

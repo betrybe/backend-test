@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { validateNewPost } = require('../middlewares');
-const { Post } = require('../models');
-const createToken = require('../utils/createToken');
+const { Post, User } = require('../models');
 
 module.exports = (() => {
   router.post('/', validateNewPost, async (req, res, _next) => {
@@ -18,6 +17,17 @@ module.exports = (() => {
       return res.status(400).json({ message: 'Something went wrong', error });
     }
     return res.status(201).json({ title, content, userId: id });
+  });
+  router.get('/', async (_req, res, _next) => {
+    const posts = await Post.findAll({
+      include: {
+        model: User,
+        as: 'user',
+        attributes: { exclude: ['password'] },
+      },
+      limit: 2,
+    });
+    res.status(200).json(posts);
   });
   return router;
 })();

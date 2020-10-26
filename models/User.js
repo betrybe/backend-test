@@ -15,6 +15,13 @@ const User = (sequelize, DataTypes) => {
     },
   );
 
+  UserObject.associate = (models) => {
+    UserObject.hasOne(models.Post, {
+      foreignKey: 'id',
+      as: 'addressesuser',
+    });
+  };
+
   return UserObject;
 };
 
