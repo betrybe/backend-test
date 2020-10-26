@@ -1,14 +1,7 @@
-// const Joi = require('joi');
 const rescue = require('express-rescue');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = 'mirellasproject';
-
-// const validateUser = Joi.object({
-//   displayName: Joi.string().length(8),
-//   email: Joi.string().email().required(),
-//   password: Joi.string().length(8).required(),
-// });
 
 const createUser = (service) => rescue(async (req, res) => {
   const { displayName, email, password, image } = req.body;

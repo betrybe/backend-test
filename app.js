@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const models = require('./models');
 const errorMiddleware = require('./middlewares/error');
+// const validateUser = require('./utils/validateUser');
 
 const { getUserService } = require('./services/userService');
 const { getUserController } = require('./controllers/userController');
