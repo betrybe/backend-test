@@ -8,11 +8,23 @@ const createPost = async (postTitle, postContent, ownerId) =>
 
 const getAllPosts = async () => Post.findAll({ include: 'user' });
 
-// const getUserById = async (id) => {
-//   const user = await User.findByPk(id);
-//   if (!user) return { status: 404, response: { message: 'Usuário não existe' } };
-//   return { status: 200, response: user };
-// };
+const getPostById = async (id) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { status: 404, response: { message: 'Post não existe' } };
+  return { status: 200, response: post };
+};
+
+const updatePostById = async (id, title, content, userId) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { status: 404, response: { message: 'Post não encontrado' } };
+  if (userId !== post.user.id) {
+    return { status: 401, response: { message: 'Usuário não autorizado' } };
+  }
+  const updatedPost = await Post.update({ title, content }, { where: { id } });
+  return updatedPost[0] === 1
+    ? { status: 200, response: { title, content, userId } }
+    : { status: 400, response: { message: 'error: Nenhum post editado' } };
+};
 
 // const deteleUserById = async (id) => {
 //   const user = await User.findByPk(id);
@@ -24,8 +36,8 @@ const getAllPosts = async () => Post.findAll({ include: 'user' });
 
 module.exports = {
   createPost,
-  // userLogin,
   getAllPosts,
-  // getUserById,
+  getPostById,
+  updatePostById,
   // deteleUserById,
 };

@@ -4,6 +4,8 @@ const {
   NULL_PASSWORD,
   EMPTY_EMAIL,
   EMPTY_PASSWORD,
+  NULL_TITLE,
+  NULL_CONTENT,
 } = require('../services/errors');
 
 const errMessage = (message) => ({
@@ -15,6 +17,11 @@ const loginValidationRules = [
   body('password', errMessage(NULL_PASSWORD)).exists(),
   body('email', errMessage(EMPTY_EMAIL)).custom((value) => value !== ''),
   body('password', errMessage(EMPTY_PASSWORD)).custom((value) => value !== ''),
+];
+
+const postValidationRules = [
+  body('title', errMessage(NULL_TITLE)).exists(),
+  body('content', errMessage(NULL_CONTENT)).exists(),
 ];
 
 const validate = (schemas, status) => async (req, res, next) => {
@@ -30,4 +37,5 @@ const validate = (schemas, status) => async (req, res, next) => {
 
 module.exports = {
   loginValidate: validate(loginValidationRules, 400),
+  postValidate: validate(postValidationRules, 400),
 };

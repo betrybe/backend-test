@@ -4,7 +4,7 @@ const userController = require('./controllers/userController');
 const loginController = require('./controllers/loginController');
 const postController = require('./controllers/postController');
 const errorHandler = require('./middlewares/errorHandler');
-const { loginValidate } = require('./middlewares/userValidate');
+const { loginValidate } = require('./middlewares/validateData');
 
 const app = express();
 app.use(express.json());
