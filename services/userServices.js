@@ -10,11 +10,16 @@ const jwtConfig = {
 
 const userLogin = async (userEmail, userPassword) => {
   const user = await User.findOne({ where: { email: userEmail } });
-  if (user.email !== userEmail) return { status: 404, message: 'Não há cadastro com esse email.' };
-  if (user.password !== userPassword) return { status: 400, message: 'Senha incorreta.' };
+  if (!user || parseInt(user.password, 10) !== parseInt(userPassword, 10)) {
+    return { status: 400, response: { message: 'Campos inválidos' } };
+  }
+  if (user.email !== userEmail) {
+    return { status: 404, response: { message: 'Não há cadastro com esse email.' } };
+  }
   const { password, ...userData } = user;
   const token = jwt.sign(userData, process.env.SECRET || 'blogsApiSecret', jwtConfig);
-  return { ...userData, token };
+  console.log('token', token);
+  return { status: 200, response: { token } };
 };
 
 const createUser = async (displayName, email = null, password, image) => {
