@@ -6,7 +6,7 @@ const createPost = async (postTitle, postContent, ownerId) =>
       ({ status: 201, response: { title, content, userId } }))
     .catch(({ errors }) => ({ status: 400, response: { message: errors[0].message } }));
 
-const getAllPosts = async () => Post.findAll();
+const getAllPosts = async () => Post.findAll({ include: 'user' });
 
 // const getUserById = async (id) => {
 //   const user = await User.findByPk(id);
