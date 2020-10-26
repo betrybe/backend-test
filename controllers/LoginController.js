@@ -5,13 +5,9 @@ const login = Router();
 
 
 
-const tokenVerify = (token) => { 
-
-}
-
 login.post('/', authClient(), (req, res) => {
-
-  res.status(201).send(req.body.token);
+  console.log(res)
+  res.status(201).send(req.cookie.token);
 });
 
 

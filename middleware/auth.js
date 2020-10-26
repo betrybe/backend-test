@@ -7,7 +7,7 @@ const authClient = () => (req, res, next) => {
   const { body } = req;
   const { email } = body;
   const token = jwt.sign({ email }, secret);
-  req.body = { ...req.body, token };
+  req.cookie = {token}
   next();
 };
 
