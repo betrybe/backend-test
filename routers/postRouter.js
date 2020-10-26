@@ -8,7 +8,7 @@ const postRouter = (postController, models) => {
   post
     .post(
       '/',
-      rescue(validateToken), rescue(validatePost),
+      rescue(validateToken), rescue(validatePost(models)),
       rescue(postController.createPost),
     )
     .get('/',
