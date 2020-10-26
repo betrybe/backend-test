@@ -9,6 +9,7 @@ const errors = {
   empty_email: { message: '"email" is not allowed to be empty', status: 400 },
   empty_password: { message: '"password" is not allowed to be empty', status: 400 },
   invalid_fields: { message: 'Campos inválidos', status: 400 },
+  unauthorized_user: { message: 'Usuário não autorizado', status: 401 },
   token_error: { message: 'Token expirado ou inválido', status: 401 },
   no_token: { message: 'Token não encontrado', status: 401 },
   invalid_id: { message: 'Invalid id', status: 401 },
@@ -31,7 +32,7 @@ function makeError(err) {
 }
 
 module.exports = (err, _req, res, _next) => {
-  console.log('erre', err);
+  console.log('erre', Object.entries(err));
   const error = makeError(err);
   // ternário top do Herbert https://github.com/tryber/sd-03-store-manager/pull/4/files
   return error

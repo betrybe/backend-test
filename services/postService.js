@@ -31,11 +31,26 @@ const getById = (models) => async (id) => {
     include: {
       model: models.User,
       as: 'user',
-    } });
+    },
+  });
 
   if (!post) return post;
 
   return post.dataValues;
+};
+
+const updatePost = (models) => async (id, title, content, userId) => {
+  const post = await models.Post.findByPk(id);
+  if (post.dataValues.userId !== userId) return { error: 'unauthorized_user' };
+
+  const updated = await models.Post.update(
+    { title, content },
+    { where: { id } },
+  );
+
+  if (!updated) return updated;
+
+  return { title, content, userId };
 };
 
 const deletePost = (models) => async (id) =>
@@ -46,6 +61,7 @@ const userService = (models) => ({
   getAll: getAll(models),
   getById: getById(models),
   deletePost: deletePost(models),
+  updatePost: updatePost(models),
 });
 
 module.exports = userService;
