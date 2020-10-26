@@ -7,13 +7,22 @@ const createUser = (sequelize, DataTypes) => {
       allowNull: false,
     },
     title: {
+      allowNull: false,
       type: DataTypes.STRING,
+      validate: {
+        notNull: {
+          msg: '"title" is required',
+        },
+      },
     },
     content: {
       type: DataTypes.STRING,
-    },
-    image: {
-      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: '"content" is required',
+        },
+      },
     },
   }, { timestamps: true, updatedAt: 'updated', createdAt: 'published' });
 
