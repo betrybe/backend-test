@@ -1,13 +1,18 @@
 const { Router } = require('express');
 const { authClient } = require('../middleware/auth');
-const { Users } = require('../models');
 
 const login = Router();
 
+
+
+const tokenVerify = (token) => { 
+
+}
+
 login.post('/', authClient(), (req, res) => {
-  Users.findAll().then((users) =>
-    console.log(users));
-  res.status(201).send('created user');
+
+  res.status(201).send(req.body.token);
 });
+
 
 module.exports = login;
