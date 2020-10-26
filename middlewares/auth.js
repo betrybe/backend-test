@@ -10,13 +10,6 @@ const jwtConfig = {
 
 const secret = process.env.SECRET || 'ronaldinho';
 
-/* {
-  user: blabla,
-  email: blabla,
-  expiresIn: 2d,
-  algorithm: HS256
-} */
-
 const generateJWT = (data) => {
   const token = jwt.sign({ data }, secret, jwtConfig);
   return token;
@@ -30,7 +23,6 @@ const validateJWT = rescue(async (req, res, next) => {
     const {
       data: { email },
     } = decode;
-    // console.log(decode);
     const user = await Users.findAll({ where: { email } }); // ver a resposta
     console.log('depois do await');
     if (!user) res.status(401).json({ message: 'Token expirado ou inválido' });
