@@ -7,6 +7,7 @@ const Post = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       content: DataTypes.STRING,
       userId: DataTypes.INTEGER,
+      published: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
       updated: { type: DataTypes.DATE, defaultValue: Sequelize.NOW },
     },
     {
