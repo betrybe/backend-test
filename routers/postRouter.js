@@ -14,6 +14,9 @@ const postRouter = (postController, models) => {
     .get('/',
       rescue(validateToken),
       rescue(postController.getAllWithUser))
+    .get('/search',
+      rescue(validateToken),
+      rescue(postController.searchPost))
     .get('/:id',
       rescue(validateToken),
       rescue(postController.getById))

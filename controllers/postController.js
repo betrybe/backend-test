@@ -43,12 +43,20 @@ const deletePost = (service) => async (req, res, next) => {
   return res.status(204).end();
 };
 
+const searchPost = (service) => async (req, res, next) => {
+  const posts = await service.searchPost(req.query.q);
+  if (!posts) return next('post_not_found');
+
+  return res.status(200).json(posts);
+};
+
 const postController = (service) => ({
   createPost: createPost(service),
   getAllWithUser: getAllWithUser(service),
   getById: getById(service),
   updatePost: updatePost(service),
   deletePost: deletePost(service),
+  searchPost: searchPost(service),
 });
 
 module.exports = postController;
