@@ -32,7 +32,7 @@ function makeError(err) {
 }
 
 module.exports = (err, _req, res, _next) => {
-  console.log('erre', Object.entries(err));
+  console.log('error: ', err);
   const error = makeError(err);
   // ternário top do Herbert https://github.com/tryber/sd-03-store-manager/pull/4/files
   return error

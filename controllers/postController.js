@@ -23,19 +23,14 @@ const getById = (service) => async (req, res, next) => {
 };
 
 const updatePost = (service) => async (req, res, next) => {
-  try {
-    const { title, content } = req.body;
+  const { title, content } = req.body;
 
-    const post = await service.updatePost(req.params.id, title, content, req.user.id);
+  const post = await service.updatePost(req.params.id, title, content, req.user.id);
 
-    if (post.error) return next(post.error);
-    if (!post) return next('post_not_found');
+  if (post.error) return next(post.error);
+  if (!post) return next('post_not_found');
 
-    return res.status(200).json(post);
-  } catch (e) {
-    console.log(e);
-    next(e);
-  }
+  return res.status(200).json(post);
 };
 
 const postController = (service) => ({

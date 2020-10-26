@@ -1,6 +1,7 @@
 const app = require('./app');
 
-const config = { port: 3000 };
+const { PORT } = process.env;
+const config = { port: PORT };
 
 app
   .factory()
