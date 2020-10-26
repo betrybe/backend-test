@@ -27,8 +27,14 @@ const getAll = (models) => async () => {
 };
 
 const getById = (models) => async (id) => {
-  const post = await models.Post.findByPk(id);
-  console.log('post', post);
+  const post = await models.Post.findByPk(id, {
+    include: {
+      model: models.User,
+      as: 'user',
+    } });
+
+  if (!post) return post;
+
   return post.dataValues;
 };
 
