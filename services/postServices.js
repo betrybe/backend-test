@@ -1,3 +1,4 @@
+const sequelize = require('sequelize');
 const { Post } = require('../models');
 
 const createPost = async (postTitle, postContent, ownerId) =>
@@ -26,6 +27,20 @@ const updatePostById = async (id, title, content, userId) => {
     : { status: 400, response: { message: 'error: Nenhum post editado' } };
 };
 
+const getPostBySearch = async (searchTerm) => {
+  const { Op } = sequelize;
+  const posts = await Post.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${searchTerm}%` } },
+        { content: { [Op.like]: `%${searchTerm}%` } },
+      ],
+    },
+    include: 'user',
+  });
+  return { status: 200, response: posts || [] };
+};
+
 // const deteleUserById = async (id) => {
 //   const user = await User.findByPk(id);
 //   console.log(user);
@@ -39,5 +54,6 @@ module.exports = {
   getAllPosts,
   getPostById,
   updatePostById,
+  getPostBySearch,
   // deteleUserById,
 };

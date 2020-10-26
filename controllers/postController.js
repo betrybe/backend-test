@@ -4,6 +4,7 @@ const {
   getAllPosts,
   getPostById,
   updatePostById,
+  getPostBySearch,
   // detelePostById
 } = require('../services/postServices');
 const { postValidate } = require('../middlewares/validateData');
@@ -39,18 +40,21 @@ const updateById = async (req, res) => {
   res.status(status).json(response);
 };
 
-// const deleteById = async (req, res) => {
-//   const { dataValues: { id } } = req.user;
-//   const { status } = await detelePostById(id);
-//   return res.status(status).json();
-// };
-posts.route('/')
-  .post(auth(true), create)
-  .get(auth(true), getAll);
+const getBySearch = async (req, res) => {
+  const { q: searchTerm } = req.query;
+  const { status, response } = await getPostBySearch(searchTerm);
+  return res.status(status).json(response);
+};
+posts.route('/search')
+  .get(auth(true), getBySearch);
 
 posts.route('/:id')
   .get(auth(true), getById)
   .put(auth(true), postValidate, updateById);
+
+posts.route('/')
+  .post(auth(true), create)
+  .get(auth(true), getAll);
 
 // users.route('/me')
 //   .delete(auth(true), deleteById);
