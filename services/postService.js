@@ -7,20 +7,28 @@ const createPost = (models) => async ({ title, content, userId }) => {
     published: new Date(),
     updated: new Date(),
   });
-  console.log(post);
-  return post;
+  return post.dataValues;
 };
 
 const getAll = (models) => async () => {
-  const posts = await models.Post.findAll({ include: {
-    model: models.User,
-    as: 'user',
-  } });
-  return posts.map((post) => post.dataValues);
+  const posts = await models.Post.findAll({
+    include: {
+      model: models.User,
+      as: 'user',
+    },
+  });
+  return posts.reduce((acc, { dataValues }) => {
+    const filterPost = {
+      ...dataValues,
+      user: dataValues.user.dataValues,
+    };
+    return [...acc, filterPost];
+  }, []);
 };
 
 const getById = (models) => async (id) => {
   const post = await models.Post.findByPk(id);
+  console.log('post', post);
   return post.dataValues;
 };
 
