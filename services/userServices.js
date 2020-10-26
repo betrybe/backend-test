@@ -33,7 +33,10 @@ const createUser = async (displayName, email = null, password, image) => {
     .catch(({ errors }) => ({ status: 400, response: { message: errors[0].message } }));
 };
 
+const getAllUsers = async () => User.findAll();
+
 module.exports = {
   createUser,
   userLogin,
+  getAllUsers,
 };
