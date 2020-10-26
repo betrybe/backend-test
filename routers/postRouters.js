@@ -25,9 +25,27 @@ module.exports = (() => {
         as: 'user',
         attributes: { exclude: ['password'] },
       },
-      limit: 2,
     });
     res.status(200).json(posts);
+  });
+  router.get('/:id', async (req, res, _next) => {
+    try {
+      const { id } = req.params;
+      const post = await Post.findByPk(id, {
+        include: {
+          model: User,
+          as: 'user',
+          attributes: { exclude: ['password'] },
+        },
+        limit: 1,
+      });
+      if (post === null) {
+        return res.status(404).json({ message: 'Post não existe' });
+      }
+      res.status(200).json(post);
+    } catch (error) {
+      return res.status(400).json({ message: 'Algo deu errado' });
+    }
   });
   return router;
 })();
