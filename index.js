@@ -1,10 +1,19 @@
-const express = require('express');
+const app = require('./app');
+const config = require('./config');
 
-const app = express();
+app
+  .factory(config)
+  .then((appIntance) => {
+    appIntance.listen(config.port, () => {
+      console.log(`Ouvindo a porta ${config.port}`);
+    });
 
-app.listen(3000, () => console.log('ouvindo porta 3000!'));
-
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (request, response) => {
-  response.send();
-});
+    // não remova esse endpoint, e para o avaliador funcionar
+    appIntance.get('/', (request, response) => {
+      response.send();
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
