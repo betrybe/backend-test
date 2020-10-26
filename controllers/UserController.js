@@ -10,36 +10,42 @@ const verificarData = async ({ displayName, email, password }) => {
   const isValidEmail = EmailValidation(email);
   if (displayName && displayName.length <= 8) {
     error.isError = true;
+    error.statusCode = 400;
     error.message = '"displayName" length must be at least 8 characters long';
     return error;
   }
   if (!email) {
     error.isError = true;
+    error.statusCode = 400;
     error.message = '"email" is required';
     return error;
   }
   if (email) {
-    const isUserExists = await Users.findOne({ where: { email: 'lewishamilton@gmail.com' } });
+    const isUserExists = await Users.findAll({ where: { email } });
     console.log(isUserExists);
-    if (!isUserExists === null) {
+    if (isUserExists.length) {
       error.isError = true;
-      error.message = '"email" is required';
+      error.statusCode = 409;
+      error.message = 'Usuário já existe';
       return error;
     }
   }
   if (!isValidEmail) {
     error.isError = true;
+    error.statusCode = 400;
     error.message = '"email" must be a valid email';
     return error;
   }
   if (!password) {
     error.isError = true;
+    error.statusCode = 400;
     error.message = '"password" is required';
     return error;
   }
 
   if (password && password.length < 6) {
     error.isError = true;
+    error.statusCode = 400;
     error.message = '"password" length must be 6 characters long';
     return error;
   }
@@ -58,12 +64,18 @@ const verificaToken = (cookies) => {
 user.post('/', authClient(), async (req, res) => {
   const verifyData = await verificarData(req.body);
   const verifyToken = verificaToken(req.cookies);
+  const { displayName, email, password, image } = req.body;
+
   if (verifyData.isError) {
-    return res.status(400).send(verifyData);
+    return res.status(verifyData.statusCode).send(verifyData);
   }
   if (verifyToken.isError) {
     return res.status(400).send(verifyData);
   }
+
+  Users.create({
+    displayName, email, password, image,
+  });
   return res.status(201).send({ token: req.cookies.token });
 });
 
