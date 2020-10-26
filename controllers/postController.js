@@ -33,11 +33,23 @@ const updatePost = (service) => async (req, res, next) => {
   return res.status(200).json(post);
 };
 
+const deletePost = (service) => async (req, res, next) => {
+  const { title, content } = req.body;
+
+  const post = await service.deletePost(req.params.id, title, content, req.user.id);
+
+  if (post.error) return next(post.error);
+  if (!post) return next('post_not_found');
+
+  return res.status(204).end();
+};
+
 const postController = (service) => ({
   createPost: createPost(service),
   getAllWithUser: getAllWithUser(service),
   getById: getById(service),
   updatePost: updatePost(service),
+  deletePost: deletePost(service),
 });
 
 module.exports = postController;
