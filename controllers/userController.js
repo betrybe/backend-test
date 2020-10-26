@@ -23,7 +23,6 @@ const getAll = (service) => async (_req, res) => {
 
 const getById = (service) => async (req, res, next) => {
   const user = await service.getById(req.params.id);
-
   if (!user) return next('user_not_found');
 
   return res.status(200).json(user);

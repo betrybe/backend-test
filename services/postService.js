@@ -40,9 +40,6 @@ const getById = (models) => async (id) => {
 };
 
 const updatePost = (models) => async (id, title, content, userId) => {
-  const post = await models.Post.findByPk(id);
-  if (post.dataValues.userId !== userId) return { error: 'unauthorized_user' };
-
   const updated = await models.Post.update(
     { title, content },
     { where: { id } },

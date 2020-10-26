@@ -1,9 +1,9 @@
-const createUser = (models, createToken) => async (
+const createUser = (models, createToken) => async ({
   displayName,
   email,
   image,
   password,
-) => {
+}) => {
   const user = await models.User.create({ displayName, email, image, password });
   const token = createToken({ displayName, email, id: user.dataValues.id });
   return token;
@@ -13,7 +13,7 @@ const login = (models, createToken) => async (email, password) => {
   const foundUser = await models.User.findOne({
     where: { email, password },
   });
-  if (!foundUser.dataValues) return { error: 'invalid_fields' };
+  if (!foundUser) return { error: 'invalid_fields' };
   const { id, displayName } = foundUser.dataValues;
   const token = createToken({ displayName, id, email });
 
@@ -29,6 +29,7 @@ const getAll = (models) => async () => {
 
 const getById = (models) => async (id) => {
   const user = await models.User.findByPk(id);
+  if (!user) return;
   return user.dataValues;
 };
 

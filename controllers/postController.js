@@ -38,7 +38,6 @@ const deletePost = (service) => async (req, res, next) => {
 
   const post = await service.deletePost(req.params.id, title, content, req.user.id);
 
-  if (post.error) return next(post.error);
   if (!post) return next('post_not_found');
 
   return res.status(204).end();

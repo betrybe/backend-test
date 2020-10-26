@@ -22,12 +22,12 @@ const factory = async () => {
   const userService = getUserService(models, createToken);
   const userController = getUserController(userService);
 
-  app.use('/user', userRouter(userController));
+  app.use('/user', userRouter(userController, models));
 
   const postService = getPostService(models);
   const postController = getPostController(postService);
 
-  app.use('/post', postRouter(postController));
+  app.use('/post', postRouter(postController, models));
 
   app.post('/login', rescue(validateLogin), rescue(userController.login));
 

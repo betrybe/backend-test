@@ -4,7 +4,7 @@ const { validateToken, validatePost } = require('../middlewares/index');
 
 const post = Router();
 
-const postRouter = (postController) => {
+const postRouter = (postController, models) => {
   post
     .post(
       '/',
@@ -18,10 +18,10 @@ const postRouter = (postController) => {
       rescue(validateToken),
       rescue(postController.getById))
     .put('/:id',
-      rescue(validateToken), rescue(validatePost),
+      rescue(validateToken), rescue(validatePost(models)),
       rescue(postController.updatePost))
     .delete('/:id',
-      rescue(validateToken),
+      rescue(validateToken), rescue(validatePost(models)),
       rescue(postController.deletePost));
   return post;
 };
