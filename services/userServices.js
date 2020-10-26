@@ -35,8 +35,24 @@ const createUser = async (displayName, email = null, password, image) => {
 
 const getAllUsers = async () => User.findAll();
 
+const getUserById = async (id) => {
+  const user = await User.findByPk(id);
+  if (!user) return { status: 404, response: { message: 'Usuário não existe' } };
+  return { status: 200, response: user };
+};
+
+const deteleUserById = async (id) => {
+  const user = await User.findByPk(id);
+  console.log(user);
+  if (!user) return { status: 404 };
+  await User.destroy({ where: { id } });
+  return { status: 204 };
+};
+
 module.exports = {
   createUser,
   userLogin,
   getAllUsers,
+  getUserById,
+  deteleUserById,
 };
