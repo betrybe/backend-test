@@ -7,6 +7,7 @@ app.use(express.json());
 
 app.use('/user', users.user);
 app.use('/login', users.login);
+app.use('/post', users.post);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
 

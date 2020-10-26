@@ -26,7 +26,7 @@ const createUser = (sequelize, DataTypes) => {
   }, { timestamps: false });
 
   user.associate = (models) => {
-    user.hasMany(models.Post, { foreignKey: 'userId', as: 'Posts' });
+    user.hasMany(models.Post, { foreignKey: 'userId', as: 'Post' });
   };
 
   return user;

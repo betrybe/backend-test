@@ -5,6 +5,8 @@ const EMAIL_IS_REQUIRED = '"email" is required';
 const PASSWORD_IS_REQUIRED = '"password" is required';
 const EMAIL_EMPTY = '"email" is not allowed to be empty';
 const PASSWORD_EMPTY = '"password" is not allowed to be empty';
+const TITLE_IS_REQUIRED = '"title" is required';
+const CONTENT_IS_REQUIRED = '"content" is required';
 
 module.exports = {
   DISPLAY_NAME,
@@ -14,4 +16,6 @@ module.exports = {
   PASSWORD_IS_REQUIRED,
   EMAIL_EMPTY,
   PASSWORD_EMPTY,
+  TITLE_IS_REQUIRED,
+  CONTENT_IS_REQUIRED,
 };

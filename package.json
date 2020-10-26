@@ -9,6 +9,7 @@
     "express-rescue": "^1.1.30",
     "express-validator": "^6.6.1",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.0.0",
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",
     "sequelize": "^6.3.5",
