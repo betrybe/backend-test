@@ -43,9 +43,10 @@ const validateLogin = async ({ email, password }) => {
 login.post('/', authClient(), async (req, res) => {
   const isLoginValid = await validateLogin(req.body);
   if (isLoginValid.isError) {
+    req.headers = { authorization: 'null' };
     return res.status(isLoginValid.statusCode).send(isLoginValid);
   }
-  res.status(200).send({ token: req.cookie.token });
+  res.status(200).send({ token: req.headers.authorization });
 });
 
 module.exports = login;

@@ -79,8 +79,17 @@ user.post('/', authClient(), async (req, res) => {
   return res.status(201).send({ token: req.cookies.token });
 });
 
-user.get('/', authClient(), (req, res) => {
-  Users.findAll().then((users) => console.log(users));
+user.get('/', authClient(), async (req, res) => {
+  const userData = await Users.findAll();
+  console.log(`${JSON.stringify(req.cookies)}object`);
+  if (req.cookies.token === 'null') {
+    return res.status(401).send('token invalido!');
+  }
+  return res.status(200).send(userData);
+});
+
+user.get('/:id', authClient(), async (req, res) => {
+  Users.findAll().then((users) => users);
   res.status(401).send(req.cookies.token);
 });
 module.exports = user;

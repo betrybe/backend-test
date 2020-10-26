@@ -6,8 +6,10 @@ const secret = process.env.SECRET || 'jwtSecret';
 const authClient = () => (req, res, next) => {
   const { body } = req;
   const { email } = body;
+  console.log(email, 'email');
   const token = jwt.sign({ email }, secret);
-  req.cookie = { token };
+  req.headers = { authorization: token };
+  console.log(req.headers);
   next();
 };
 
