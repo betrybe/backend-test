@@ -41,13 +41,13 @@ const getPostBySearch = async (searchTerm) => {
   return { status: 200, response: posts || [] };
 };
 
-// const deteleUserById = async (id) => {
-//   const user = await User.findByPk(id);
-//   console.log(user);
-//   if (!user) return { status: 404 };
-//   await User.destroy({ where: { id } });
-//   return { status: 204 };
-// };
+const detelePostById = async (id, userId) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { status: 404, response: { message: 'Post não existe' } };
+  if (post.user.id !== userId) return { status: 401, response: { message: 'Usuário não autorizado' } };
+  if (post.user) { await Post.destroy({ where: { id } }); }
+  return { status: 204 };
+};
 
 module.exports = {
   createPost,
@@ -55,5 +55,5 @@ module.exports = {
   getPostById,
   updatePostById,
   getPostBySearch,
-  // deteleUserById,
+  detelePostById,
 };
