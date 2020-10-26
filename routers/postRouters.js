@@ -28,6 +28,31 @@ module.exports = (() => {
     });
     res.status(200).json(posts);
   });
+
+  router.put('/:id', validateNewPost, async (req, res) => {
+    const { title, content } = req.body;
+    const { id } = req.params;
+    const { id: userId } = req.user;
+    try {
+      const updatePost = await Post.update(
+        { title, content, updated: new Date() },
+        {
+          where: { id, userId },
+        },
+      );
+      if (updatePost[0] === 0) {
+        return res.status(401).json({ message: 'Usuário não autorizado' });
+      }
+      const updatedPost = await Post.findByPk(id, {
+        attributes: { exclude: ['password'] },
+        limit: 1,
+      });
+      return res.status(200).json(updatedPost);
+    } catch (error) {
+      return res.status(400).json({ error });
+    }
+  });
+
   router.get('/:id', async (req, res, _next) => {
     try {
       const { id } = req.params;
