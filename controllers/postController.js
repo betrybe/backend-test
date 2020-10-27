@@ -41,10 +41,28 @@ const updatePost = rescue(async (req, res) => {
   return res.status(200).json(update);
 });
 
+const queryPost = rescue(async (req, res) => {
+  const posts = await postService.searchPostByQuery(req.query.q);
+
+  return res.status(200).json(posts);
+});
+
+const removePost = rescue(async (req, res) => {
+  const { user } = req;
+
+  const data = await postService.deletePost(req.params.id, user.id);
+
+  if (data.status) return res.status(data.status).json({ message: data.message });
+
+  return res.status(204).send();
+});
+
 module.exports = {
   newPost,
   test,
   postsList,
   getPost,
   updatePost,
+  queryPost,
+  removePost,
 };

@@ -18,6 +18,8 @@ app.get('/user/:id', auth, userController.getUser);
 app.get('/user', auth, userController.userList);
 app.post('/user', userController.createUser);
 
+app.get('/post/search', auth, postController.queryPost);
+app.delete('/post/:id', auth, postController.removePost);
 app.get('/post/:id', auth, postController.getPost);
 app.put('/post/:id', auth, postController.updatePost);
 app.get('/post', auth, postController.postsList);

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Post, User } = require('../models');
 
 const checkingRequiredFields = (title, content) => {
@@ -38,9 +39,35 @@ const updatePost = async (title, content, postId, userId) => {
 
   if (post.userId !== userId) return { status: 401, message: 'Usuário não autorizado' };
 
-  await Post.update({ title, content }, { where: { id: userId } });
+  await Post.update({ title, content }, { where: { id: postId } });
 
   return { title, content, userId };
+};
+
+const searchPostByQuery = async (query) => {
+  const post = await Post.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${query}%` } },
+        { content: { [Op.like]: `%${query}%` } },
+      ],
+    },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: 'password' } },
+    ],
+  });
+  return post;
+};
+
+const deletePost = async (id, userId) => {
+  const post = await Post.findByPk(id);
+
+  if (!post) return { status: 404, message: 'Post não existe' };
+  if (userId !== post.userId) return { status: 401, message: 'Usuário não autorizado' };
+
+  const data = await Post.destroy({ where: { id } });
+
+  return data;
 };
 
 module.exports = {
@@ -48,4 +75,6 @@ module.exports = {
   listPosts,
   getPost,
   updatePost,
+  searchPostByQuery,
+  deletePost,
 };
