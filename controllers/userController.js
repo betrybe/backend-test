@@ -112,7 +112,17 @@ const userLogin = rescue(async (req, res) => {
   const token = JWT.sign({ password, email }, secret, jwtConfig); res.status(200).json({ token });
 });
 
+/*
+endpoint que retorna todos os usuários cadastrados
+é necessário estar autenticado
+*/
+const getAllUsers = rescue(async (_req, res) => {
+  Users.findAll({ raw: true }).then((users) => res.status(200).json(users));
+});
+
 module.exports = {
   createNewUser,
   userLogin,
+  secret,
+  getAllUsers,
 };
