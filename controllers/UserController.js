@@ -72,7 +72,12 @@ user.get('/', auth, async (req, res) => {
 });
 
 user.get('/:id', auth, async (req, res) => {
-  Users.findAll().then((users) => users);
-  res.status(401).send(req.cookies.token);
+  const { id } = req.params;
+  const UserData = await Users.findOne({ where: { id } });
+  console.log(UserData);
+  if (!UserData) {
+    return res.status(404).send({ message: 'Usuário não existe' });
+  }
+  res.status(200).send(UserData);
 });
 module.exports = user;
