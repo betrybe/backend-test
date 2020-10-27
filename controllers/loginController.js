@@ -30,7 +30,7 @@ login.post(
       // console.log(data);
       const token = generateJWT(data);
       // console.log(token);
-      return res.status(201).json({ token });
+      return res.status(200).json({ token });
     } catch (error) {
       console.log(error.message);
     }
