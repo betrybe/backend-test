@@ -18,4 +18,10 @@ post.post('/', auth, async (req, res) => {
   return res.status(201).send(postCreated);
 });
 
+post.get('/', auth, async (req, res) => {
+  const postResults = await Posts.findAll();
+  console.log(postResults);
+  res.status(200).send(postResults);
+});
+
 module.exports = post;
