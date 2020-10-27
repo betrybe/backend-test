@@ -1,4 +1,4 @@
-const { GenerateToken } = require('../config/jwt');
+const { GenerateToken } = require('./jwt');
 const { User } = require('../models');
 const err = require('../errors');
 
