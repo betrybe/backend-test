@@ -7,9 +7,8 @@ const router = Router();
 router.post('/', rescue(async (req, res, next) => {
   const payLoad = req.body;
   const response = await uService.UserServices.CreateUser(payLoad);
-  console.log(response);
   if (response.error) return next(response.error);
-  /* res.status(201).json({ token: response.token }); */
+  res.status(201).json({ token: response.token });
 }));
 
 module.exports = router;

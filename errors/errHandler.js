@@ -37,6 +37,10 @@ const VerifyEmail = (email) => {
 };
 
 const VerifyPassword = (password, length) => {
+  if (password === '') {
+    const error = { error : { status:400, message: '"password" is not allowed to be empty'}};
+    return error;
+  }
   if (!password) {
     const error = { error: { status: 400, message: '"password" is required' } };
     return error;
