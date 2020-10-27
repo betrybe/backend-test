@@ -6,7 +6,7 @@ const CreateUser = async (payload) => {
   const { displayName, email, password, image } = payload;
   const NameErr = err.ErrHandler.VerifyNameLength(displayName, 8);
   const EmailErr = err.ErrHandler.VerifyEmail(email);
-  const PassErr = err.ErrHandler.VerifyPassword(password,6);
+  const PassErr = err.ErrHandler.VerifyPassword(password, 6);
   if (NameErr) return NameErr;
   if (EmailErr) return EmailErr;
   if (PassErr) return PassErr;
@@ -15,7 +15,7 @@ const CreateUser = async (payload) => {
   if (duplicateErr) return duplicateErr;
   //* Passando nas validações é inserido no DB e gerado um token com a senha informada.
   await User.create({ displayName, email, password, image });
-  const token = GenerateToken({email, password});
+  const token = GenerateToken({ email, password });
   return { token };
 };
 module.exports = {
