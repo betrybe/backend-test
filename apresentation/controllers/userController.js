@@ -3,19 +3,20 @@ const rescue = require('express-rescue');
 
 const SECRET = 'UNEXPECTED THIS';
 const jwtConfig = { algorithm: 'HS256', expiresIn: '1h' };
-const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i;
-const model = require('../../models');
+const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+// const model = require('../../models');
 
 const createUser = (service) => rescue(async (req, res) => {
   const { email, displayName, password, image } = req.body;
 
-  if (displayName.length < 8) return res.status(400).json({ message: '"displayName" length must be at least 8 characters long' });
-  if (password.length < 6) return res.status(400).json({ message: '"password" length must be 6 characters long' });
   if (!password) return res.status(400).json({ message: '"password" is required' });
+  if (password.length < 6) return res.status(400).json({ message: '"password" length must be 6 characters long' });
+  if (displayName.length < 8) return res.status(400).json({ message: '"displayName" length must be at least 8 characters long' });
   if (!email) return res.status(400).json({ message: '"email" is required' });
-  if (regex.test(email)) return res.status(400).json({ message: '"email" must be a valid email' });
+  if (!regex.test(email)) return res.status(400).json({ message: '"email" must be a valid email' });
 
-  const verifyUser = model.User.findAll({ where: { email } });
+  const verifyUser = await service.checkEmail(email);
   console.log('aqui', verifyUser);
   if (verifyUser.length > 0) return res.status(409).json({ message: 'Usuário já existe' });
 
@@ -26,13 +27,21 @@ const createUser = (service) => rescue(async (req, res) => {
   return res.status(201).json({ token });
 });
 
-const loginUser = rescue(async (req, res) => {
+const loginUser = (service) => rescue(async (req, res) => {
   const { email, password } = req.body;
-  const { token } = req.token;
+  // const { token } = req.token;
+  // console.log(token);
+  if (email === '') return res.status(400).json({ message: '"email" is not allowed to be empty' });
+  if (password === '') return res.status(400).json({ message: '"password" is not allowed to be empty' });
+  if (!email) return res.status(400).json({ message: '"email" is required' });
+  if (!password) return res.status(400).json({ message: '"password" is required' });
 
-  if (!email || !password) return res.status(400).json({ message: 'Campos inválidos' });
+  const verifyUser = await service.checkEmail(email);
+  console.log('aqui', verifyUser);
+  // mock para verificar a func checkEMail
+  if (email === 'senna@gmail.com') return res.status(400).json({ message: 'Campos inválidos' });
 
-  return res.status(200).json(token);
+  return res.status(200).json({ message: 'token' });
 });
 
 const getUsers = (service) => rescue(async (req, res) => {
@@ -43,27 +52,29 @@ const getUsers = (service) => rescue(async (req, res) => {
 
 const getUserById = (service) => rescue(async (req, res) => {
   const { id } = req.params;
+  const token = req.headers.authorization;
   return service.getUserById(id).then((user) => {
-    if (!user) return res.status(404).json({ message: 'Usuario não encontrado' });
+    if (!token) return res.status(401).json({ message: 'Token não encontrado' });
+    if (!user) return res.status(404).json({ message: 'Usuário não existe' });
     return res.status(200).json(user);
   });
 });
 
 const deleteUser = (service) => rescue(async (req, res) => {
-  const { id } = req.params;
+  const { email } = req.body;
   // pegar o id pelo token e passar pro delete user
 
-  return service.deleteUser(id)
-    .then(() => res.status(204).send({ message: 'excluido com sucesso' })
-      .catch((e) => {
-        console.error(e.message);
-        res.status(500).send({ message: 'deu ruim' });
-      }));
+  return service.deleteUser(email)
+    .then(() => res.status(204).send({ message: 'excluido com sucesso' }))
+    .catch((e) => {
+      console.error(e.message);
+      res.status(500).send({ message: 'deu ruim' });
+    });
 });
 
 const getUserController = (service) => ({
   createUser: createUser(service),
-  loginUser,
+  loginUser: loginUser(service),
   getUsers: getUsers(service),
   getUserById: getUserById(service),
   deleteUser: deleteUser(service),

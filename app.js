@@ -26,7 +26,7 @@ async function factory() {
   app.get('/', (_request, response) => response.send());
 
   app.post('/user', userController.createUser);
-  app.post('/login', Auth, userController.loginUser);
+  app.post('/login', userController.loginUser);
   app.get('/user', Auth, userController.getUsers);
   app.get('/user/:id', userController.getUserById);
   app.delete('user/me', userController.deleteUser);
