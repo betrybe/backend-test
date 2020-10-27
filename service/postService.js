@@ -1,5 +1,5 @@
-const { validatePostData } = require('../middlewares/valiData');
 const { Posts } = require('../models');
+const { validatePostData } = require('../middlewares/valiData');
 
 const findById = (id) => Posts.findOne({ where: { id } });
 

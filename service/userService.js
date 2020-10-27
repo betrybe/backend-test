@@ -1,12 +1,11 @@
-const { validateUser } = require('../middlewares/valiData');
 const { Users } = require('../models');
+const { validateUser } = require('../middlewares/valiData');
 
 const genericErr = (code, message) => ({
   code,
   message,
 });
 
-// const findById = (id) => Users.findOne({ where: { id } });
 const findByEmail = (email) => Users.findOne({ where: { email } });
 const findByEmailPass = (email, password) => Users.findOne({ where: { email, password } });
 
@@ -26,7 +25,6 @@ const createUser = async (data) => {
 };
 
 module.exports = {
-  // findById,
   createUser,
   findByEmail,
   findByEmailPass,

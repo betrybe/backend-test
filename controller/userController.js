@@ -1,6 +1,6 @@
-const { checkLoginFields } = require('../middlewares/valiData');
 const { Users } = require('../models');
 const { getToken } = require('../service/tokenService');
+const { checkLoginFields } = require('../middlewares/valiData');
 const { createUser, findByEmailPass } = require('../service/userService');
 
 const insertUser = async (req, res) => {
