@@ -8,6 +8,10 @@ const {
 
 const {
   createPost,
+  getAllPosts,
+  getPostById,
+  getAllPostsByQuery,
+  deletePost,
 } = require('./postService');
 
 module.exports = {
@@ -17,4 +21,8 @@ module.exports = {
   getAllUser,
   deleteUser,
   createPost,
+  getAllPosts,
+  getPostById,
+  getAllPostsByQuery,
+  deletePost,
 };
