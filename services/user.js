@@ -3,8 +3,7 @@ const { users } = require('../models');
 const validateName = (name) => name.length >= 8;
 
 const validateEmail = (email) => {
-  // https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-  const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return regex.test(email);
 };
 
