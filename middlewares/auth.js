@@ -17,7 +17,7 @@ const generateJWT = (data) => {
 
 const validateJWT = rescue(async (req, res, next) => {
   const auth = req.headers.authorization;
-  if (!auth) res.status(401).json({ message: 'Token não encontrado' });
+  if (!auth) return res.status(401).json({ message: 'Token não encontrado' });
   try {
     const decode = jwt.verify(auth, secret);
     const {
@@ -25,12 +25,12 @@ const validateJWT = rescue(async (req, res, next) => {
     } = decode;
     const user = await Users.findAll({ where: { email } }); // ver a resposta
     console.log('depois do await');
-    if (!user) res.status(401).json({ message: 'Token expirado ou inválido' });
+    if (!user) return res.status(401).json({ message: 'Token expirado ou inválido' });
     const { _password, ...userData } = user[0]; //  muda de acordo com a reposta do service
     req.user = userData;
     return next();
   } catch (error) {
-    res.status(401).json({ message: 'Token expirado ou inválido' });
+    return res.status(401).json({ message: 'Token expirado ou inválido' });
   }
 });
 
