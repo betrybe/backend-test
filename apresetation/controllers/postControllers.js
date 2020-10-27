@@ -142,17 +142,14 @@ post.delete(
     const { email } = req.user;
     const idParams = req.params.id;
 
-    console.log(req.user);
     const user = await getUserByEmail(email);
-    const { id } = user[0].dataValues;
-
     const getPosts = await getPostById(idParams);
 
     if (getPosts.length <= 0) return res.status(404).json({ message: 'Post não existe' });
 
     const { userId } = getPosts[0].dataValues;
 
-    if (userId !== id) {
+    if (userId !== user[0].dataValues.id) {
       return res.status(401).json({ message: 'Usuário não autorizado' });
     }
 
