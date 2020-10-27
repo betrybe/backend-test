@@ -3,8 +3,9 @@ const { User } = require('../models/userModel');
 const err = require('../errors');
 
 const CreateUser = async (payload) => {
+  console.log(payload);
   const { displayName, email, password, image } = payload;
-  const NameErr = err.ErrHandler.verifyDisplayName(displayName, 8);
+  const NameErr = err.ErrHandler.VerifyNameLength(displayName, 8);
   const EmailErr = err.ErrHandler.VerifyEmail(email);
   const PassErr = err.ErrHandler.VerifyPassword(password, 6);
   if (NameErr) return NameErr;
@@ -14,9 +15,9 @@ const CreateUser = async (payload) => {
   const duplicateErr = await err.ErrHandler.VerifyDuplicate(email);
   if (duplicateErr) return duplicateErr;
   //* Passando nas validações é inserido no DB e gerado um token com a senha informada.
-  await User.create({ displayName, email, password, image });
+  /* await User.create({ displayName, email, password, image });
   const token = GenerateToken(password);
-  return { token };
+  return { token }; */
 };
 module.exports = {
   CreateUser,

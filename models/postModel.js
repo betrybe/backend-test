@@ -1,4 +1,4 @@
-const Post = (sequelize, DataTypes) => {
+/* const Post = (sequelize, DataTypes) => {
   const newPost = sequelize.define('Post', {
     content: DataTypes.VARCHAR,
     title: DataTypes.VARCHAR,
@@ -10,3 +10,4 @@ const Post = (sequelize, DataTypes) => {
 };
 
 module.exports = Post;
+ */

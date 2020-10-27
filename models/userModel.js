@@ -1,10 +1,11 @@
 const Users = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    displayName: DataTypes.VARCHAR,
-    email: DataTypes.VARCHAR,
+    displayName: DataTypes.STRING,
+    email: DataTypes.STRING,
     password: DataTypes.INTERGER,
-    image: DataTypes.INTEGER,
-  });
+    image: DataTypes.STRING,
+  },
+  { timestamps: false });
   return User;
 };
 

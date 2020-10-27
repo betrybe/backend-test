@@ -13,7 +13,7 @@ module.exports = {
       },
       email: {
         allowNull: false,
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING,
         unique: true,
       },
       password: {
@@ -21,7 +21,7 @@ module.exports = {
         type: DataTypes.INTEGER,
       },
       image: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING,
       },
       createdAt: {
         type: DataTypes.DATE,
