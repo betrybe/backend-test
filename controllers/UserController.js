@@ -80,4 +80,8 @@ user.get('/:id', auth, async (req, res) => {
   }
   res.status(200).send(UserData);
 });
+
+user.delete('/me', auth, (req, res) => {
+  res.status(204).send('UserData');
+});
 module.exports = user;
