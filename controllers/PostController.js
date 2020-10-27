@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { Posts } = require('../models');
+const { Posts, Users } = require('../models');
 const auth = require('../middleware/auth');
 
 const post = Router();
@@ -19,8 +19,9 @@ post.post('/', auth, async (req, res) => {
 });
 
 post.get('/', auth, async (req, res) => {
-  const postResults = await Posts.findAll();
-  console.log(postResults);
+  const postResults = await Posts.findAll({
+    include: [{ model: Users, as: 'user' }] });
+  console.log(postResults.Users);
   res.status(200).send(postResults);
 });
 
