@@ -7,7 +7,6 @@ const post = Router();
 post.post('/', auth, async (req, res) => {
   const { title, content } = req.body;
   const { id } = req.user;
-  console.log(req.user);
   if (title === undefined) {
     return res.status(400).send({ message: '"title" is required' });
   }
@@ -21,7 +20,6 @@ post.post('/', auth, async (req, res) => {
 post.get('/', auth, async (req, res) => {
   const postResults = await Posts.findAll({
     include: [{ model: Users, as: 'user' }] });
-  console.log(postResults.Users);
   res.status(200).send(postResults);
 });
 
@@ -32,8 +30,24 @@ post.get('/:id', auth, async (req, res) => {
   if (!postResults) {
     res.status(404).send({ message: 'Post não existe' });
   }
-  console.log(postResults.Users);
   res.status(200).send(postResults);
 });
 
+post.put('/:id', auth, async (req, res) => {
+  const { title, content } = req.body;
+  const { id } = req.params;
+  if (parseInt(id, 10) === req.user.id) {
+    const postUpdated = await Posts.findOne({ where: { id } });
+    postUpdated.title = title;
+    postUpdated.content = content;
+    if (title === undefined) {
+      return res.status(400).send({ message: '"title" is required' });
+    }
+    if (content === undefined) {
+      return res.status(400).send({ message: '"content" is required' });
+    }
+    return res.status(200).send(postUpdated);
+  }
+  res.status(401).send({ message: 'Usuário não autorizado' });
+});
 module.exports = post;
