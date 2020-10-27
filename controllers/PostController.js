@@ -25,4 +25,15 @@ post.get('/', auth, async (req, res) => {
   res.status(200).send(postResults);
 });
 
+post.get('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  const postResults = await Posts.findOne({ where: { id },
+    include: [{ model: Users, as: 'user' }] });
+  if (!postResults) {
+    res.status(404).send({ message: 'Post não existe' });
+  }
+  console.log(postResults.Users);
+  res.status(200).send(postResults);
+});
+
 module.exports = post;
