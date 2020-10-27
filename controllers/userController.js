@@ -50,6 +50,20 @@ const findUser = async (email) => {
   }
 };
 
+const getUser = async (email) => {
+  const gotUser = (await Users.findAll({ where: { email } }));
+  if (gotUser.length === 0) {
+    return { code: 400, message: 'Campos inválidos' };
+  }
+};
+
+/* endpoint para criar um novo usuário e retorna o token JWT de autenticação dele
+{
+  "displayName":"Marcela Remor",
+  "email":"marceladev@gmail.com",
+  "password": "12345678",
+  "image":"https://sportbuzz.uol.com.br/media/_versions/gettyimages-52491565_widelg.jpg"
+} */
 const createNewUser = rescue(async (req, res) => {
   const { displayName, email, password, image } = req.body;
 
@@ -77,6 +91,28 @@ const createNewUser = rescue(async (req, res) => {
   res.status(201).json({ token });
 });
 
+/* enpoint para login do usuário e retorna o token JWT de autenticação
+{
+  "email":"lewishamilton@gmail.com",
+  "password":"123456"
+} */
+const userLogin = rescue(async (req, res) => {
+  const { email, password } = req.body;
+
+  const isEmailNotValid = validateEmail(email);
+  if (isEmailNotValid) {
+    return res.status(isEmailNotValid.code).json({ message: isEmailNotValid.message });
+  }
+  const isPasswordNotValid = validatePassword(password);
+  if (isPasswordNotValid) {
+    return res.status(isPasswordNotValid.code).json({ message: isPasswordNotValid.message });
+  }
+  const isThereUser = await getUser(email, password);
+  if (isThereUser) return res.status(isThereUser.code).json({ message: isThereUser.message });
+  const token = JWT.sign({ password, email }, secret, jwtConfig); res.status(200).json({ token });
+});
+
 module.exports = {
   createNewUser,
+  userLogin,
 };

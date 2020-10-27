@@ -7,6 +7,7 @@ app.use(bodyParser.json());
 
 // endpoint para criar usuário
 app.post('/user', userController.createNewUser);
+app.post('/login', userController.userLogin);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
 
