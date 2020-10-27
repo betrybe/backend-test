@@ -2,22 +2,19 @@ const jwt = require('jsonwebtoken');
 
 const SECRET = 'UNEXPECTED THIS';
 
-async function Auth(req, res, next) {
-  const { authorization: token } = req.headers;
-
-  if (!token) return res.status(401).json({ message: 'Missing auth token' });
-
-  try {
-    const objToken = jwt.verify(token, SECRET);
-
-    if (!objToken) res.status(401).json({ message: 'token invalid' });
-
-    req.user = token;
-
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: 'jwt malformed' });
+const Auth = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
-}
+  jwt.verify(token, SECRET, (err, userData) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token expirado ou inválido' });
+    }
+    req.token = token;
+    req.user = userData;
+    next();
+  });
+};
 
 module.exports = Auth;

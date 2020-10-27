@@ -4,12 +4,11 @@ const createPosts = (service) => async (req, res) => {
   if (!title) return res.status(400).json({ message: '"title" is required' });
   if (!content) return res.status(400).json({ message: '"content" is required' });
 
-
   const resultPost = await service.createPost(title, content, 'userId');
   return res.status(201).json(resultPost);
 };
 
-const getPosts = (service) => async (_req, res) =>
+const getPosts = (service) => async (req, res) =>
   service.getPosts(service).then((result) => {
     if (result.length === 0) return res.status(404).json({ message: 'not found' });
     return res.status(200).json(result);

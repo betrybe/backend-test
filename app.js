@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const errorMiddleware = require('./apresentation/middlewares/error');
-const authentication = require('./apresentation/middlewares/auth');
+const Auth = require('./apresentation/middlewares/auth');
 
 const models = require('./models');
 
@@ -26,12 +26,12 @@ async function factory() {
   app.get('/', (_request, response) => response.send());
 
   app.post('/user', userController.createUser);
-  app.post('/login', authentication, userController.loginUser);
-  app.get('/user', userController.getUsers);
+  app.post('/login', Auth, userController.loginUser);
+  app.get('/user', Auth, userController.getUsers);
   app.get('/user/:id', userController.getUserById);
   app.delete('user/me', userController.deleteUser);
 
-  app.post('/post', authentication, postController.createPosts);
+  app.post('/post', Auth, postController.createPosts);
   app.get('/post', postController.getPosts);
   app.get('/post/:id', postController.getPostsById);
   app.put('/post/:id', postController.putPosts);
