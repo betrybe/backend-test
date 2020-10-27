@@ -5,7 +5,7 @@ require('dotenv/config');
 
 const secret = process.env.SECRET || 'jwtSecret';
 const login = Router();
-const userExists = async (email) => Users.findAll({ where: { email } });
+const userExists = async (email) => Users.findOne({ where: { email } });
 
 const validateLogin = async ({ email, password }) => {
   const error = { isError: false };
@@ -34,7 +34,7 @@ const validateLogin = async ({ email, password }) => {
     return error;
   }
   const isUserExists = await userExists(email);
-  if (!isUserExists.length) {
+  if (!isUserExists) {
     error.isError = true;
     error.statusCode = 400;
     error.message = 'Campos inválidos';
@@ -47,7 +47,9 @@ login.post('/', async (req, res) => {
   if (isLoginValid.isError) {
     return res.status(isLoginValid.statusCode).send(isLoginValid);
   }
-  const token = jwt.sign(req.body.email, secret);
+  const userData = await userExists(req.body.email);
+  console.log(userData.dataValues);
+  const token = jwt.sign(userData.dataValues, secret);
   res.setHeader('authorization', token);
   res.status(200).send({ token });
 });
