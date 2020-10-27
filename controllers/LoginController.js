@@ -1,7 +1,9 @@
 const { Router } = require('express');
-const { authClient } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
+require('dotenv/config');
 
+const secret = process.env.SECRET || 'jwtSecret';
 const login = Router();
 const userExists = async (email) => Users.findAll({ where: { email } });
 
@@ -40,13 +42,14 @@ const validateLogin = async ({ email, password }) => {
   }
   return error;
 };
-login.post('/', authClient(), async (req, res) => {
+login.post('/', async (req, res) => {
   const isLoginValid = await validateLogin(req.body);
   if (isLoginValid.isError) {
-    req.headers = { authorization: 'null' };
     return res.status(isLoginValid.statusCode).send(isLoginValid);
   }
-  res.status(200).send({ token: req.headers.authorization });
+  const token = jwt.sign(req.body.email, secret);
+  res.setHeader('authorization', token);
+  res.status(200).send({ token });
 });
 
 module.exports = login;
