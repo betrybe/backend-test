@@ -1,7 +1,7 @@
 const { User } = require('../models');
 
-const VerifyNameLength = (name, length) => {
-  if (name.length < length) {
+const VerifyNameLength = (name) => {
+  if (name.length < 8) {
     const error = {
       error: {
         status: 400,
@@ -14,6 +14,15 @@ const VerifyNameLength = (name, length) => {
 };
 
 const VerifyEmail = (email) => {
+  if (email === '') {
+    const error = {
+      error: {
+        status: (400),
+        message: '"email" is not allowed to be empty',
+      },
+    };
+    return error;
+  }
   if (!email) {
     const error = {
       error: {
@@ -65,9 +74,19 @@ const VerifyDuplicate = async (email) => {
   return false;
 };
 
+const VerifyUserLogin = async (email, password) => {
+  const UserFound = await User.findAll({ where: { email, password } });
+  if (!UserFound.length) {
+    const error = { error: { status: 400, message: 'Campos inválidos' } };
+    return error;
+  }
+  return false;
+};
+
 module.exports = {
   VerifyNameLength,
   VerifyEmail,
   VerifyPassword,
   VerifyDuplicate,
+  VerifyUserLogin,
 };

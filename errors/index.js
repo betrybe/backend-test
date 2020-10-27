@@ -1,3 +1,5 @@
 const ErrHandler = require('./errHandler');
 
-module.exports = { ErrHandler };
+module.exports = {
+  ErrHandler,
+};

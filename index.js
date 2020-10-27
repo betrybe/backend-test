@@ -6,8 +6,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/user', controller.UserController);
-/* app.use('/login', controller.LoginController);
-app.use('/post', controller.PostController); */
+app.use('/login', controller.LoginController);
+/* app.use('/post', controller.PostController); */
 app.use((err, _req, res, _next) => {
   res.status(err.status).json({ message: err.message });
 });
