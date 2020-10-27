@@ -47,7 +47,7 @@ user.post('/', async (req, res) => {
 
 user.get(
   '/',
-
+  validateJWT,
   rescue((_req, res) => {
     Users.findAll({ attributes: { exclude: ['password'] } }).then((results) =>
       res.status(200).json(results));
