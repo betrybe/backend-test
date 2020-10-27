@@ -65,4 +65,11 @@ user.get(
   }),
 );
 
+user.delete('/me', validateJWT, async (req, res) => {
+  const { dataValues: { id } } = req.user;
+  console.log(id);
+  Users.destroy({ where: { id } });
+  return res.status(204).end();
+});
+
 module.exports = user;
