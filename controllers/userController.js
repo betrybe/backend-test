@@ -39,9 +39,20 @@ user.post('/', async (req, res) => {
     return res.status(201).json({ token });
   } catch (error) {
     console.log(error.message);
-    if (error.message === 'Validation error') { res.status(409).json({ message: 'Usuário já existe' }); }
+    if (error.message === 'Validation error') {
+      res.status(409).json({ message: 'Usuário já existe' });
+    }
   }
 });
+
+user.get(
+  '/',
+  validateJWT,
+  rescue((_req, res) => {
+    Users.findAll({ attributes: { exclude: ['password'] } }).then((results) =>
+      res.status(200).json({ results }));
+  }),
+);
 
 user.get(
   '/:id',
