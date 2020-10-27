@@ -6,20 +6,20 @@ const { errors } = require('../services');
 const createUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;
 
-  if (!userService.validateName(displayName)) {
-    return res.status(400).json(errors.errorName);
-  }
   if (!email) {
     return res.status(400).json(errors.errorEmailReq);
+  }
+  if (!password) {
+    return res.status(400).json(errors.errorPasswordReq);
+  }
+  if (!userService.validateName(displayName)) {
+    return res.status(400).json(errors.errorName);
   }
   if (!userService.validateEmail(email)) {
     return res.status(400).json(errors.errorEmail);
   }
   if (!userService.validatePassword(password)) {
     return res.status(400).json(errors.errorPassword);
-  }
-  if (!password) {
-    return res.status(400).json(errors.errorPasswordReq);
   }
   if (await userService.checkUserExist(email)) {
     return res.status(409).json(errors.errorUserExist);
