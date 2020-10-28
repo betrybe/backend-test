@@ -12,11 +12,12 @@ post.post('/', validateJWT, async (req, res) => {
   } = req.user;
 
   if (!title || !content) {
-    return res.status(401).json({ message: `"${!title ? 'title' : 'content'}" is required` });
+    return res.status(400).json({ message: `"${!title ? 'title' : 'content'}" is required` });
   }
   try {
     const createdPost = await Posts.create({ title, content, userId });
-    return res.status(201).json(createdPost);
+    const { id, updated, published, ...postInfo } = createdPost.dataValues;
+    return res.status(201).json(postInfo);
   } catch (error) {
     console.log(error.message);
   }
