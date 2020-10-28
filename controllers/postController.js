@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const { uploadPost } = require('../services/postService');
+const { uploadPost, getAllPosts } = require('../services/postService');
 
 const createPost = rescue(async (req, res) => {
   const { title, content } = req.body;
@@ -18,6 +18,13 @@ const createPost = rescue(async (req, res) => {
   });
 });
 
+const listAllPosts = rescue(async (_req, res) => {
+  const response = await getAllPosts();
+
+  return res.status(200).json(response);
+});
+
 module.exports = {
   createPost,
+  listAllPosts,
 };
