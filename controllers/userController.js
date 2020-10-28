@@ -41,7 +41,8 @@ const getAllUsers = (service) =>
 const getUserById = (service) =>
   rescue(async (req, res) => {
     const { authorization } = req.headers;
-    verifyError(authorization, res);
+    const validToken = verifyError(authorization, res);
+    if (validToken !== undefined) return;
     const { id } = req.params;
     const user = await service.getUserById(id);
     if (user.err) {
@@ -54,7 +55,8 @@ const getUserById = (service) =>
 const deleteMe = (service) =>
   rescue(async (req, res) => {
     const { authorization } = req.headers;
-    verifyError(authorization, res);
+    const validToken = verifyError(authorization, res);
+    if (validToken !== undefined) return;
     const { id } = verifyToken(authorization);
     const message = await service.deleteMe(id);
     if (message.err) return res.status(200).json(message);

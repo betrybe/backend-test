@@ -11,7 +11,7 @@ const validateInfos = (displayName, email, password) => {
   return { err: false };
 };
 
-const createUser = ({ Users }) => (displayName, email, password, image) => {
+const createUser = ({ Users }) => async (displayName, email, password, image) => {
   const errorMessage = validateInfos(displayName, email, password);
   if (errorMessage.err) return errorMessage;
 
