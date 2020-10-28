@@ -27,8 +27,6 @@ const getPost = (services) =>
       const { message = 'x' } = post;
       return res.status(400).json({ message });
     }
-    console.log(post);
-    //const { dataValues: { updated, published, ...insertedPost } } = post;
     res.status(201).json(post);
   });
 
