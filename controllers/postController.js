@@ -45,6 +45,7 @@ const createPost = rescue(async (req, res) => {
 
 /*
 endpoint Get autenticado com token JWT válido, que retorna um array de objetos
+com todos os posts
 retorno
 [
     {
@@ -73,7 +74,23 @@ const getAllPosts = rescue(async (req, res) => {
   res.status(200).json(allPosts);
 });
 
+/*
+endpoint Get onde envio um token JWT válido e que retorna um post específico
+com informações do post e do usuário que escreveu o post
+*/
+const getPostById = rescue(async (req, res) => {
+  // preciso utilizar o [0] para que retorno o primeiro objeto do array
+  const getPostedById = (await Posts.findAll({ where: { id: req.params.id }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }))[0];
+  // console.log(getPostedById);
+
+  if (!getPostedById) {
+    res.status(404).json({ message: 'Post não existe' });
+  }
+  res.status(200).json(getPostedById);
+});
+
 module.exports = {
   createPost,
   getAllPosts,
+  getPostById,
 };
