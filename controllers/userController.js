@@ -27,7 +27,7 @@ const getUser = (service) =>
     }
 
     const token = createToken(user);
-    return res.status(201).json({ token });
+    return res.status(200).json({ token });
   });
 
 const getAllUsers = (service) =>
@@ -35,7 +35,7 @@ const getAllUsers = (service) =>
     const { authorization } = req.headers;
     verifyError(authorization, res);
     const users = await service.getAllUser();
-    return res.status(201).json(users);
+    return res.status(200).json(users);
   });
 
 const getUserById = (service) =>
@@ -46,8 +46,8 @@ const getUserById = (service) =>
     const { id } = req.params;
     const user = await service.getUserById(id);
     if (user.err) {
-      const { message } = user;
-      return res.status(401).json({ message });
+      const { message, status } = user;
+      return res.status(status).json({ message });
     }
     return res.status(200).json(user);
   });

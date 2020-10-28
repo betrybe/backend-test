@@ -13,7 +13,7 @@ const createPost = (services) =>
       const { message = 'x' } = post;
       return res.status(400).json({ message });
     }
-    const { dataValues: { updated, published, ...insertedPost } } = post;
+    const { dataValues: { updated, published, id: noId, ...insertedPost } } = post;
     res.status(201).json(insertedPost);
   });
 
@@ -27,7 +27,7 @@ const getPost = (services) =>
       const { message } = post;
       return res.status(400).json({ message });
     }
-    res.status(201).json(post);
+    res.status(200).json(post);
   });
 
 const getPostById = (services) =>
@@ -38,8 +38,8 @@ const getPostById = (services) =>
     if (typeof validToken !== 'object') return;
     const post = await services.getPostById(id);
     if (post.err) {
-      const { message } = post;
-      return res.status(404).json({ message });
+      const { message, status } = post;
+      return res.status(status).json({ message });
     }
     res.status(200).json(post);
   });
@@ -56,7 +56,7 @@ const changePostById = (services) =>
       const { message, status } = post;
       return res.status(status).json({ message });
     }
-    res.status(201).json(post);
+    res.status(200).json(post);
   });
 
 const blogPostController = (service) => ({

@@ -21,8 +21,8 @@ const getPostById = ({ Posts, Users }) => async (id) => Posts.findOne({
   include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }],
   attributes: { exclude: ['userId'] },
 }).then((post) => {
-  if (post.length === 0) {
-    return { err: true, message: 'Post não existe' };
+  if (post === null) {
+    return { err: true, status: 404, message: 'Post não existe' };
   }
   return post;
 });
@@ -40,7 +40,7 @@ const changePostById = ({ Posts }) => async (id, title, content, userId) => {
       return { err: true, status: 401, message: 'Usuário não autorizado' };
     }
     return Posts.findOne({ where: { id } }).then((postUpdated) => {
-      const { dataValues: { published, updated, ...postValues } } = postUpdated;
+      const { dataValues: { published, updated, id: noId, ...postValues } } = postUpdated;
       return postValues;
     });
   });
