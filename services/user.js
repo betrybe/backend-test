@@ -7,7 +7,7 @@ const validateEmail = (email) => {
   return regex.test(email);
 };
 
-const validatePassword = (password) => password >= 6;
+// const validatePassword = (password) => password.length <= 6;
 
 const checkUserExist = async (email) => {
   const UserFound = await users.findAll({ where: { email } });
@@ -17,6 +17,6 @@ const checkUserExist = async (email) => {
 module.exports = {
   validateName,
   validateEmail,
-  validatePassword,
+  // validatePassword,
   checkUserExist,
 };

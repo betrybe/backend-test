@@ -15,11 +15,11 @@ const createUser = async (req, res) => {
   if (!userService.validateName(displayName)) {
     return res.status(400).json(errors.errorName);
   }
+  if (password.length < 6) {
+    return res.status(400).json(errors.errorPassword);
+  }
   if (!userService.validateEmail(email)) {
     return res.status(400).json(errors.errorEmail);
-  }
-  if (!userService.validatePassword(password)) {
-    return res.status(400).json(errors.errorPassword);
   }
   if (await userService.checkUserExist(email)) {
     return res.status(409).json(errors.errorUserExist);
