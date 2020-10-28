@@ -1,4 +1,4 @@
-const { tokenValid } = require('./jwt');
+const { tokenValid } = require('../authmiddleware/jwt');
 const { User } = require('../models');
 const err = require('../errors');
 
@@ -13,11 +13,18 @@ const CreateUser = async (payload) => {
 
   const duplicateErr = await err.ErrHandler.VerifyDuplicate(email);
   if (duplicateErr) return duplicateErr;
-  
+
   await User.create({ displayName, email, password, image });
   const token = tokenValid({ email, password });
   return { token };
 };
+
+const GetUsers = async () => {
+  const getAll = await User.findAll();
+  return getAll;
+};
+
 module.exports = {
   CreateUser,
+  GetUsers,
 };

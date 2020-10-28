@@ -11,4 +11,9 @@ router.post('/', rescue(async (req, res, next) => {
   res.status(201).json({ token: response.token });
 }));
 
+router.get('/', rescue(async (_req, res, _nex) => {
+  const response = await uService.UserServices.GetUsers();
+  res.status(200).json(response);
+}));
+
 module.exports = router;

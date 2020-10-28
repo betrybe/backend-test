@@ -1,4 +1,4 @@
-const { tokenValid } = require('./jwt');
+const { tokenValid } = require('../authmiddleware/jwt');
 const err = require('../errors');
 
 const UserLogin = async (payload) => {
