@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { createUser, getAllUsers, getUserById, deleteUser } = require('./controllers/userController');
+const { createPost } = require('./controllers/postController');
 const { makeLogin } = require('./controllers/loginController');
 const authMiddleware = require('./middlewares/authMiddleware');
 
@@ -15,6 +16,8 @@ app.delete('/user/me', authMiddleware, deleteUser);
 app.get('/user/:id', authMiddleware, getUserById);
 
 app.post('/login', makeLogin);
+
+app.post('/post', authMiddleware, createPost);
 
 app.use((err, _req, res, _next) => {
   console.error(err);
