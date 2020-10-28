@@ -48,4 +48,16 @@ post.get('/:id', validateJWT, (req, res) => {
   });
 });
 
+post.delete('/:id', validateJWT, async (req, res) => {
+  const { id } = req.params;
+  const {
+    dataValues: { id: userId },
+  } = req.user;
+
+  const checkPost = await Posts.findByPk(id);
+  if (!checkPost) return res.status(404).json({ message: 'Post não existe' });
+  if (checkPost.dataValues.userId !== userId) { return res.status(401).json({ message: 'Usuário não autorizado' }); }
+  return Posts.destroy({ where: { id } }).then(() => res.status(204).end());
+});
+
 module.exports = post;
