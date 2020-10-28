@@ -29,14 +29,29 @@ const getPostById = async (id) => {
       attributes: { exclude: ['password'] },
     },
   });
-  console.log(post);
+
   if (!post) return createError(404, 'Post não existe');
 
   return post;
+};
+
+const overwritePost = async (id, title, content, email) => {
+  if (!title) return createError(400, '"title" is required');
+  if (!content) return createError(400, '"content" is required');
+
+  const post = await getPostById(id);
+  if (post.dataValues.user.dataValues.email !== email) {
+    return createError(401, 'Usuário não autorizado');
+  }
+
+  const answer = await Post.update({ title, content }, { where: { id } });
+
+  return answer;
 };
 
 module.exports = {
   uploadPost,
   getAllPosts,
   getPostById,
+  overwritePost,
 };
