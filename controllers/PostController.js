@@ -50,4 +50,19 @@ post.put('/:id', auth, async (req, res) => {
   }
   res.status(401).send({ message: 'Usuário não autorizado' });
 });
+
+post.delete('/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  const postToDelete = await Posts.findOne({ where: { id } });
+  if (!postToDelete) {
+    return res.status(404).send({ message: 'Post não existe' });
+  }
+  if (parseInt(id, 10) === req.user.id) {
+    const deletedUser = await Posts.destroy({ where: { id } });
+    console.log(deletedUser);
+
+    return res.status(204).send({ message: 'Usuário não autorizado' });
+  }
+  res.status(401).send({ message: 'Usuário não autorizado' });
+});
 module.exports = post;
