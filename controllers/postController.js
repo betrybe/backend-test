@@ -24,13 +24,28 @@ post.post('/', validateJWT, async (req, res) => {
 });
 
 post.get('/', validateJWT, (_req, res) => {
-  Posts.findAll({ attributes: { exclude: ['userId'] },
+  Posts.findAll({
+    attributes: { exclude: ['userId'] },
     include: {
       model: Users,
       as: 'user',
       attributes: { exclude: ['password'] },
     },
   }).then((results) => res.status(200).json(results));
+});
+
+post.get('/:id', validateJWT, (req, res) => {
+  Posts.findByPk(req.params.id, {
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: Users,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+  }).then((results) => {
+    if (!results) return res.status(404).json({ message: 'Post não existe' });
+    return res.status(200).json(results);
+  });
 });
 
 module.exports = post;
