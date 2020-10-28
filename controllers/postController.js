@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const { uploadPost, getAllPosts, getPostById, overwritePost } = require('../services/postService');
+const { uploadPost, getAllPosts, getPostById, overwritePost, deletePostById } = require('../services/postService');
 
 const createPost = rescue(async (req, res) => {
   const { title, content } = req.body;
@@ -55,9 +55,23 @@ const updatePost = rescue(async (req, res) => {
   });
 });
 
+const deletePost = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { email } = req.user[0];
+
+  const response = await deletePostById(id, email);
+
+  if (response.error) {
+    return res.status(response.error.status).json({ message: response.error.message });
+  }
+
+  return res.status(204).end();
+});
+
 module.exports = {
   createPost,
   listAllPosts,
   listPostById,
   updatePost,
+  deletePost,
 };

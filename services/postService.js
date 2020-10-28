@@ -49,9 +49,23 @@ const overwritePost = async (id, title, content, email) => {
   return answer;
 };
 
+const deletePostById = async (id, email) => {
+  const post = await getPostById(id);
+
+  if (post.error) return post;
+  if (post.dataValues.user.dataValues.email !== email) {
+    return createError(401, 'Usuário não autorizado');
+  }
+
+  const answer = await Post.destroy({ where: { id } });
+
+  return answer;
+};
+
 module.exports = {
   uploadPost,
   getAllPosts,
   getPostById,
   overwritePost,
+  deletePostById,
 };
