@@ -6,7 +6,7 @@ const createPost = (services) =>
     const { title, content } = req.body;
     const { authorization } = req.headers;
     const validToken = verifyError(authorization, res);
-    if (validToken !== undefined) return;
+    if (typeof validToken !== 'object') return;
     const { id } = verifyToken(authorization);
     const post = await services.createPost(title, content, id);
     if (post.err) {
@@ -21,11 +21,40 @@ const getPost = (services) =>
   rescue(async (req, res) => {
     const { authorization } = req.headers;
     const validToken = verifyError(authorization, res);
-    if (validToken !== undefined) return;
+    if (typeof validToken !== 'object') return;
     const post = await services.getPost();
     if (post.err) {
-      const { message = 'x' } = post;
+      const { message } = post;
       return res.status(400).json({ message });
+    }
+    res.status(201).json(post);
+  });
+
+const getPostById = (services) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    const { id } = req.params;
+    const validToken = verifyError(authorization, res);
+    if (typeof validToken !== 'object') return;
+    const post = await services.getPostById(id);
+    if (post.err) {
+      const { message } = post;
+      return res.status(404).json({ message });
+    }
+    res.status(200).json(post);
+  });
+
+const changePostById = (services) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    const { title, content } = req.body;
+    const { id } = req.params;
+    const validToken = verifyError(authorization, res);
+    if (typeof validToken !== 'object') return;
+    const post = await services.changePostById(id, title, content, validToken.id);
+    if (post.err) {
+      const { message, status } = post;
+      return res.status(status).json({ message });
     }
     res.status(201).json(post);
   });
@@ -33,6 +62,8 @@ const getPost = (services) =>
 const blogPostController = (service) => ({
   createPost: createPost(service),
   getPost: getPost(service),
+  getPostById: getPostById(service),
+  changePostById: changePostById(service),
 });
 
 module.exports = { blogPostController };

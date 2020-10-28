@@ -18,6 +18,7 @@ const verifyError = (authorization, res) => {
     const { message } = verify;
     return res.status(401).json({ message });
   }
+  return verify;
 };
 
 module.exports = {

@@ -42,7 +42,7 @@ const getUserById = (service) =>
   rescue(async (req, res) => {
     const { authorization } = req.headers;
     const validToken = verifyError(authorization, res);
-    if (validToken !== undefined) return;
+    if (typeof validToken !== 'object') return;
     const { id } = req.params;
     const user = await service.getUserById(id);
     if (user.err) {
@@ -56,7 +56,7 @@ const deleteMe = (service) =>
   rescue(async (req, res) => {
     const { authorization } = req.headers;
     const validToken = verifyError(authorization, res);
-    if (validToken !== undefined) return;
+    if (typeof validToken !== 'object') return;
     const { id } = verifyToken(authorization);
     const message = await service.deleteMe(id);
     if (message.err) return res.status(200).json(message);
