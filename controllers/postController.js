@@ -43,6 +43,37 @@ const createPost = rescue(async (req, res) => {
     .then(() => res.status(201).json({ title, content, userId }));
 });
 
+/*
+endpoint Get autenticado com token JWT válido, que retorna um array de objetos
+retorno
+[
+    {
+        "id": 1,
+        "title": "Post do Ano",
+        "content": "Melhor post do ano",
+        "userId": 1,
+        "published": "2011-08-01T19:58:00.000Z",
+        "updated": "2011-08-01T19:58:51.000Z",
+        "user": {
+            "id": 1,
+            "displayName": "Lewis Hamilton",
+            "email": "lewishamilton@gmail.com",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/1/18/Lewis_Hamilton_2016_Malaysia_2.jpg"
+        }
+    }
+]
+ */
+const getAllPosts = rescue(async (req, res) => {
+  /*
+  do sequelize utilizo o include para simular o join com a tabela users e o
+  attributes exclude para não retornar o password como visto na aula
+  */
+  const allPosts = await Posts.findAll({ include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] });
+
+  res.status(200).json(allPosts);
+});
+
 module.exports = {
   createPost,
+  getAllPosts,
 };
