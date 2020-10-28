@@ -1,10 +1,43 @@
+// module.exports = {
+//   up: async (queryInterface, Sequelize) =>
+//     queryInterface.createTable('Posts', {
+//       id: {
+//         type: Sequelize.INTEGER,
+//         primaryKey: true,
+//         autoIncrement: true,
+//         allowNull: false,
+//       },
+//       title: {
+//         type: Sequelize.STRING,
+//         allowNull: false,
+//       },
+//       content: {
+//         type: Sequelize.STRING,
+//         allowNull: false,
+//       },
+//       userId: {
+//         type: Sequelize.STRING,
+//         allowNull: false,
+//       },
+//       published: {
+//         type: Sequelize.DATE,
+//         allowNull: false,
+//       },
+//       updated: {
+//         type: Sequelize.DATE,
+//         allowNull: false,
+//       },
+//     }),
+//   down: async (queryInterface) => queryInterface.dropTable('Posts'),
+// };
+
 module.exports = {
-  up: async (queryInterface, Sequelize) =>
-    queryInterface.createTable('Posts', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('Posts', {
       id: {
-        type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       title: {
@@ -16,17 +49,28 @@ module.exports = {
         allowNull: false,
       },
       userId: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
-      published: {
+      createdAt: {
         type: Sequelize.DATE,
-        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'published',
       },
-      updated: {
+      updatedAt: {
         type: Sequelize.DATE,
-        allowNull: false,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        field: 'updated',
       },
-    }),
-  down: async (queryInterface) => queryInterface.dropTable('Posts'),
+    });
+  },
+
+  down: async (queryInterface) => {
+    await queryInterface.dropTable('Posts');
+  },
 };
