@@ -1,5 +1,6 @@
 require('dotenv/config');
 const { users } = require('../models');
+const validateToken = require('./validateToken');
 
 const validateName = (name) => name.length >= 8;
 
@@ -23,6 +24,8 @@ const checkUserDb = async (email, password) => {
   return UserFound.length > 0;
 };
 
+const getAllUsers = async () => users.findAll();
+
 module.exports = {
   validateName,
   validateEmail,
@@ -30,4 +33,5 @@ module.exports = {
   checkEmailEmpty,
   checkPasswordEmpty,
   checkUserDb,
+  getAllUsers,
 };

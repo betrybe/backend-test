@@ -4,10 +4,7 @@ require('dotenv/config');
 const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
 
 const validateToken = (token) => {
-  if (!token) {
-    return false;
-  }
-  jwt.verify(token, SECRETE_KEY, (err) => !err);
+  jwt.verify(token, SECRETE_KEY, (err) => err);
 };
 
 module.exports = validateToken;

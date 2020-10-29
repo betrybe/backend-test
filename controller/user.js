@@ -1,7 +1,11 @@
+const jwt = require('jsonwebtoken');
 const { users } = require('../models');
 const { createToken } = require('../services');
 const { userService } = require('../services');
 const { errors } = require('../services');
+require('dotenv/config');
+
+const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
 
 const createUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;
@@ -54,7 +58,18 @@ const login = async (req, res) => {
   const token = await createToken({ email, password });
   return res.status(200).json({ token });
 };
+
+const getAllUsers = async (req, res) => {
+  const token = req.headers.authorization;
+  if (!token || token === 'Bearer') {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  const getAll = await userService.getAllUsers();
+  return res.send(getAll);
+};
 module.exports = {
   createUser,
   login,
+  getAllUsers,
 };

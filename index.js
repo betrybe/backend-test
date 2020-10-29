@@ -13,6 +13,7 @@ app.get('/', (request, response) => {
 });
 
 app.post('/user', user.createUser);
+app.get('/user', user.getAllUsers);
 
 app.post('/login', user.login);
 
