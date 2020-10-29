@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const verifyToken = (token) => {
   try {
-    const { dataValues: { password, ...rest } } = jwt.verify(token, 'xablau');
-    return rest;
+    const user = jwt.verify(token, 'xablau');
+    return user;
   } catch (err) {
     return { err: true, message: 'Token expirado ou inválido' };
   }
