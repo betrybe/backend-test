@@ -6,4 +6,6 @@ const user = Router();
 
 user.route('/').get(validateJWT, userController.getAll).post(userController.createUser);
 
+user.get('/:id', validateJWT, userController.getById);
+
 module.exports = user;
