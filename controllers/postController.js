@@ -119,9 +119,21 @@ const updatePost = rescue(async (req, res) => {
     .then(() => res.status(200).json({ title, content, userId: uId }));
 });
 
+const deletePost = rescue(async (req, res) => {
+  const { id } = req.params;
+  const getPostedById = (await Posts.findAll({ where: { id }, include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }] }))[0];
+  if (!getPostedById) return res.status(404).json({ message: 'Post não existe' });
+  const { user: { id: userId } } = getPostedById;
+  const { user: { email } } = req;
+  const { id: uId } = (await Users.findAll({ where: { email } }))[0];
+  if (userId !== uId) return res.status(401).json({ message: 'Usuário não autorizado' });
+  Posts.destroy({ where: { id } }).then(() => res.status(204).end());
+});
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
   updatePost,
+  deletePost,
 };

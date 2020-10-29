@@ -17,6 +17,7 @@ app.post('/post', auth, postController.createPost);
 app.get('/post/:id', auth, postController.getPostById);
 app.get('/post', auth, postController.getAllPosts);
 app.put('/post/:id', auth, postController.updatePost);
+app.delete('/post/:id', auth, postController.deletePost);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
 
