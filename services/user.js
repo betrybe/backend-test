@@ -1,7 +1,5 @@
 require('dotenv/config');
-const jwt = require('jsonwebtoken');
 const { users } = require('../models');
-const createToken = require('./createToken');
 
 const validateName = (name) => name.length >= 8;
 
