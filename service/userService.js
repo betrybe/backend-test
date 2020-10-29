@@ -1,5 +1,5 @@
-const { Users } = require('../models');
 const { validateUser } = require('../middlewares/valiData');
+const { Users } = require('../models');
 
 const genericErr = (code, message) => ({
   code,

@@ -8,7 +8,7 @@ const insertPost = async (req, res) => {
 
   return response.dataValues
     ? res.status(201).json({ ...req.body, userId })
-    : res.status(400).json(response.message);
+    : res.status(400).json(response);
 };
 
 const updatePost = async (req, res) => {
@@ -22,7 +22,7 @@ const updatePost = async (req, res) => {
   const response = await updtPost({ ...req.body, id });
 
   return response.message
-    ? res.status(400).json(response.message)
+    ? res.status(400).json(response)
     : res.status(200).json({ ...req.body, userId });
 };
 
