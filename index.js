@@ -13,6 +13,7 @@ app.get('/', (_request, response) => {
 
 app.use('/user', routes.user);
 app.use('/login', routes.login);
+app.use('/post', routes.post);
 
 app.use(errorHandler);
 
