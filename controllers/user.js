@@ -31,12 +31,12 @@ const login = rescue(async (req, res, next) => {
   return res.status(200).json({ token });
 });
 
-const getAll = async (_req, res) => res.status(200).json(await userService.getAll());
+const getAll = rescue(async (_req, res) => res.status(200).json(await userService.getAll()));
 
-const getById = async (req, res, next) => {
+const getById = rescue(async (req, res, next) => {
   const user = await userService.getById(req.params.id);
   if (user.message) return next({ errors: [{ message: user.message }], code: 404 });
   return res.status(200).json(user);
-};
+});
 
 module.exports = { createUser, login, getAll, getById, deleteUser };
