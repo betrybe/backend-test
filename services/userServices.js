@@ -1,33 +1,73 @@
 const { GenerateToken } = require('./JWT');
 const { User } = require('../models');
-const err = require('../errors');
+const { ErrHandler } = require('../errors');
 
 const CreateUser = async (payload) => {
   const { displayName, email, password, image } = payload;
 
-  //* Validações de parâmetros
-  const NameErr = err.ErrHandler.VerifyNameLength(displayName, 8);
-  const EmailErr = err.ErrHandler.VerifyEmail(email);
-  const PassErr = err.ErrHandler.VerifyPassword(password, 6);
+  // Validações de nome, email, senha e usuário duplicado
+  const nameValidate = ErrHandler.VerifyNameLength(displayName, 8);
+  const emailValidate = ErrHandler.VerifyEmail(email);
+  const passwordValidate = ErrHandler.VerifyPassword(password, 6);
+  const duplicateUser = await ErrHandler.VerifyDuplicate(email);
 
-  if (NameErr) return NameErr;
-  if (EmailErr) return EmailErr;
-  if (PassErr) return PassErr;
+  if (nameValidate) return nameValidate;
+  if (emailValidate) return emailValidate;
+  if (passwordValidate) return passwordValidate;
+  if (duplicateUser) return duplicateUser;
 
-  //* Validação de usuário duplicado
-  const duplicateErr = await err.ErrHandler.VerifyDuplicate(email);
-  if (duplicateErr) return duplicateErr;
-
-  //* Passando nas validações é inserido no DB e gerado um token com a senha informada.
+  // Passando nas validações é inserido no DB e gerado um token com a senha informada.
   await User.create({ displayName, email, password, image });
   const token = GenerateToken({ email, password });
+
   return { token };
+};
+
+const UserLogin = async (payload) => {
+  const { email, password } = payload;
+
+  // Validações de email, senha e dados incorretos
+  const emailValidate = ErrHandler.VerifyEmail(email);
+  const passwordValidate = ErrHandler.VerifyPassword(password, 6);
+  const loginValidate = await ErrHandler.VerifyUserLogin(email, password);
+
+  if (emailValidate) return emailValidate;
+  if (passwordValidate) return passwordValidate;
+  if (loginValidate) return loginValidate;
+
+  // Passando nas validações é gerado o token e devolvido ao usuário.
+  const token = GenerateToken({ email, password });
+
+  return { token };
+};
+
+const GetUsers = async () => {
+  const users = await User.findAll();
+  const arrUsers = users.map((user) => user.dataValues);
+
+  return arrUsers;
+};
+
+const GetUserById = async (pk) => {
+  const user = await User.findByPk(pk);
+  if (!user) {
+    const error = { error: { status: 404, message: 'Usuário não existe' } };
+    return error;
+  }
+
+  return user.dataValues;
+};
+
+const DeleteUser = async (email) => {
+  await User.destroy({ where: { email } });
+
+  return true;
 };
 
 module.exports = {
   CreateUser,
-  /* UserLogin,
+  UserLogin,
   GetUsers,
   GetUserById,
-  DeleteUser, */
+  DeleteUser,
 };

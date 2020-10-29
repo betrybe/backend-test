@@ -16,6 +16,8 @@ const VerifyNameLength = (name, length) => {
 };
 
 const VerifyEmail = (email) => {
+  const ValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
   if (email === '') {
     const error = {
       error: {
@@ -38,7 +40,6 @@ const VerifyEmail = (email) => {
     return error;
   }
 
-  const ValidEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
   if (!ValidEmail.test(email)) {
     const error = {
       error: {
@@ -83,6 +84,7 @@ const VerifyPassword = (password, length) => {
 
 const VerifyDuplicate = async (email) => {
   const UserFound = await User.findAll({ where: { email } });
+
   if (UserFound.length) {
     const error = { error: { status: 409, message: 'Usuário já existe' } };
     return error;
@@ -91,7 +93,7 @@ const VerifyDuplicate = async (email) => {
   return false;
 };
 
-/* const VerifyUserLogin = async (email, password) => {
+const VerifyUserLogin = async (email, password) => {
   const UserFound = await User.findAll({ where: { email, password } });
   if (!UserFound.length) {
     const error = { error: { status: 400, message: 'Campos inválidos' } };
@@ -99,7 +101,7 @@ const VerifyDuplicate = async (email) => {
   }
 
   return false;
-}; */
+};
 
 //* Validações de Posts a partir daqui -----------------
 
@@ -135,8 +137,8 @@ module.exports = {
   VerifyEmail,
   VerifyPassword,
   VerifyDuplicate,
-  /* VerifyUserLogin,
-  VerifyPostTitle,
+  VerifyUserLogin,
+  /* VerifyPostTitle,
   VerifyPostContent,
   VerifyPostAndUser, */
 };
