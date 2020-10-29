@@ -23,9 +23,11 @@ const createUser = rescue(async (req, res) => {
 
 const login = rescue(async (req, res, next) => {
   const response = await userService.userLogin(req.body);
-  console.log(response);
   if (response.errors) return next(response);
-  return res.status(200).json(response);
+  const token = generateToken(response);
+  return res.status(200).json({ response, token });
 });
 
-module.exports = { createUser, login, generateToken };
+const getAll = async (_req, res) => res.status(200).json(await userService.getAll());
+
+module.exports = { createUser, login, getAll };

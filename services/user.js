@@ -20,4 +20,6 @@ const userLogin = async (request) => {
   return user;
 };
 
-module.exports = { createUser, userLogin };
+const getAll = async () => User.findAll();
+
+module.exports = { createUser, userLogin, getAll };
