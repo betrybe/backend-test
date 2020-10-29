@@ -9,11 +9,12 @@ const CreateUser = async (payload) => {
   const nameValidate = ErrHandler.VerifyNameLength(displayName, 8);
   const emailValidate = ErrHandler.VerifyEmail(email);
   const passwordValidate = ErrHandler.VerifyPassword(password, 6);
-  const duplicateUser = await ErrHandler.VerifyDuplicate(email);
 
   if (nameValidate) return nameValidate;
   if (emailValidate) return emailValidate;
   if (passwordValidate) return passwordValidate;
+
+  const duplicateUser = await ErrHandler.VerifyDuplicate(email);
   if (duplicateUser) return duplicateUser;
 
   // Passando nas validações é inserido no DB e gerado um token com a senha informada.
@@ -29,10 +30,11 @@ const UserLogin = async (payload) => {
   // Validações de email, senha e dados incorretos
   const emailValidate = ErrHandler.VerifyEmail(email);
   const passwordValidate = ErrHandler.VerifyPassword(password, 6);
-  const loginValidate = await ErrHandler.VerifyUserLogin(email, password);
 
   if (emailValidate) return emailValidate;
   if (passwordValidate) return passwordValidate;
+
+  const loginValidate = await ErrHandler.VerifyUserLogin(email, password);
   if (loginValidate) return loginValidate;
 
   // Passando nas validações é gerado o token e devolvido ao usuário.
