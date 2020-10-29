@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
   if (password.length < 6) {
     return res.status(400).json(errors.errorPassword);
   }
-  if (userService.validateEmail(email)) {
+  if (!userService.validateEmail(email)) {
     return res.status(400).json(errors.errorEmail);
   }
   if (await userService.checkUserExist(email)) {
