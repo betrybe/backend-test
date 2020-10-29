@@ -47,7 +47,7 @@ const login = async (req, res) => {
   if (!password) {
     return res.status(400).json(errors.errorPasswordReq);
   }
-  if (userService.checkUserDb(email, password)) {
+  if (!(await userService.checkUserDb(email, password))) {
     return res.status(400).json(errors.loginInvalid);
   }
 
