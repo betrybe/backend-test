@@ -26,7 +26,7 @@ const deleteUser = rescue(async (req, res) => {
 
 const login = rescue(async (req, res, next) => {
   const response = await userService.userLogin(req.body);
-  if (response.errors) return next(response.errors[0]);
+  if (response.errors) return next(response);
   const token = generateToken(response);
   return res.status(200).json({ token });
 });
@@ -35,7 +35,7 @@ const getAll = async (_req, res) => res.status(200).json(await userService.getAl
 
 const getById = async (req, res, next) => {
   const user = await userService.getById(req.params.id);
-  if (user.message) return next({ message: user.message, code: 404 });
+  if (user.message) return next({ errors: [{ message: user.message }], code: 404 });
   return res.status(200).json(user);
 };
 
