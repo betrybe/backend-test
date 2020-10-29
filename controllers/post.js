@@ -11,7 +11,7 @@ const createPost = rescue(async (req, res) => {
 //   return res.status(204).json();
 // });
 
-// const getAll = async (_req, res) => res.status(200).json(await userService.getAll());
+const getAll = async (_req, res) => res.status(200).json(await postService.getAll());
 
 // const getById = async (req, res, next) => {
 //   const user = await userService.getById(req.params.id);
@@ -19,4 +19,4 @@ const createPost = rescue(async (req, res) => {
 //   return res.status(200).json(user);
 // };
 
-module.exports = { createPost };
+module.exports = { createPost, getAll };

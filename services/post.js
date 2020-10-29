@@ -3,7 +3,7 @@ const { Post } = require('../models');
 const createPost = async ({ title, content }, id) =>
   Post.create({ userId: id, title, content });
 
-// const getAll = async () => User.findAll();
+const getAll = async () => Post.findAll({ include: 'user' });
 
 // const deleteUser = async (id) => User.destroy({ where: { id } });
 
@@ -13,4 +13,4 @@ const createPost = async ({ title, content }, id) =>
 //   return user;
 // };
 
-module.exports = { createPost };
+module.exports = { createPost, getAll };
