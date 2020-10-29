@@ -10,8 +10,10 @@ const postService = blogPostService(models);
 const postController = blogPostController(postService);
 
 post.post('/', postController.createPost);
+post.get('/search', postController.shearchPostByQuery);
 post.get('/:id', postController.getPostById);
 post.put('/:id', postController.changePostById);
+post.delete('/:id', postController.deletePostById);
 post.get('/', postController.getPost);
 
 module.exports = post;

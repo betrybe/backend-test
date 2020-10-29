@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const { verifyToken, verifyError } = require('../verifyToken');
+const { verifyError } = require('../verifyToken');
 
 const createPost = (services) =>
   rescue(async (req, res) => {
@@ -7,14 +7,14 @@ const createPost = (services) =>
     const { authorization } = req.headers;
     const validToken = verifyError(authorization, res);
     if (typeof validToken !== 'object') return;
-    const { id } = verifyToken(authorization);
+    const { id } = validToken;
     const post = await services.createPost(title, content, id);
     if (post.err) {
-      const { message = 'x' } = post;
+      const { message } = post;
       return res.status(400).json({ message });
     }
     const { dataValues: { updated, published, id: noId, ...insertedPost } } = post;
-    res.status(201).json(insertedPost);
+    return res.status(201).json(insertedPost);
   });
 
 const getPost = (services) =>
@@ -59,11 +59,38 @@ const changePostById = (services) =>
     res.status(200).json(post);
   });
 
+const deletePostById = (service) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    const validToken = verifyError(authorization, res);
+    const { id } = req.params;
+    const { id: userId } = validToken;
+    const getId = await service.getPostById(id);
+    const { status: stats, message: msg } = getId;
+    if (getId.err) return res.status(stats).json({ message: msg });
+    const resp = await service.deletePostById(id, userId);
+    const { err, status, message } = resp;
+    if (err) return res.status(status).json({ message });
+    return res.status(204).json();
+  });
+
+const shearchPostByQuery = (service) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    const { q } = req.query;
+    const validToken = verifyError(authorization, res);
+    if (typeof validToken !== 'object') return;
+    const byQuery = await service.shearchPostByQuery(q);
+    return res.status(200).json(byQuery);
+  });
+
 const blogPostController = (service) => ({
   createPost: createPost(service),
   getPost: getPost(service),
   getPostById: getPostById(service),
   changePostById: changePostById(service),
+  deletePostById: deletePostById(service),
+  shearchPostByQuery: shearchPostByQuery(service),
 });
 
 module.exports = { blogPostController };
