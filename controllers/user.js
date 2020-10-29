@@ -16,9 +16,13 @@ const generateToken = (userObj) => {
   return token;
 };
 
-const createUser = rescue(async (req, res) =>
-  res.status(201).json(await userService.createUser(req.body)),
-);
+const createUser = rescue(async (req, res) => res
+  .status(201).json(await userService.createUser(req.body)));
+
+const deleteUser = rescue(async (req, res) => {
+  await userService.deleteUser(req.user.id);
+  return res.status(204).json();
+});
 
 const login = rescue(async (req, res, next) => {
   const response = await userService.userLogin(req.body);
@@ -35,4 +39,4 @@ const getById = async (req, res, next) => {
   return res.status(200).json(user);
 };
 
-module.exports = { createUser, login, getAll, getById };
+module.exports = { createUser, login, getAll, getById, deleteUser };

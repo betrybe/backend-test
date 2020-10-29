@@ -22,10 +22,12 @@ const userLogin = async (request) => {
 
 const getAll = async () => User.findAll();
 
+const deleteUser = async (id) => User.destroy({ where: { id } });
+
 const getById = async (id) => {
   const user = await User.findOne({ where: { id } });
   if (!user) return { message: 'Usuário não existe' };
   return user;
 };
 
-module.exports = { createUser, userLogin, getAll, getById };
+module.exports = { createUser, userLogin, getAll, getById, deleteUser };

@@ -8,4 +8,6 @@ user.route('/').get(validateJWT, userController.getAll).post(userController.crea
 
 user.get('/:id', validateJWT, userController.getById);
 
+user.delete('/me', validateJWT, userController.deleteUser);
+
 module.exports = user;
