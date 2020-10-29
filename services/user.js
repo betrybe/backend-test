@@ -25,7 +25,7 @@ const getAll = async () => User.findAll();
 const deleteUser = async (id) => User.destroy({ where: { id } });
 
 const getById = async (id) => {
-  const user = await User.findOne({ where: { id } });
+  const user = await User.findByPk(id);
   if (!user) return { message: 'Usuário não existe' };
   return user;
 };

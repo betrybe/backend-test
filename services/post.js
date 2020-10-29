@@ -13,4 +13,16 @@ const getById = async (id) => {
   return post;
 };
 
-module.exports = { createPost, getAll, getById };
+const updatePost = async ({ title, content }, id, userId) => {
+  if (!title) return { message: '"title" is required' };
+  if (!content) return { message: '"content" is required' };
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { message: 'Post não existe' };
+  if (userId !== post.user.id) {
+    return { message: 'Usuário não autorizado', code: 401 };
+  }
+  await Post.update({ title, content }, { where: { id } });
+  return { title, content, userId };
+};
+
+module.exports = { createPost, getAll, getById, updatePost };

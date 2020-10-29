@@ -9,6 +9,9 @@ post
   .get(validateJWT, postController.getAll)
   .post(validateJWT, postController.createPost);
 
-post.get('/:id', validateJWT, postController.getById);
+post
+  .route('/:id')
+  .get(validateJWT, postController.getById)
+  .put(validateJWT, postController.updatePost);
 
 module.exports = post;
