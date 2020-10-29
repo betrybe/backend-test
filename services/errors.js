@@ -4,6 +4,9 @@ const errorEmailReq = { message: '"email" is required' };
 const errorPassword = { message: '"password" length must be 6 characters long' };
 const errorPasswordReq = { message: '"password" is required' };
 const errorUserExist = { message: 'Usuário já existe' };
+const emailNull = { message: '"email" is not allowed to be empty' };
+const passwordNull = { message: '"password" is not allowed to be empty' };
+const loginInvalid = { message: 'Campos inválidos' };
 
 module.exports = {
   errorName,
@@ -12,4 +15,7 @@ module.exports = {
   errorPassword,
   errorPasswordReq,
   errorUserExist,
+  emailNull,
+  passwordNull,
+  loginInvalid,
 };
