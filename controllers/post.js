@@ -22,10 +22,11 @@ const searchPost = rescue(async (req, res) => {
   return res.status(status).json(response);
 });
 
-// const deleteUser = rescue(async (req, res) => {
-//   await userService.deleteUser(req.user.id);
-//   return res.status(204).json();
-// });
+const deletePost = rescue(async (req, res, next) => {
+  const response = await postService.deletePost(req.params.id, req.user.id);
+  if (response) return next({ errors: [{ message: response.message }], code: response.code });
+  return res.status(204).json();
+});
 
 const getAll = rescue(async (_req, res) => res.status(200).json(await postService.getAll()));
 
@@ -35,4 +36,4 @@ const getById = rescue(async (req, res, next) => {
   return res.status(200).json(post);
 });
 
-module.exports = { createPost, getAll, getById, updatePost, searchPost };
+module.exports = { createPost, getAll, getById, updatePost, searchPost, deletePost };

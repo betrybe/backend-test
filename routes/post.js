@@ -14,7 +14,7 @@ post
 post
   .route('/:id')
   .get(validateJWT, postController.getById)
-  .put(validateJWT, postController.updatePost);
-
+  .put(validateJWT, postController.updatePost)
+  .delete(validateJWT, postController.deletePost);
 
 module.exports = post;

@@ -6,7 +6,12 @@ const createPost = async ({ title, content }, id) =>
 
 const getAll = async () => Post.findAll({ include: 'user' });
 
-// const deleteUser = async (id) => User.destroy({ where: { id } });
+const deletePost = async (id, userId) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { message: 'Post não existe', code: 404 };
+  if (post.user.id !== userId) return { message: 'Usuário não autorizado', code: 401 };
+  await Post.destroy({ where: { id } });
+};
 
 const getById = async (id) => {
   const post = await Post.findByPk(id, { include: 'user' });
@@ -39,4 +44,4 @@ const searchPost = async (searchTerm) => {
   return { status: 200, response: posts || [] };
 };
 
-module.exports = { createPost, getAll, getById, updatePost, searchPost };
+module.exports = { createPost, getAll, getById, updatePost, searchPost, deletePost };
