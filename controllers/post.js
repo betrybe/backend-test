@@ -13,10 +13,10 @@ const createPost = rescue(async (req, res) => {
 
 const getAll = async (_req, res) => res.status(200).json(await postService.getAll());
 
-// const getById = async (req, res, next) => {
-//   const user = await userService.getById(req.params.id);
-//   if (user.message) return next({ errors: [{ message: user.message }], code: 404 });
-//   return res.status(200).json(user);
-// };
+const getById = async (req, res, next) => {
+  const post = await postService.getById(req.params.id);
+  if (post.message) return next({ errors: [{ message: post.message }], code: 404 });
+  return res.status(200).json(post);
+};
 
-module.exports = { createPost, getAll };
+module.exports = { createPost, getAll, getById };

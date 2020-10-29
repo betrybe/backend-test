@@ -7,10 +7,10 @@ const getAll = async () => Post.findAll({ include: 'user' });
 
 // const deleteUser = async (id) => User.destroy({ where: { id } });
 
-// const getById = async (id) => {
-//   const user = await User.findOne({ where: { id } });
-//   if (!user) return { message: 'Usuário não existe' };
-//   return user;
-// };
+const getById = async (id) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { message: 'Post não existe' };
+  return post;
+};
 
-module.exports = { createPost, getAll };
+module.exports = { createPost, getAll, getById };
