@@ -1,6 +1,5 @@
 require('dotenv/config');
 const { users } = require('../models');
-const validateToken = require('./validateToken');
 
 const validateName = (name) => name.length >= 8;
 
