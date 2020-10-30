@@ -1,5 +1,6 @@
-const { Post } = require('../models');
+const { User, Post } = require('../models');
 const { ErrHandler } = require('../errors');
+const { UserLogin } = require('./userServices');
 
 const CreatePost = async (payload, user) => {
   const { title, content } = payload;
@@ -22,6 +23,16 @@ const CreatePost = async (payload, user) => {
   return newPost;
 };
 
+const GetPosts = async () => {
+  const posts = await Post.findAll({
+    include: { model: User, as: 'user' },
+    attributes: { exclude: ['userId'] },
+  });
+
+  return posts;
+};
+
 module.exports = {
   CreatePost,
+  GetPosts,
 };

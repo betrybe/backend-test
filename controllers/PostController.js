@@ -21,4 +21,10 @@ router.post('/', authMiddleware, rescue(async (req, res, next) => {
   );
 }));
 
+router.get('/', authMiddleware, rescue(async (_req, res) => {
+  const response = await PostServices.GetPosts();
+
+  res.status(200).json(response);
+}));
+
 module.exports = router;
