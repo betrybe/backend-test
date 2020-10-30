@@ -1,5 +1,5 @@
 const Users = (sequelize, DataTypes) => {
-  const users = sequelize.define('users', {
+  const users = sequelize.define('Users', {
     id: {
       primaryKey: true,
       autoIncrement: true,
@@ -28,7 +28,7 @@ const Users = (sequelize, DataTypes) => {
   });
 
   users.associate = (models) => {
-    users.hasMany(models.posts, { foreignKey: 'userId', as: 'posts' });
+    users.hasMany(models.Posts, { foreignKey: 'userId', as: 'posts' });
   };
 
   return users;

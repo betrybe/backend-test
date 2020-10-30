@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Post = sequelize.define('posts', {
+  const Post = sequelize.define('Posts', {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   Post.associate = (models) => {
-    Post.belongsTo(models.users, { foreignKey: 'userId', as: 'user' });
+    Post.belongsTo(models.Users, { foreignKey: 'userId', as: 'user' });
   };
   // https://www.youtube.com/watch?v=CMc7IVdYumw&ab_channel=ThomasW.Smith
   return Post;
