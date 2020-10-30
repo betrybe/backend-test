@@ -5,8 +5,6 @@ const { userService } = require('../services');
 const { errors } = require('../services');
 require('dotenv/config');
 
-const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
-
 const createUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;
 
@@ -60,10 +58,18 @@ const login = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  const token = req.headers.authorization;
-  if (!token || token === 'Bearer') {
+  const token = await req.headers.authorization;
+  if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
+
+  const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
+
+  jwt.verify(token, SECRETE_KEY, (err) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token expirado ou inválido' });
+    }
+  });
 
   const getAll = await userService.getAllUsers();
   return res.send(getAll);
