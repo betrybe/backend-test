@@ -1,5 +1,5 @@
 module.exports = {
-  up: async (queryInterface, Sequelize) => queryInterface.createTable('posts', {
+  up: async (queryInterface, Sequelize) => queryInterface.createTable('Posts', {
     id: {
       type: Sequelize.INTEGER,
       allowNull: false,
@@ -29,11 +29,11 @@ module.exports = {
       onUpdate: 'cascade',
       onDelete: 'cascade',
       references: {
-        model: 'users',
+        model: 'Users',
         key: 'id',
       },
     },
   }),
 
-  down: async (queryInterface, _Sequelize) => queryInterface.dropTable('posts'),
+  down: async (queryInterface, _Sequelize) => queryInterface.dropTable('Posts'),
 };
