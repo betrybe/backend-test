@@ -105,7 +105,7 @@ const VerifyUserLogin = async (email, password) => {
 
 //* Validações de Posts a partir daqui -----------------
 
-/* const VerifyPostTitle = (title) => {
+const VerifyPostTitle = (title) => {
   if (!title) {
     const error = { error: { status: 400, message: '"title" is required' } };
     return error;
@@ -130,7 +130,7 @@ const VerifyPostAndUser = (post, user) => {
   }
 
   return false;
-}; */
+};
 
 module.exports = {
   VerifyNameLength,
@@ -138,7 +138,7 @@ module.exports = {
   VerifyPassword,
   VerifyDuplicate,
   VerifyUserLogin,
-  /* VerifyPostTitle,
+  VerifyPostTitle,
   VerifyPostContent,
-  VerifyPostAndUser, */
+  VerifyPostAndUser,
 };

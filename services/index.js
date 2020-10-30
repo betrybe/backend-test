@@ -1,7 +1,7 @@
 const userServices = require('./userServices');
-/* const PostServices = require('./PostServices'); */
+const PostServices = require('./postService');
 
 module.exports = {
   userServices,
-  /* PostServices, */
+  PostServices,
 };
