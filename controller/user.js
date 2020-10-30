@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { users } = require('../models');
+const { Users } = require('../models');
 const { createToken } = require('../services');
 const { userService } = require('../services');
 const { errors } = require('../services');
@@ -27,7 +27,7 @@ const createUser = async (req, res) => {
     return res.status(409).json(errors.errorUserExist);
   }
 
-  const newUser = await users.create({ displayName, email, password, image });
+  const newUser = await Users.create({ displayName, email, password, image });
 
   const token = await createToken({ newUser });
 

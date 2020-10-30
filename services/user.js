@@ -1,5 +1,5 @@
 require('dotenv/config');
-const { users } = require('../models');
+const { Users } = require('../models');
 
 const validateName = (name) => name.length >= 8;
 
@@ -13,17 +13,17 @@ const checkEmailEmpty = (email) => email === '';
 const checkPasswordEmpty = (password) => password === '';
 
 const checkUserExist = async (email) => {
-  const UserFound = await users.findAll({ where: { email } });
+  const UserFound = await Users.findAll({ where: { email } });
   return UserFound.length > 0;
 };
 
 const checkUserDb = async (email, password) => {
-  const UserFound = await users.findAll({ where: { email, password } });
+  const UserFound = await Users.findAll({ where: { email, password } });
   console.log(UserFound.length > 0);
   return UserFound.length > 0;
 };
 
-const getAllUsers = async () => users.findAll();
+const getAllUsers = async () => Users.findAll();
 
 module.exports = {
   validateName,
