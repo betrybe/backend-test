@@ -51,8 +51,8 @@ const getPostsByQuery = async (query) => {
 const deleteOnePost = async (id, userId) => {
   let post = await Post.findOne({ where: { id } });
 
-  if (!post) return { status: 404, message: 'Post não encontrado' };
-  if (post.userId !== userId) return { status: 401, message: 'Usuário não é dono do post' };
+  if (!post) return { status: 404, message: 'Post não existe' };
+  if (post.userId !== userId) return { status: 401, message: 'Usuário não autorizado' };
 
   await Post.destroy({ where: { id } });
 
