@@ -1,6 +1,5 @@
 const { User, Post } = require('../models');
 const { ErrHandler } = require('../errors');
-const { UserLogin } = require('./userServices');
 
 const CreatePost = async (payload, user) => {
   const { title, content } = payload;
