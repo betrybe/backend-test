@@ -1,26 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const userController = require('./controllers/userController');
+const errorHandler = require('./middlewares/errorHandler');
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use('/user', userController);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (request, response) => {
   response.send();
 });
 
+app.use(errorHandler);
+
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
 
 /**
  * endpoints:
- * criar user
- * POST /user
  * logar user
  * POST /login
- * pegar users
- * GET /user
  * pegar user por id
  * GET /user/:id
  * apaga os eu user
