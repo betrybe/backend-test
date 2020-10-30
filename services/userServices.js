@@ -6,7 +6,7 @@ const duplicateUser = async (email) => {
   }
   return;
 };
-
+// dividir em 2 cases
 const validateRegister = async (name, email, password, image) => {
   const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
   const duplicate = await duplicateUser(email);
