@@ -1,21 +1,25 @@
+const express = require('express');
 const rescue = require('express-rescue');
-const jwt = require('jsonwebtoken');
+const { User } = require('../models');
+const createJWT = require('../services/createJWT');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-const JWT_SECRET = 'mirellasproject';
+const router = express.Router();
 
-const createUser = (service) => rescue(async (req, res) => {
+const createUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;
+  const { dataValues } = await User.create({ displayName, email, password, image });
 
-  const user = await service.createUser(displayName, email, password, image);
-
-  const jwtConfig = { expiresIn: '50min', algorithm: 'HS256' };
-  const token = jwt.sign({ user }, JWT_SECRET, jwtConfig);
-
+  const token = createJWT(dataValues);
   res.status(201).json({ token });
-});
+};
 
-const getUserController = (service) => ({
-  createUser: createUser(service),
-});
+const getUser = async (req, res) => {
+  const users = await User.findAll({});
+  res.status(200).json(users);
+};
 
-module.exports = { getUserController };
+router.get('/', authMiddleware, rescue(getUser));
+router.post('/', rescue(createUser));
+
+module.exports = router;

@@ -1,27 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const models = require('./models');
-const errorMiddleware = require('./middlewares/error');
-// const validateUser = require('./utils/validateUser');
+// const errorMiddleware = require('./middlewares/error');
+const userController = require('./controllers/userController');
 
-const { getUserService } = require('./services/userService');
-const { getUserController } = require('./controllers/userController');
+const app = express();
+app.use(bodyParser.json());
 
-const factory = async (config) => {
-  const app = express();
-  app.use(bodyParser.json());
+app.get('/', (request, response) => {
+  response.send();
+});
 
-  app.get('/ping', (_, res) => res.status(200).json({ message: 'ok' }));
+app.use('/users', userController);
 
-  const userService = getUserService(models);
-  const userController = getUserController(userService);
+// app.use(errorMiddleware(config.environment));
 
-  app.post('/users', userController.createUser);
-
-  app.use(errorMiddleware(config.enviroment));
-
-  return app;
-};
-
-module.exports = { factory };
+module.exports = app;
