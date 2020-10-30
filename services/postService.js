@@ -32,7 +32,23 @@ const GetPosts = async () => {
   return posts;
 };
 
+const GetPostsById = async (id) => {
+  const post = await Post.findAll({
+    where: { id },
+    include: { model: User, as: 'user' },
+    attributes: { exclude: ['userId'] },
+  });
+
+  if (post.length === 0) {
+    const error = { error: { status: 404, message: 'Post não existe' } };
+    return error;
+  }
+
+  return post[0];
+};
+
 module.exports = {
   CreatePost,
   GetPosts,
+  GetPostsById,
 };

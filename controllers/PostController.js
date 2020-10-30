@@ -27,4 +27,12 @@ router.get('/', authMiddleware, rescue(async (_req, res) => {
   res.status(200).json(response);
 }));
 
+router.get('/:id', authMiddleware, rescue(async (req, res, next) => {
+  const postId = req.params.id;
+  const response = await PostServices.GetPostsById(postId);
+
+  if (response.error) return next(response.error);
+  res.status(200).json(response);
+}));
+
 module.exports = router;
