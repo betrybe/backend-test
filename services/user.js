@@ -25,6 +25,12 @@ const checkUserDb = async (email, password) => {
 
 const getAllUsers = async () => Users.findAll();
 
+const getUserById = async (id) => {
+  const user = await Users.findAll({ where: { id } });
+
+  return user;
+};
+
 module.exports = {
   validateName,
   validateEmail,
@@ -33,4 +39,5 @@ module.exports = {
   checkPasswordEmpty,
   checkUserDb,
   getAllUsers,
+  getUserById,
 };

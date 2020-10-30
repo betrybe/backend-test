@@ -7,6 +7,7 @@ const errorUserExist = { message: 'Usuário já existe' };
 const emailNull = { message: '"email" is not allowed to be empty' };
 const passwordNull = { message: '"password" is not allowed to be empty' };
 const loginInvalid = { message: 'Campos inválidos' };
+const invalidId = { message: 'Usuário não existe' };
 
 module.exports = {
   errorName,
@@ -18,4 +19,5 @@ module.exports = {
   emailNull,
   passwordNull,
   loginInvalid,
+  invalidId,
 };

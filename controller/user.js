@@ -74,8 +74,29 @@ const getAllUsers = async (req, res) => {
   const getAll = await userService.getAllUsers();
   return res.send(getAll);
 };
+
+const getUserById = async (req, res) => {
+  const token = await req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
+
+  jwt.verify(token, SECRETE_KEY, (err) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token expirado ou inválido' });
+    }
+  });
+  const user = await userService.getUserById(req.params.id);
+  if (user.length <= 0) return res.status(404).json(errors.invalidId);
+
+  return res.status(200).json(user[0]);
+};
+
 module.exports = {
   createUser,
   login,
   getAllUsers,
+  getUserById,
 };
