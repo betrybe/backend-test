@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
-const  uLogin = require('../service');
+const uLogin = require('../service');
 
 const router = Router();
 

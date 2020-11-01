@@ -2,7 +2,7 @@ require('dotenv/config');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
-const SECRET = process.env.SECRET;
+const { SECRET } = process.env;
 
 module.exports = async (req, res, next) => {
   const token = req.headers.authorization;
@@ -12,12 +12,12 @@ module.exports = async (req, res, next) => {
     const user = await User.findOne({
       where: {
         email: decoded.email,
-        password: decoded.password
-      }
+        password: decoded.password,
+      },
     });
     req.user = user;
     return next();
   } catch (err) {
-    return res.status(401).json({ message: 'Token expirado ou inválido' })
+    return res.status(401).json({ message: 'Token expirado ou inválido' });
   }
 };

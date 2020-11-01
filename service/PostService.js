@@ -1,10 +1,9 @@
-const { ErrHandler } = require('../errors');
 const errHandler = require('../errors/errHandler');
 const { User, Post } = require('../models');
 
 const postsUser = async (title, content, userId) => {
-  const errTitle = ErrHandler.VerifyTitle(title);
-  const errContent = ErrHandler.VerifyContent(content);
+  const errTitle = errHandler.VerifyTitle(title);
+  const errContent = errHandler.VerifyContent(content);
 
   if (errTitle) return errTitle;
   if (errContent) return errContent;
@@ -27,14 +26,14 @@ const getAllPosts = async () => {
 };
 
 const PostById = async (id) => {
-  getPostById = await Post.findOne({
+  const getPostById = await Post.findOne({
     where: { id },
     include: { model: User, as: 'user' },
     attribute: { exclude: ['userId'] },
   });
 
   if (!getPostById) {
-    const postErroId = { error: { status: 404, message: 'Post não existe' } }
+    const postErroId = { error: { status: 404, message: 'Post não existe' } };
     return postErroId;
   }
   return getPostById;
@@ -45,13 +44,13 @@ const updatePosts = async (id, title, content, allInfoUser) => {
   const validatePosts = errHandler.VerifyPost(getPostsForUpadate, allInfoUser);
   if (validatePosts) return validatePosts;
 
-  const errTitle = ErrHandler.VerifyTitle(title);
-  const errContent = ErrHandler.VerifyContent(content);
+  const errTitle = errHandler.VerifyTitle(title);
+  const errContent = errHandler.VerifyContent(content);
   if (errTitle) return errTitle;
   if (errContent) return errContent;
 
   await Post.update({
-    title, content
+    title, content,
   }, { where: { id } });
 
   const postUpdated = Post.findOne({
@@ -67,13 +66,13 @@ const deletePosts = async (id, allInfoUser) => {
   if (!findPostsDel) {
     const errDelPost = { error: { status: 404, message: 'Post não existe' } };
     return errDelPost;
-  };
+  }
   const validatePosts = errHandler.VerifyPost(findPostsDel, allInfoUser);
   if (validatePosts) return validatePosts;
 
   await Post.destroy({ where: { id } });
   return true;
-}
+};
 
 module.exports = {
   postsUser,
