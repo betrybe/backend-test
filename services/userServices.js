@@ -1,12 +1,15 @@
 const { Users } = require('../models');
 
-const validateName = (name) => name && name.length < 8
-  ? {
+const validateName = (name) => {
+  if (name && name.length < 8) {
+    return {
       ok: false,
       status: 400,
       message: '"displayName" length must be at least 8 characters long',
-    }
-  : { ok: true }
+    };
+  }
+  return { ok: true };
+};
 
 const validadeEmail = async (email) => {
   if (!email) return { ok: false, status: 400, message: '"email" is required' };
@@ -22,9 +25,10 @@ const validatePassword = (pass) => {
     : { ok: true };
 };
 
-const validateImage = (image) => image
-  ? { ok: true }
-  : { ok: false, status: 400, message: '"image" is required' };
+const validateImage = (image) => {
+  if (image) return { ok: true };
+  return { ok: false, status: 400, message: '"image" is required' };
+};
 
 const registerUser = async (displayName, email, password, image) => {
   const validEmail = await validadeEmail(email);
@@ -41,16 +45,14 @@ const registerUser = async (displayName, email, password, image) => {
     case validImage.ok:
       return validImage;
     default:
-      let duplicate = false;
-      const createdUser = await Users.create({ displayName, email, password, image })
-      .catch(() => duplicate = true);
-      if (duplicate) return { ok: false, status: 409, message: 'Usuário já existe' };
-      return { ok: true, status: 201, message: 'Usuário válido', createdUser };
+      break;
   }
+  const createdUser = await Users.create({ displayName, email, password, image })
+    .catch(() => false);
+  if (!createdUser) return { ok: false, status: 409, message: 'Usuário já existe' };
+  return { ok: true, status: 201, message: 'Usuário válido' };
 };
 
-const getAllUsers = async () => {
-  return User.findAll();
-};
+const getAllUsers = async () => Users.findAll();
 
 module.exports = { registerUser, getAllUsers };

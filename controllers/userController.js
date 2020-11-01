@@ -6,7 +6,7 @@ const userRoute = Router();
 
 const createUser = async (req, res, next) => {
   const { displayName, email, password, image } = req.body;
-  const createdUser = await registerUser(displayName, email, password, image);
+  const createdUser = await registerUser(displayName, email, password, image, next);
   return createdUser.ok
     ? res.status(createdUser.status).json({ displayName, email, password, image })
     : next(createdUser);
@@ -17,13 +17,9 @@ const getUser = async (_req, res) => {
   return res.status(200).json(users);
 };
 
-const getUserById = (_req, res) => {
-  return res.status(200).json({ ok: true });
-};
+const getUserById = (_req, res) => res.status(200).json({ ok: true });
 
-const deleteUser = (_req, res) => {
-  return res.status(200).json({ ok: true });
-};
+const deleteUser = (_req, res) => res.status(200).json({ ok: true });
 
 userRoute.route('/').get(auth(true), getUser).post(createUser);
 userRoute.route('/:id').get(auth(true), getUserById);
