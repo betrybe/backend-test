@@ -1,47 +1,52 @@
 const { Users } = require('../models');
 
-const duplicateUser = async (email) => {
-  if (email) {
-    return Users.findOne({ where: { email } });
-  }
-  return;
-};
-// dividir em 2 cases
-const validateRegister = async (name, email, password, image) => {
-  const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
-  const duplicate = await duplicateUser(email);
-  switch (true) {
-    case !email:
-      return { ok: false, status: 400, message: '"email" is required' };
-    case !password:
-      return { ok: false, status: 400, message: '"password" is required' };
-    case !image:
-      return { ok: false, status: 400, message: '"image" is required' };
-    case name.length < 8:
-      return {
-        ok: false,
-        status: 400,
-        message: '"displayName" length must be at least 8 characters long',
-      };
-    case password.length < 6:
-      return { ok: false, status: 400, message: '"password" length must be 6 characters long' };
-    case !validEmail:
-      return { ok: false, status: 400, message: '"email" must be a valid email' };
-    case duplicate && duplicate.Users:
-      return { ok: false, status: 409, message: 'Usuário já existe' };
-    default:
-      return { ok: true, status: 201, message: 'Usuário válido' };
-  }
+const validateName = (name) => name && name.length < 8
+  ? {
+      ok: false,
+      status: 400,
+      message: '"displayName" length must be at least 8 characters long',
+    }
+  : { ok: true }
+
+const validadeEmail = async (email) => {
+  if (!email) return { ok: false, status: 400, message: '"email" is required' };
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)
+    ? { ok: true }
+    : { ok: false, status: 400, message: '"email" must be a valid email' };
 };
 
+const validatePassword = (pass) => {
+  if (!pass) return { ok: false, status: 400, message: '"password" is required' };
+  return pass.length < 6
+    ? { ok: false, status: 400, message: '"password" length must be 6 characters long' }
+    : { ok: true };
+};
+
+const validateImage = (image) => image
+  ? { ok: true }
+  : { ok: false, status: 400, message: '"image" is required' };
+
 const registerUser = async (displayName, email, password, image) => {
-  const isValidUser = await validateRegister(displayName, email, password, image);
-  if (isValidUser.ok) {
-    const createdUser = await Users.create({ displayName, email, password, image });
-    isValidUser.user = createdUser;
-    return isValidUser;
+  const validEmail = await validadeEmail(email);
+  const validName = validateName(displayName);
+  const validPassword = validatePassword(password);
+  const validImage = validateImage(image);
+  switch (false) {
+    case validName.ok:
+      return validName;
+    case validEmail.ok:
+      return validEmail;
+    case validPassword.ok:
+      return validPassword;
+    case validImage.ok:
+      return validImage;
+    default:
+      let duplicate = false;
+      const createdUser = await Users.create({ displayName, email, password, image })
+      .catch(() => duplicate = true);
+      if (duplicate) return { ok: false, status: 409, message: 'Usuário já existe' };
+      return { ok: true, status: 201, message: 'Usuário válido', createdUser };
   }
-  return isValidUser;
 };
 
 const getAllUsers = async () => {
