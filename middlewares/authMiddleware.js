@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
     req.user = payload;
     next();
   } catch (err) {
-    console.log('jwt linha12', err.message);
+    console.log('jwt linha12 - message:', err.message);
     return res.status(401).json({ message: 'jwt malformed' });
   }
 };
