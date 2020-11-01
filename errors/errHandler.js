@@ -83,10 +83,37 @@ const VerifyUserLogin = async (email, password) => {
   return false;
 };
 
+const VerifyTitle = (title) => {
+  if (!title) {
+    const titleError = { error: { status: 400, message: '"title" is required' } };
+    return titleError;
+  }
+  return false;
+};
+
+const VerifyContent = (content) => {
+  if (!content) {
+    const contentError = { error: { status: 400, message: '"content" is required' } };
+    return contentError;
+  }
+  return false;
+};
+
+const VerifyPost = (post, user) => {
+  if (post.dataValues.userId !== user.dataValues.id) {
+    const errorPost = { error: { status: 401, message: 'Usuário não autorizado' } };
+    return errorPost;
+  }
+  return false;
+};
+
 module.exports = {
   VerifyNameLength,
   VerifyEmail,
   VerifyPassword,
   VerifyDuplicate,
   VerifyUserLogin,
+  VerifyTitle,
+  VerifyContent,
+  VerifyPost,
 };
