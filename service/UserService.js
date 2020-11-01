@@ -1,6 +1,7 @@
 const { tokenValid } = require('../authmiddleware/jwt');
 const { User } = require('../models');
 const err = require('../errors');
+const { response } = require('express');
 
 const CreateUser = async (payload) => {
   const { displayName, email, password, image } = payload;
@@ -24,7 +25,23 @@ const GetUsers = async () => {
   return getAll;
 };
 
+const getUserbyId = async (id) => {
+  const userById = await User.findByPk(id);
+  if (!userById) {
+    const userErroId = { error: { status: 404, message: 'Usuário não existe' } }
+    return userErroId;
+  }
+  return userById;
+}
+
+const deleteMyUser = async (email) => {
+  await User.destroy({ where: { email } });
+  return true;
+}
+
 module.exports = {
   CreateUser,
   GetUsers,
+  getUserbyId,
+  deleteMyUser,
 };
