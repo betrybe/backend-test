@@ -1,9 +1,9 @@
-const errHandler = require('../errors/errHandler');
+const { ErrHandler } = require('../errors');
 const { User, Post } = require('../models');
 
 const postsUser = async (title, content, userId) => {
-  const errTitle = errHandler.VerifyTitle(title);
-  const errContent = errHandler.VerifyContent(content);
+  const errTitle = ErrHandler.VerifyTitle(title);
+  const errContent = ErrHandler.VerifyContent(content);
 
   if (errTitle) return errTitle;
   if (errContent) return errContent;
@@ -40,20 +40,18 @@ const PostById = async (id) => {
 };
 
 const updatePosts = async (id, title, content, allInfoUser) => {
-  const getPostsForUpadate = Post.findOne({ where: { id } });
-  const validatePosts = errHandler.VerifyPost(getPostsForUpadate, allInfoUser);
+  const getPostsForUpadate = await Post.findOne({ where: { id } });
+  const validatePosts = ErrHandler.VerifyPost(getPostsForUpadate, allInfoUser);
   if (validatePosts) return validatePosts;
 
-  const errTitle = errHandler.VerifyTitle(title);
-  const errContent = errHandler.VerifyContent(content);
+  const errTitle = ErrHandler.VerifyTitle(title);
+  const errContent = ErrHandler.VerifyContent(content);
   if (errTitle) return errTitle;
   if (errContent) return errContent;
 
-  await Post.update({
-    title, content,
-  }, { where: { id } });
+  await Post.update({ title, content }, { where: { id } });
 
-  const postUpdated = Post.findOne({
+  const postUpdated = await Post.findOne({
     where: { id },
     attributes: { exclude: ['id', 'published', 'updated'] },
   });
@@ -67,7 +65,7 @@ const deletePosts = async (id, allInfoUser) => {
     const errDelPost = { error: { status: 404, message: 'Post não existe' } };
     return errDelPost;
   }
-  const validatePosts = errHandler.VerifyPost(findPostsDel, allInfoUser);
+  const validatePosts = ErrHandler.VerifyPost(findPostsDel, allInfoUser);
   if (validatePosts) return validatePosts;
 
   await Post.destroy({ where: { id } });
