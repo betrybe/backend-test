@@ -94,9 +94,35 @@ const getUserById = async (req, res) => {
   return res.status(200).json(user[0]);
 };
 
+const deleteMe = async (req, res, _next) => {
+  const token = await req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
+
+  await jwt.verify(token, SECRETE_KEY, (err) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token expirado ou inválido' });
+    }
+  });
+
+  const teste = jwt.decode(token, SECRETE_KEY);
+
+  const user = await Users.findAll({ where: { email: teste.user.email } });
+
+  const { id } = user[0].dataValues;
+
+  await Users.destroy({ where: { id } });
+
+  return res.status(204).json();
+};
+
 module.exports = {
   createUser,
   login,
   getAllUsers,
   getUserById,
+  deleteMe,
 };
