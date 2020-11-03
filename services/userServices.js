@@ -48,9 +48,9 @@ const registerUser = async (displayName, email, password, image) => {
       break;
   }
   const createdUser = await Users.create({ displayName, email, password, image })
-    .catch(() => false);
-  if (!createdUser) return { ok: false, status: 409, message: 'Usuário já existe' };
-  return { ok: true, status: 201, message: 'Usuário válido' };
+    .then((res) => ({ ok: true, status: 201, message: 'Usuário válido', res }))
+    .catch((err) => ({ ok: false, status: 409, message: 'Usuário já existe', err }));
+  return createdUser;
 };
 
 const getAllUsers = async () => Users.findAll();
