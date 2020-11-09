@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
-const User = require('../models/Users');
 
 const generateToken = (userData) => {
   const { password, ...data } = userData;
