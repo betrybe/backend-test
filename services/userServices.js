@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { Users } = require('../models');
 
-const generateToken = (userData) => {
-  const { password, ...data } = userData;
+const generateToken = ({ dataValues }) => {
+  const { password, ...data } = dataValues;
   const SECRET = 'alaoluisefera';
   const JWTCONFIG = {
     expiresIn: '7d',
@@ -85,6 +85,17 @@ const registerUser = async (displayName, email, password, image) => {
 
 const getAllUsers = async () => Users.findAll();
 
+const getUserById = async (id) => {
+  const user = await Users.findByPk(id);
+  if (!user) return { ok: false, status: 404, message: 'Usuário não existe' };
+  return { ok: true, status: 200, user };
+};
+
+const deleteMe = async (id) => {
+  await Users.destroy({ where: { id } });
+  return { ok: true, status: 204 };
+};
+
 const login = async (email, password) => {
   const validated = validadeLogin(email, password);
   if (!validated.ok) return validated;
@@ -94,4 +105,10 @@ const login = async (email, password) => {
   return { ...validated, token };
 };
 
-module.exports = { getAllUsers, registerUser, login };
+module.exports = {
+  deleteMe,
+  getAllUsers,
+  getUserById,
+  login,
+  registerUser,
+};
