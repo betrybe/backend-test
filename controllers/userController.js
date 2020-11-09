@@ -8,7 +8,7 @@ const createUser = async (req, res, next) => {
   const { displayName, email, password, image } = req.body;
   const createdUser = await registerUser(displayName, email, password, image, next);
   return createdUser.ok
-    ? res.status(createdUser.status).json({ displayName, email, password, image })
+    ? res.status(createdUser.status).json({ token: createdUser.token })
     : next(createdUser);
 };
 
