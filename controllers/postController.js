@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const {
   getAllPosts,
+  getPostById,
   registerPost,
 } = require('../services/postServices');
 
@@ -21,20 +22,22 @@ const getPosts = async (_req, res) => {
   return res.status(200).json(posts);
 };
 
+const getOnePost = async (req, res, next) => {
+  const { id } = req.params;
+  const { ok, status, message, post } = await getPostById(id);
+  return ok
+    ? res.status(status).json(post)
+    : next({ status, message });
+};
+
 postRoute.route('/').get(getPosts).post(createPost);
-postRoute.route('/:id').get().put();
+postRoute.route('/:id').get(getOnePost).put();
 postRoute.route('/me').delete();
 
 module.exports = postRoute;
 
 /**
  * endpoints:
- * POST /post
- * cria um post
- * GET /post
- * retorna todos os posts
- * GET /post/:id
- * retorna um post pelo id
  * PUT /post/:id
  * sobrescreve o post
  * GET /post/search?q=:searchTerm

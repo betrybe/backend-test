@@ -9,4 +9,11 @@ const registerPost = async (title, content, userId) => {
 
 const getAllPosts = async () => Post.findAll({ include: 'user' });
 
-module.exports = { getAllPosts, registerPost };
+const getPostById = async (id) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  console.log(post);
+  if (!post) return { ok: false, status: 404, message: 'Post não existe' };
+  return { ok: true, status: 200, post };
+};
+
+module.exports = { getAllPosts, getPostById, registerPost };
