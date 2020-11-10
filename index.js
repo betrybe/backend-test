@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const auth = require('./middlewares/auth');
 const userController = require('./controllers/userController');
 const loginController = require('./controllers/loginController');
+const postController = require('./controllers/postController');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -12,34 +14,11 @@ app.use(bodyParser.json());
 
 app.use('/user', userController);
 app.use('/login', loginController);
+app.use('/post', auth(true), postController);
 
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (request, response) => {
-  response.send();
-});
+app.get('/', (_req, res) => res.send());
 
 app.use(errorHandler);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));
-
-/**
- * endpoints:
- * logar user
- * POST /login
- * pegar user por id
- * GET /user/:id
- * apaga os eu user
- * DELETE /user/me
- * cria um post
- * POST /post
- * retorna todos os posts
- * GET /post
- * retorna um post pelo id
- * GET /post/:id
- * sobrescreve o post
- * PUT /post/:id
- * pesquisa um post
- * GET /post/search?q=:searchTerm
- * deleta um post
- * DELETE /post/:id
- */

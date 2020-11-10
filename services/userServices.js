@@ -76,7 +76,7 @@ const registerUser = async (displayName, email, password, image) => {
   }
   const createdUser = await Users.create({ displayName, email, password, image })
     .then((res) => {
-      const token = generateToken(res.dataValues);
+      const token = generateToken(res);
       return { ok: true, status: 201, message: 'Usuário válido', token };
     })
     .catch((err) => ({ ok: false, status: 409, message: 'Usuário já existe', err }));

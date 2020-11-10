@@ -11,9 +11,7 @@ const userRoute = Router();
 
 const createUser = async (req, res, next) => {
   const { displayName, email, password, image } = req.body;
-  const {
-    ok, status, message, token,
-  } = await registerUser(displayName, email, password, image, next);
+  const { ok, status, message, token } = await registerUser(displayName, email, password, image, next);
   return ok
     ? res.status(status).json({ token })
     : next({ status, message });
