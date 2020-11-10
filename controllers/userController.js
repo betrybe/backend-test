@@ -22,7 +22,6 @@ const createUser = async (req, res, next) => {
 const getUsers = async (_req, res) => {
   const users = await getAllUsers();
   const filteredUsers = users.map(({ dataValues }) => dataValues);
-  console.log(filteredUsers)
   return res.status(200).json(filteredUsers);
 };
 

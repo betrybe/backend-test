@@ -16,9 +16,9 @@ const createPost = async (req, res, next) => {
 
 const getPosts = async (_req, res) => {
   const posts = await getAllPosts();
-  const filteredPosts = posts.map(({ dataValues }) => dataValues);
-  console.log(filteredPosts)
-  return res.status(200).json(filteredPosts);
+  // const filteredPosts = posts.map(({ dataValues }) => dataValues);
+  console.log(posts);
+  return res.status(200).json(posts);
 };
 
 postRoute.route('/').get(getPosts).post(createPost);

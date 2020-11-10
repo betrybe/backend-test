@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { Users } = require('../models');
+const { User } = require('../models');
 
 const generateToken = ({ dataValues }) => {
   const { password, ...data } = dataValues;
@@ -74,7 +74,7 @@ const registerUser = async (displayName, email, password, image) => {
     default:
       break;
   }
-  const createdUser = await Users.create({ displayName, email, password, image })
+  const createdUser = await User.create({ displayName, email, password, image })
     .then((res) => {
       const token = generateToken(res);
       return { ok: true, status: 201, message: 'Usuário válido', token };
@@ -83,23 +83,23 @@ const registerUser = async (displayName, email, password, image) => {
   return createdUser;
 };
 
-const getAllUsers = async () => Users.findAll();
+const getAllUsers = async () => User.findAll();
 
 const getUserById = async (id) => {
-  const user = await Users.findByPk(id);
+  const user = await User.findByPk(id);
   if (!user) return { ok: false, status: 404, message: 'Usuário não existe' };
   return { ok: true, status: 200, user };
 };
 
 const deleteMe = async (id) => {
-  await Users.destroy({ where: { id } });
+  await User.destroy({ where: { id } });
   return { ok: true, status: 204 };
 };
 
 const login = async (email, password) => {
   const validated = validadeLogin(email, password);
   if (!validated.ok) return validated;
-  const user = await Users.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email } });
   if (!user) return { ok: false, status: 400, message: 'Campos inválidos' };
   const token = generateToken(user);
   return { ...validated, token };
