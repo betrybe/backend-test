@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const {
+  deleteMyPost,
   getAllPosts,
   getPostById,
   registerPost,
@@ -28,9 +29,21 @@ const getOnePost = async (req, res, next) => {
     : next({ status, message });
 };
 
+// const updatePost = async (req, res, next) => {
+//   const { id } = req.params;
+// }
+
+const deletePost = async (req, res, next) => {
+  const { id: postId } = req.params;
+  const { id: userId } = req.user;
+  const { ok, status = 200, message } = await deleteMyPost(postId, userId);
+  return ok
+    ? res.status(status).json()
+    : next({ status, message });
+};
+
 postRoute.route('/').get(getPosts).post(createPost);
-postRoute.route('/:id').get(getOnePost).put();
-postRoute.route('/me').delete();
+postRoute.route('/:id').get(getOnePost).put().delete(deletePost);
 
 module.exports = postRoute;
 

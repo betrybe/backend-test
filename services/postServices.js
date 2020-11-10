@@ -15,4 +15,14 @@ const getPostById = async (id) => {
   return { ok: true, status: 200, post };
 };
 
-module.exports = { getAllPosts, getPostById, registerPost };
+const deleteMyPost = async (postId, userId) => {
+  const isValidPost = await Post.findByPk(postId);
+  if (!isValidPost) return { ok: false, status: 404, message: 'Post não existe' };
+  if (isValidPost.userId !== userId) {
+    return { ok: false, status: 401, message: 'Usuário não autorizado' };
+  }
+  await Post.destroy({ where: { id: postId } });
+  return { ok: true, status: 204 };
+};
+
+module.exports = { deleteMyPost, getAllPosts, getPostById, registerPost };
