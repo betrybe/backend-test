@@ -1,11 +1,29 @@
 const { Router } = require('express');
-const auth = require('../middlewares/auth');
+const {
+  getAllPosts,
+  registerPost,
+} = require('../services/postServices');
 
 const postRoute = Router();
 
-postRoute.route('/').get(auth(true)).post(auth(true));
-postRoute.route('/:id').get(auth(true)).put(auth(true));
-postRoute.route('/me').delete(auth(true));
+const createPost = async (req, res, next) => {
+  const { body: { title, content }, user: { id } } = req;
+  const { ok, status, message, post } = await registerPost(title, content, id);
+  return ok
+    ? res.status(status).json(post)
+    : next({ status, message });
+};
+
+const getPosts = async (_req, res) => {
+  const posts = await getAllPosts();
+  const filteredPosts = posts.map(({ dataValues }) => (dataValues));
+  console.log(filteredPosts)
+  return res.status(200).json(filteredPosts);
+};
+
+postRoute.route('/').get(getPosts).post(createPost);
+postRoute.route('/:id').get().put();
+postRoute.route('/me').delete();
 
 module.exports = postRoute;
 

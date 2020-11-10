@@ -21,7 +21,8 @@ const createUser = async (req, res, next) => {
 
 const getUsers = async (_req, res) => {
   const users = await getAllUsers();
-  return res.status(200).json(users);
+  const filteredUsers = users.map(({ dataValues }) => (dataValues));
+  return res.status(200).json(filteredUsers);
 };
 
 const getOneUser = async (req, res, next) => {
