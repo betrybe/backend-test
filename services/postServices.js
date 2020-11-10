@@ -7,6 +7,6 @@ const registerPost = async (title, content, userId) => {
   return { ok: true, status: 201, post };
 };
 
-const getAllPosts = async () => Posts.findAll();
+const getAllPosts = async () => Posts.findAll({ include: 'user' });
 
 module.exports = { getAllPosts, registerPost };
