@@ -10,6 +10,7 @@ Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu
 
 ### ANTES DE COMEÇAR A DESENVOLVER:
 
+
 1. Clone o repositório
   * `git clone https://github.com/betrybe/sd-03-project-blogs-api.git`.
   * Entre na pasta do repositório que você acabou de clonar:
