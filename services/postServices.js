@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Post } = require('../models');
 
 const registerPost = async (title, content, userId) => {
