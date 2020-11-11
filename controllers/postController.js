@@ -58,22 +58,15 @@ const deletePost = async (req, res, next) => {
 };
 
 const search = async (req, res, next) => {
-  console.log('PARAMS ----');
-  const { searchTerm } = req.params;
-  const { ok, status, message, posts } = await searchPosts(searchTerm);
+  const { q } = req.query;
+  const { ok, status, message, posts } = await searchPosts(q);
   return ok
     ? res.status(status).json(posts)
     : next({ status, message });
 };
 
-postRoute.route('/search?q=:searchTerm').get(search);
+postRoute.route('/search').get(search);
 postRoute.route('/').get(getPosts).post(createPost);
 postRoute.route('/:id').get(getOnePost).put(updatePost).delete(deletePost);
 
 module.exports = postRoute;
-
-/**
- * endpoints:
- * GET /post/search?q=:searchTerm
- * pesquisa um post
- */
