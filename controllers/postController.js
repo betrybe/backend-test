@@ -4,6 +4,7 @@ const {
   getAllPosts,
   getPostById,
   registerPost,
+  searchPosts,
   updateMyPost,
 } = require('../services/postServices');
 
@@ -56,6 +57,16 @@ const deletePost = async (req, res, next) => {
     : next({ status, message });
 };
 
+const search = async (req, res, next) => {
+  console.log('PARAMS ----');
+  const { searchTerm } = req.params;
+  const { ok, status, message, posts } = await searchPosts(searchTerm);
+  return ok
+    ? res.status(status).json(posts)
+    : next({ status, message });
+};
+
+postRoute.route('/search?q=:searchTerm').get(search);
 postRoute.route('/').get(getPosts).post(createPost);
 postRoute.route('/:id').get(getOnePost).put(updatePost).delete(deletePost);
 

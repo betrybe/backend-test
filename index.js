@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 app.use('/user', userController);
 app.use('/login', loginController);
-app.use('/post', auth(true), postController);
+app.use('/post', auth(false), postController);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_req, res) => res.send());

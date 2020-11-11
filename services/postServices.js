@@ -34,10 +34,28 @@ const deleteMyPost = async (postId, userId) => {
   return { ok: true, status: 204 };
 };
 
+const searchPosts = async (searchTerm) => {
+  if (!searchTerm) {
+    const posts = await Post.findAll({ include: 'user' });
+    return { ok: true, status: 200, posts };
+  }
+  const posts = await Post.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.substring]: searchTerm } },
+        { content: { [Op.substring]: searchTerm } },
+      ],
+    },
+    include: 'user',
+  });
+  return { ok: true, status: 200, posts };
+};
+
 module.exports = {
   deleteMyPost,
   getAllPosts,
   getPostById,
   registerPost,
+  searchPosts,
   updateMyPost,
 };
