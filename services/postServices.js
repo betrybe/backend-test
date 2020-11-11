@@ -15,6 +15,15 @@ const getPostById = async (id) => {
   return { ok: true, status: 200, post };
 };
 
+const updateMyPost = async (postId, userId, title, content) => {
+  const validPost = await Post.findByPk(postId, { include: 'user' });
+  if (validPost.user.id !== userId) return { ok: false, status: 401, message: 'Usuário não autorizado' };
+  if (!title) return { ok: false, status: 400, message: '"title" is required' };
+  if (!content) return { ok: false, status: 400, message: '"content" is required' };
+  await Post.update({ title, content }, { where: { id: postId } });
+  return { ok: true, status: 200, post: { title, content, userId } };
+};
+
 const deleteMyPost = async (postId, userId) => {
   const isValidPost = await Post.findByPk(postId);
   if (!isValidPost) return { ok: false, status: 404, message: 'Post não existe' };
@@ -25,4 +34,10 @@ const deleteMyPost = async (postId, userId) => {
   return { ok: true, status: 204 };
 };
 
-module.exports = { deleteMyPost, getAllPosts, getPostById, registerPost };
+module.exports = {
+  deleteMyPost,
+  getAllPosts,
+  getPostById,
+  registerPost,
+  updateMyPost,
+};

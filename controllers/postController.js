@@ -4,6 +4,7 @@ const {
   getAllPosts,
   getPostById,
   registerPost,
+  updateMyPost,
 } = require('../services/postServices');
 
 const postRoute = Router();
@@ -29,9 +30,22 @@ const getOnePost = async (req, res, next) => {
     : next({ status, message });
 };
 
-// const updatePost = async (req, res, next) => {
-//   const { id } = req.params;
-// }
+const updatePost = async (req, res, next) => {
+  const {
+    params: { id: postId },
+    user: { id: userId },
+    body: { title, content },
+  } = req;
+  const {
+    ok,
+    status,
+    message,
+    post,
+  } = await updateMyPost(postId, userId, title, content);
+  return ok
+    ? res.status(status).json(post)
+    : next({ status, message });
+};
 
 const deletePost = async (req, res, next) => {
   const { id: postId } = req.params;
@@ -43,16 +57,12 @@ const deletePost = async (req, res, next) => {
 };
 
 postRoute.route('/').get(getPosts).post(createPost);
-postRoute.route('/:id').get(getOnePost).put().delete(deletePost);
+postRoute.route('/:id').get(getOnePost).put(updatePost).delete(deletePost);
 
 module.exports = postRoute;
 
 /**
  * endpoints:
- * PUT /post/:id
- * sobrescreve o post
  * GET /post/search?q=:searchTerm
  * pesquisa um post
- * DELETE /post/:id
- * deleta um post
  */
