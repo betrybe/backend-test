@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const controllers = require('./controllers');
@@ -7,6 +8,7 @@ const controllers = require('./controllers');
 const app = express();
 
 app.use(cors());
+app.use(bodyParser.json());
 const { PORT = 3000 } = process.env;
 app.listen(PORT, () => console.log(`ouvindo porta ${PORT}!!`));
 
