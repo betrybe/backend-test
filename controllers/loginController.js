@@ -24,7 +24,7 @@ user.post('/',
       if (password === '') {
         res.status(400).json({ message: '"password" is not allowed to be empty' });
         throw new Error();
-      }  
+      }
       const userLog = await User.findOne({
         where: { email, password },
       });
@@ -37,8 +37,7 @@ user.post('/',
       console.error('erro aqui', error);
       return next(error);
     }
-  },
-
+  }
 );
 
 module.exports = user;
