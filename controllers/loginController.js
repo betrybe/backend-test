@@ -37,6 +37,6 @@ user.post('/',
       console.error('erro aqui', error);
       return next(error);
     }
-  },);
+  });
 
 module.exports = user;
