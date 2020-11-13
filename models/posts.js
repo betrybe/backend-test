@@ -8,14 +8,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    updated: {
-      type: DataTypes.DATE,
-      allowNull: false,
+    userId: {
+      type: DataTypes.INTEGER,
     },
-    published: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
+  }, {
+    timestamps: true,
+    createdAt: 'published',
+    updatedAt: 'updated',
   });
   Post.associate = (models) => {
     Post.belongsTo(models.Users, { foreignKey: 'userId', as: 'user' });

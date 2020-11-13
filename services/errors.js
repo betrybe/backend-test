@@ -8,6 +8,8 @@ const emailNull = { message: '"email" is not allowed to be empty' };
 const passwordNull = { message: '"password" is not allowed to be empty' };
 const loginInvalid = { message: 'Campos inválidos' };
 const invalidId = { message: 'Usuário não existe' };
+const titleRequired = { message: '"title" is required' };
+const contentRequired = { message: '"content" is required' };
 
 module.exports = {
   errorName,
@@ -20,4 +22,6 @@ module.exports = {
   passwordNull,
   loginInvalid,
   invalidId,
+  titleRequired,
+  contentRequired,
 };
