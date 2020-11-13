@@ -20,6 +20,10 @@ app.delete('/user/me', user.deleteMe);
 
 app.post('/post', posts.createPost);
 app.get('/post', posts.getAllPost);
+app.get('/post/:id', posts.getPostById);
+app.put('/post/:id', posts.editPostById);
+app.get('/post/search?q=:searchTerm', posts.searchByQuery);
+app.delete('/post/:id', posts.deletePost);
 
 app.post('/login', user.login);
 
