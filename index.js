@@ -19,6 +19,7 @@ app.get('/user/:id', user.getUserById);
 app.delete('/user/me', user.deleteMe);
 
 app.post('/post', posts.createPost);
+app.get('/post', posts.getAllPost);
 
 app.post('/login', user.login);
 

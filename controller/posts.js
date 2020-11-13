@@ -13,8 +13,6 @@ const createPost = async (req, res) => {
 
   const { title, content } = req.body;
 
-  console.log(req.body);
-
   if (!title) {
     return res.status(400).json(errors.titleRequired);
   }
@@ -44,6 +42,35 @@ const createPost = async (req, res) => {
   }
 };
 
+const getAllPost = async (req, res) => {
+  const token = await req.headers.authorization;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
+
+  const teste = await jwt.decode(token, SECRETE_KEY);
+
+  if (!teste) {
+    return res.status(401).json({ message: 'Token expirado ou inválido' });
+  }
+
+  try {
+    const allPosts = await Posts
+      .findAll({
+        include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }],
+        attributes: { exclude: ['userId'] },
+      });
+
+    return res.status(200).json(allPosts);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   createPost,
+  getAllPost,
 };
