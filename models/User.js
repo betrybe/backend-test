@@ -14,7 +14,7 @@ const createUser = (sequelize, DataTypes) => {
           msg: '"displayName" length must be at least 8 characters long',
         },
       },
-    	allowNull: false,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
