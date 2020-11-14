@@ -14,6 +14,19 @@ const userCreation = async (req, res, next) => {
   res.status(201).json(user);
 };
 
+const userLogin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  const logedUser = await userServices.userLogin({ email, password });
+
+  if (!logedUser) {
+    return next(boom.badRequest('Campos inválidos'));
+  }
+
+  res.status(200).json({ token: logedUser });
+};
+
 module.exports = {
   userCreation,
+  userLogin,
 };

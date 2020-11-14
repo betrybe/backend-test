@@ -1,4 +1,13 @@
+const jwt = require('jsonwebtoken');
+
 const { User } = require('../models');
+
+const SECRET = '1q2w3e4r';
+
+const JWTCONFIG = {
+  expiresIn: '1h',
+  algorithm: 'HS256',
+};
 
 const userCreation = async ({ displayName, email, password, image }) => {
   const userExist = await User.findAll({ where: { email } });
@@ -10,6 +19,20 @@ const userCreation = async ({ displayName, email, password, image }) => {
   return userCreated;
 };
 
+const userLogin = async ({ email, password }) => {
+  const logedUser = await User.findOne({ where: { email }, raw: true });
+
+  if (!logedUser) return;
+
+  const { id, displayName, email: userEmail, password: userPassoword } = logedUser;
+
+  if (password !== userPassoword) return;
+
+  const token = jwt.sign({ id, displayName, userEmail }, SECRET, JWTCONFIG);
+  return token;
+};
+
 module.exports = {
   userCreation,
+  userLogin,
 };
