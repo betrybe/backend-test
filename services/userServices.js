@@ -32,7 +32,14 @@ const userLogin = async ({ email, password }) => {
   return token;
 };
 
+const getAlluser = async () => {
+  const allUser = await User.findAll({});
+
+  return allUser;
+};
+
 module.exports = {
   userCreation,
   userLogin,
+  getAlluser,
 };
