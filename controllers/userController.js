@@ -29,10 +29,8 @@ const userLogin = async (req, res, next) => {
 const getAll = async (req, res, next) => {
   const token = req.headers.authorization;
 
-  console.log(token)
-
   if (!token) {
-    next(boom.unauthorized('Token não encontrado'));
+    next(boom.unauthorized('Token expirado ou inválido'));
   }
 
   const allUser = await userServices.getAlluser();

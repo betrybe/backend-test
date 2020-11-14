@@ -10,7 +10,7 @@ module.exports = (required = true) => async (req, _res, next) => {
 
   if (!required) return next();
 
-  if (required && !token) return next(boom.unauthorized('Token expirado ou inválido'));
+  if (required && !token) return next(boom.unauthorized('Token não encontrado'));
 
   try {
     const { userEmail: email } = jwt.verify(token, JWT_SECRET);
@@ -20,7 +20,6 @@ module.exports = (required = true) => async (req, _res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.log(err)
-    return next(boom.unauthorized('jwt malformed'));
+    return next(boom.unauthorized('Token expirado ou inválido'));
   }
 };

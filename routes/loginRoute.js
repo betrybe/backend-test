@@ -2,7 +2,7 @@ const { Router } = require('express');
 const rescue = require('express-rescue');
 
 const { userControllers } = require('../controllers');
-const { userLoginValidation, authMiddleware } = require('../middlewares');
+const { userLoginValidation } = require('../middlewares');
 
 const login = Router();
 
