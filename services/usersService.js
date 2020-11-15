@@ -60,7 +60,7 @@ const login = async (email, password) => {
     return { error: { message: '"password" is not allowed to be empty', statusCode: 400 } };
   }
   const verifyUser = await User.findOne({ where: { email, password: password.toString() } });
-  if (verifyUser === null) return { error: { message: 'Campos inválidos', statusCode: 500 } };
+  if (verifyUser === null) return { error: { message: 'Campos inválidos', statusCode: 400 } };
   return verifyUser;
 };
 
