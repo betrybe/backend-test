@@ -23,7 +23,7 @@ const login = rescue(async (req, res) => {
 
   console.log('retorno userLogin', userLogin);
 
-  if (userLogin.error) return res.status((await userLogin).error.statusCode).json(userLogin.error);
+  if (userLogin.error) return res.status(userLogin.error.statusCode).json(userLogin.error);
 
   const token = generateToken({ userLogin, email });
 
