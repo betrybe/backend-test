@@ -16,6 +16,21 @@ const createUser = rescue(async (req, res) => {
   return res.status(201).json({ token });
 });
 
+const login = rescue(async (req, res) => {
+  const { email, password } = req.body;
+
+  const userLogin = await usersService.login(email, password);
+
+  console.log('retorno userLogin', userLogin);
+
+  if (userLogin.error) return res.status((await userLogin).error.statusCode).json(userLogin.error);
+
+  const token = generateToken({ userLogin, email });
+
+  return res.status(200).json({ token });
+});
+
 module.exports = {
   createUser,
+  login,
 };

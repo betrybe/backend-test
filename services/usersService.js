@@ -50,4 +50,18 @@ const createUser = async (displayName, email, password, image) => {
   return newUser;
 };
 
-module.exports = { createUser };
+const login = async (email, password) => {
+  if (!email && email !== '') return { error: { message: '"email" is required', statusCode: 400 } };
+  if (!password && password !== '') return { error: { message: '"password" is required', statusCode: 400 } };
+  if (email === '') {
+    return { error: { message: '"email" is not allowed to be empty', statusCode: 400 } };
+  }
+  if (password === '') {
+    return { error: { message: '"password" is not allowed to be empty', statusCode: 400 } };
+  }
+  const verifyUser = await User.findOne({ where: { email, password: password.toString() } });
+  if (verifyUser === null) return { error: { message: 'Campos inválidos', statusCode: 500 } };
+  return verifyUser;
+};
+
+module.exports = { createUser, login };
