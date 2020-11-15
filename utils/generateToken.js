@@ -1,15 +1,12 @@
 const jwt = require('jsonwebtoken');
 require('dotenv/config');
 
-const secret = process.env.SECRET;
+const secret = 'wowsuchasafesecret';
 
 module.exports = (userInfo) => {
-  const jwtConfig = {
+  const token = jwt.sign({ ...userInfo }, secret, {
     expiresIn: '1d',
     algorithm: 'HS256',
-  };
-
-  const { password, ...user } = userInfo;
-  const token = jwt.sign({ user }, secret, jwtConfig);
+  });
   return token;
 };
