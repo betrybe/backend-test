@@ -1,25 +1,19 @@
-const Posts = (Sequelize, DataTypes) => {
-  const Post = Sequelize.define(
-    'Post',
-    {
-      id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false, autoIncrement: true },
-      title: { type: DataTypes.STRING, allowNull: false },
-      content: { type: DataTypes.STRING, allowNull: false },
-      published: { type: DataTypes.DATE, allowNull: false, defaultValue: Sequelize.NOW },
-      updated: { type: DataTypes.DATE, allowNull: false, defaultValue: Sequelize.NOW },
+const Posts = (sequelize, DataTypes) => {
+  const Post = sequelize.define('Post', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
     },
-    {
-      timestamps: false,
-    },
-  );
+    title: { allowNull: false, type: DataTypes.STRING },
+    content: { type: DataTypes.STRING, allowNull: false },
+  },
+  { timestamps: true, updatedAt: 'updated', createdAt: 'published' });
 
   Post.associate = (models) => {
-    Post.belongsTo(models.User, {
-      foreignKey: 'id',
-      as: 'userId',
-    });
+    Post.belongsTo(models.User, { as: 'user', foreignKey: 'userId' });
   };
-
   return Post;
 };
 
