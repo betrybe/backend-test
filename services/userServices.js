@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const { User } = require('../models');
+const user = require('../routes/userRoute');
 
 const SECRET = '1q2w3e4r';
 
@@ -46,9 +47,14 @@ const getUserById = async (id) => {
   return user;
 };
 
+const deleteUser = async (id) => {
+  await User.destroy({ where: { id } });
+};
+
 module.exports = {
   userCreation,
   getUserById,
   getAlluser,
+  deleteUser,
   userLogin,
 };

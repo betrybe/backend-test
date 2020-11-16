@@ -17,9 +17,10 @@ module.exports = (required = true) => async (req, _res, next) => {
 
     const user = await User.findAll({ where: { email } });
 
-    req.user = user;
+    req.user = user[0].dataValues;
     next();
   } catch (err) {
+    console.log(err)
     return next(boom.unauthorized('Token expirado ou inválido'));
   }
 };

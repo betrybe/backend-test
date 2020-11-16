@@ -8,8 +8,11 @@ const user = Router();
 
 user.get('/', authMiddleware(true), rescue(userControllers.getAll));
 
+
 user.get('/:id', authMiddleware(true), rescue(userControllers.getUserById));
 
 user.post('/', userCreationValidation, rescue(userControllers.userCreation));
+
+user.delete('/me', authMiddleware(true), rescue(userControllers.deleteUser));
 
 module.exports = user;
