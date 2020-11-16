@@ -31,9 +31,18 @@ const updatePostById = rescue(async (req, res) => {
   return res.status(200).json(post);
 });
 
+const deletePostById = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { id: userId } = req.user;
+  const post = await postsService.deleteById(id, userId);
+  if (post && post.error) return res.status(post.error.statusCode).json(post.error);
+  return res.status(204).json();
+});
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
   updatePostById,
+  deletePostById,
 };
