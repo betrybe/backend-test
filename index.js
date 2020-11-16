@@ -20,6 +20,8 @@ app.get('/post', validateToken, postController.getAllPosts);
 
 app.get('/user/:id', validateToken, userController.getUserById);
 
+app.get('/post/:id', validateToken, postController.getPostById);
+
 app.delete('/user/me', validateToken, userController.deleteUser);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));

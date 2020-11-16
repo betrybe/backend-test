@@ -12,7 +12,16 @@ const getAll = async () => {
   return posts;
 };
 
+const getById = async (id) => {
+  const response = await Post.findOne({ where: { id }, include: 'user' });
+
+  if (response === null) return { error: { message: 'Post não existe', statusCode: 404 } };
+
+  return response;
+};
+
 module.exports = {
   createPost,
   getAll,
+  getById,
 };
