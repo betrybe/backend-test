@@ -1,9 +1,9 @@
-const userRoute = require('./userRoute');
-const loginRoute = require('./loginRoute');
-const postRoute = require('./postRoute');
+const userRouter = require('./userRouter');
+const loginRouter = require('./loginRouter');
+const postRouter = require('./postRouter');
 
 module.exports = {
-  userRoute,
-  loginRoute,
-  postRoute,
+  userRouter,
+  loginRouter,
+  postRouter,
 };

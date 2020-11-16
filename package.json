@@ -3,13 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-rescue": "^1.1.30",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
-    "nodemon": "^2.0.6",
     "sequelize": "^6.3.4",
     "shelljs": "^0.8.4"
   },
@@ -27,8 +25,10 @@
     "eslint": "^7.6.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.21.2",
-    "jest": "^26.0.1",
     "frisby": "^2.1.2",
+    "jest": "^26.0.1",
+    "nodemon": "^2.0.6",
+    "rescue": "^6.0.4",
     "sequelize-cli": "^6.2.0",
     "supertest": "^4.0.2"
   }
