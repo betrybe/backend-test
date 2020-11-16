@@ -1,3 +1,5 @@
+const { Sequelize } = require("sequelize/types");
+
 const Posts = (sequelize, DataTypes) => {
   const Post = sequelize.define(
     'Post',
@@ -5,8 +7,8 @@ const Posts = (sequelize, DataTypes) => {
       id: { type: DataTypes.INTEGER, primaryKey: true, allowNull: false, autoIncrement: true },
       title: { type: DataTypes.STRING, allowNull: false },
       content: { type: DataTypes.STRING, allowNull: false },
-      published: { type: DataTypes.DATE, allowNull: false },
-      updated: { type: DataTypes.DATE, allowNull: false },
+      published: { type: DataTypes.DATE, allowNull: false, defaultValue: Sequelize.NOW },
+      updated: { type: DataTypes.DATE, allowNull: false, defaultValue: Sequelize.NOW },
     },
     {
       timestamps: false,
