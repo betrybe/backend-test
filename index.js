@@ -16,6 +16,8 @@ app.post('/post', validateToken, postController.createPost);
 
 app.get('/user', validateToken, userController.getAllUsers);
 
+app.get('/post', validateToken, postController.getAllPosts);
+
 app.get('/user/:id', validateToken, userController.getUserById);
 
 app.delete('/user/me', validateToken, userController.deleteUser);
