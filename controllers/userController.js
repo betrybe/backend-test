@@ -1,55 +1,74 @@
 const rescue = require('express-rescue');
-const { userServices } = require('../services');
+const createToken = require('../createToken');
+const { verifyToken, verifyError } = require('../verifyToken');
 
-const createUser = rescue(async (req, res) => {
-  const { displayName, email, password, image } = req.body;
+const createUser = (service) =>
+  rescue(async (req, res) => {
+    const { displayName, email, password, image } = req.body;
 
-  const user = await userServices.createUser(displayName, email, password, image);
+    const user = await service.createUser(displayName, email, password, image);
+    if (user.err) {
+      const { message } = user;
+      return res.status(400).json({ message });
+    }
 
-  if (user.status) return res.status(user.status).json({ message: user.message });
+    const token = createToken(user);
+    return res.status(201).json({ token });
+  });
 
-  res.status(201).json(user);
+const getUser = (service) =>
+  rescue(async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await service.getUser(email, password);
+    if (user.err) {
+      const { message } = user;
+      return res.status(400).json({ message });
+    }
+
+    const token = createToken(user);
+    return res.status(200).json({ token });
+  });
+
+const getAllUsers = (service) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    verifyError(authorization, res);
+    const users = await service.getAllUser();
+    return res.status(200).json(users);
+  });
+
+const getUserById = (service) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    const validToken = verifyError(authorization, res);
+    if (typeof validToken !== 'object') return;
+    const { id } = req.params;
+    const user = await service.getUserById(id);
+    if (user.err) {
+      const { message, status } = user;
+      return res.status(status).json({ message });
+    }
+    return res.status(200).json(user);
+  });
+
+const deleteMe = (service) =>
+  rescue(async (req, res) => {
+    const { authorization } = req.headers;
+    const validToken = verifyError(authorization, res);
+    if (typeof validToken !== 'object') return;
+    const { id } = verifyToken(authorization);
+    const message = await service.deleteMe(id);
+    if (message.err) return res.status(200).json(message);
+    return res.status(204).json();
+  });
+
+const getUserController = (service) => ({
+  createUser: createUser(service),
+  getUser: getUser(service),
+  getAllUsers: getAllUsers(service),
+  getUserById: getUserById(service),
+  deleteMe: deleteMe(service),
 });
 
-const loginUser = rescue(async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await userServices.loginUser(email, password);
-
-  if (user.status) return res.status(user.status).json({ message: user.message });
-
-  res.status(200).json(user);
-});
-
-const callUsers = rescue(async (_req, res) => {
-  const users = await userServices.callUsers();
-
-  res.status(200).json(users);
-});
-
-const callUserId = rescue(async (req, res) => {
-  const { id } = req.params;
-  console.log(req.user);
-
-  const user = await userServices.callUserId(id);
-
-  if (user.status) return res.status(user.status).json({ message: user.message });
-
-  res.status(200).json(user);
-});
-
-const deleteUser = rescue(async (req, res) => {
-  const { email } = req.user;
-
-  await userServices.deleteUser(email);
-
-  res.status(204).json();
-});
-
-module.exports = {
-  createUser,
-  loginUser,
-  callUsers,
-  callUserId,
-  deleteUser,
-};
+module.exports = { getUserController };
