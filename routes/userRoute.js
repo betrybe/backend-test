@@ -8,7 +8,6 @@ const user = Router();
 
 user.get('/', authMiddleware(true), rescue(userControllers.getAll));
 
-
 user.get('/:id', authMiddleware(true), rescue(userControllers.getUserById));
 
 user.post('/', userCreationValidation, rescue(userControllers.userCreation));

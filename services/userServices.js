@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 const { User } = require('../models');
-const user = require('../routes/userRoute');
 
 const SECRET = '1q2w3e4r';
 
