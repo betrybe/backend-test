@@ -72,11 +72,14 @@ const getAll = async () => {
 const getById = async (id) => {
   const response = await User.findOne({ where: { id } });
 
-  console.log(`resposta do model: ${response}`);
-
   if (response === null) return { error: { message: 'Usuário não existe', statusCode: 404 } };
 
   return response;
 };
 
-module.exports = { createUser, login, getAll, getById };
+const deleteUser = async (id) => {
+  await User.destroy({ where: { id } });
+  return true;
+};
+
+module.exports = { createUser, login, getAll, getById, deleteUser };

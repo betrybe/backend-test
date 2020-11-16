@@ -21,8 +21,6 @@ const login = rescue(async (req, res) => {
 
   const userLogin = await usersService.login(email, password);
 
-  console.log('retorno userLogin', userLogin);
-
   if (userLogin.error) return res.status(userLogin.error.statusCode).json(userLogin.error);
 
   const token = generateToken({ userLogin, email });
@@ -44,9 +42,18 @@ const getUserById = rescue(async (req, res) => {
   return res.status(200).json(user);
 });
 
+const deleteUser = rescue(async (req, res) => {
+  const { id } = req.user.userLogin;
+
+  await usersService.deleteUser(id);
+
+  return res.status(204).json();
+});
+
 module.exports = {
   createUser,
   login,
   getAllUsers,
   getUserById,
+  deleteUser,
 };
