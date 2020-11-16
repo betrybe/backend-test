@@ -31,12 +31,22 @@ const login = rescue(async (req, res) => {
 });
 
 const getAllUsers = rescue(async (req, res) => {
-  const response = await usersService.getAll();
-  return res.status(200).json(response);
+  const users = await usersService.getAll();
+  return res.status(200).json(users);
+});
+
+const getUserById = rescue(async (req, res) => {
+  const { id } = req.params;
+  const user = await usersService.getById(id);
+
+  if (user.error) return res.status(user.error.statusCode).json(user.error);
+
+  return res.status(200).json(user);
 });
 
 module.exports = {
   createUser,
   login,
   getAllUsers,
+  getUserById,
 };

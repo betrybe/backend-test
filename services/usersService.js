@@ -69,4 +69,14 @@ const getAll = async () => {
   return response;
 };
 
-module.exports = { createUser, login, getAll };
+const getById = async (id) => {
+  const response = await User.findOne({ where: { id } });
+
+  console.log(`resposta do model: ${response}`);
+
+  if (response === null) return { error: { message: 'Usuário não existe', statusCode: 404 } };
+
+  return response;
+};
+
+module.exports = { createUser, login, getAll, getById };
