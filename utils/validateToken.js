@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
       return res.status(401).json({ message: 'Token expirado ou inválido' });
     }
     req.token = token;
-    req.user = userData;
+    req.user = userData.userLogin;
     next();
   });
 };
