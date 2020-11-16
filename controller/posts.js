@@ -147,7 +147,7 @@ const searchByQuery = async (req, res) => {
 const deletePost = async (req, res) => {
   const token = await req.headers.authorization;
 
-  if (!req.headers.authorization) {
+  if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
 
@@ -159,14 +159,16 @@ const deletePost = async (req, res) => {
     return res.status(401).json({ message: 'Token expirado ou inválido' });
   }
 
-  const { id: userId } = req.user;
+  const user = await Users.findOne({ where: { email: teste.user.email } });
+
+  const { id: userId } = user.dataValues;
   const { id } = req.params;
 
-  const getPost = await Posts.findAll({ where: { id } });
+  const getPost = await Posts.findOne({ where: { id } });
 
-  if (getPost.length <= 0) return res.status(404).json({ message: 'Post não existe' });
+  if (getPost === null) return res.status(404).json({ message: 'Post não existe' });
 
-  if (getPost[0].dataValues.userId !== userId) {
+  if (getPost.dataValues.userId !== userId) {
     return res.status(401).json({ message: 'Usuário não autorizado' });
   }
 
