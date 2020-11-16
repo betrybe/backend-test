@@ -101,15 +101,46 @@ const getPostById = async (req, res) => {
 const editPostById = async (req, res) => {
   const token = await req.headers.authorization;
 
+  console.log('tokenaquiolhaso', token, !token);
+
+  const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
+
+  const { title, content } = req.body;
+
+  const { id } = req.params;
+
+  const getPost = await Posts.findOne({ where: { id } });
+
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
 
-  const SECRETE_KEY = process.env.SECRETE_KEY || 'l2UPGGeOuHP5cS1lhofe';
+  if (!title) {
+    return res.status(400).json(errors.titleRequired);
+  }
 
-  const teste = await jwt.decode(token, SECRETE_KEY);
+  if (!content) {
+    return res.status(400).json(errors.contentRequired);
+  }
 
-  if (!teste) {
+  try {
+    const teste = await jwt.verify(token, SECRETE_KEY);
+    const user = await Users.findOne({ where: { email: teste.user.email } });
+    const userId = user.id;
+    if (!teste) {
+      res.status(401).json({ message: 'token invalido' });
+    }
+
+    if (getPost.dataValues.userId !== user.id) {
+      res.status(401).json({ message: 'Usuário não autorizado' });
+    }
+    Posts.update(
+      { title, content },
+      { where: { id } },
+    );
+    return res.status(200).json({ title, content, userId });
+  } catch (err) {
+    console.log(err);
     return res.status(401).json({ message: 'Token expirado ou inválido' });
   }
 };
@@ -131,6 +162,8 @@ const searchByQuery = async (req, res) => {
 
   const { q } = req.query;
 
+  console.log(q);
+
   const getAllByQuery = await Posts.findAll({
     include: [{ model: Users, as: 'user', attributes: { exclude: ['password'] } }],
     where: {
@@ -140,6 +173,8 @@ const searchByQuery = async (req, res) => {
       ],
     },
   });
+
+  console.log('aqui tem o a quary: ', getAllByQuery);
 
   return res.status(200).json(getAllByQuery);
 };
