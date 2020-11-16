@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
-const { userController } = require('./controllers');
+const { userController, postController } = require('./controllers');
 const { validateToken } = require('./utils');
 require('dotenv').config();
 
@@ -11,6 +11,8 @@ app.use(bodyParser.json());
 app.post('/user', userController.createUser);
 
 app.post('/login', userController.login);
+
+app.post('/post', validateToken, postController.createPost);
 
 app.get('/user', validateToken, userController.getAllUsers);
 

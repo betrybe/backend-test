@@ -43,7 +43,7 @@ const getUserById = rescue(async (req, res) => {
 });
 
 const deleteUser = rescue(async (req, res) => {
-  const { id } = req.user.userLogin;
+  const { id } = req.user;
 
   await usersService.deleteUser(id);
 
