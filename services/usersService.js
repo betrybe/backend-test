@@ -64,4 +64,9 @@ const login = async (email, password) => {
   return verifyUser;
 };
 
-module.exports = { createUser, login };
+const getAll = async () => {
+  const response = await User.findAll();
+  return response;
+};
+
+module.exports = { createUser, login, getAll };

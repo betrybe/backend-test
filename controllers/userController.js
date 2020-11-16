@@ -30,7 +30,13 @@ const login = rescue(async (req, res) => {
   return res.status(200).json({ token });
 });
 
+const getAllUsers = rescue(async (req, res) => {
+  const response = await usersService.getAll();
+  return res.status(200).json(response);
+});
+
 module.exports = {
   createUser,
   login,
+  getAllUsers,
 };
