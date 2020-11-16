@@ -173,7 +173,6 @@ const deletePost = async (req, res) => {
   }
 
   await Posts.destroy({ where: { id } });
-
   return res.status(204).json();
 };
 
