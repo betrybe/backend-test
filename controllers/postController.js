@@ -43,8 +43,22 @@ const updatePostById = async (req, res, next) => {
   res.status(200).json(editedPost);
 };
 
+const deletePost = async (req, res, next) => {
+  const { id } = req.params;
+  const { id: idLoged } = req.user;
+
+  const deletedPost = await postServices.deletePost({ id, idLoged });
+
+  if (deletedPost && deletedPost.message === 'Post não existe') return next(boom.notFound(deletedPost.message));
+
+  if (deletedPost && deletedPost.message === 'Usuário não autorizado') return next(boom.unauthorized(deletedPost.message));
+
+  res.status(204).end();
+};
+
 module.exports = {
   createPost,
+  deletePost,
   getAllPosts,
   getPostById,
   updatePostById,

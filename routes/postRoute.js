@@ -14,4 +14,6 @@ post.put('/:id', authMiddleware(), postValidation, rescue(postController.updateP
 
 post.post('/', authMiddleware(), postValidation, rescue(postController.createPost));
 
+post.delete('/:id', authMiddleware(), rescue(postController.deletePost));
+
 module.exports = post;

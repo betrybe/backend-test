@@ -27,8 +27,19 @@ const updatePostById = async ({ title, content, id, idLoged }) => {
   return editedPost;
 };
 
+const deletePost = async ({ id, idLoged }) => {
+  const post = await Post.findOne({ where: { id } });
+
+  if (!post) return { message: 'Post não existe' };
+
+  if (idLoged !== post.userId) return { message: 'Usuário não autorizado' };
+
+  await Post.destroy({ where: { id } });
+};
+
 module.exports = {
   createPost,
+  deletePost,
   getAllPosts,
   getPostById,
   updatePostById,
