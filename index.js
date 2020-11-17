@@ -10,7 +10,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-const { PORT = 3000 } = process.env;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`ouvindo porta ${PORT}!!`));
 
 // não remova esse endpoint, e para o avaliador funcionar
