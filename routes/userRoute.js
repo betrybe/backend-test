@@ -1,17 +1,17 @@
 const { Router } = require('express');
 const rescue = require('express-rescue');
 
-const { userControllers } = require('../controllers');
+const { userController } = require('../controllers');
 const { userCreationValidation, authMiddleware } = require('../middlewares');
 
 const user = Router();
 
-user.get('/', authMiddleware(true), rescue(userControllers.getAll));
+user.get('/', authMiddleware(true), rescue(userController.getAll));
 
-user.get('/:id', authMiddleware(true), rescue(userControllers.getUserById));
+user.get('/:id', authMiddleware(true), rescue(userController.getUserById));
 
-user.post('/', userCreationValidation, rescue(userControllers.userCreation));
+user.post('/', userCreationValidation, rescue(userController.userCreation));
 
-user.delete('/me', authMiddleware(true), rescue(userControllers.deleteUser));
+user.delete('/me', authMiddleware(true), rescue(userController.deleteUser));
 
 module.exports = user;
