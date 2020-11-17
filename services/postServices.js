@@ -15,8 +15,21 @@ const getPostById = async (id) => Post
     attributes: { exclude: ['userId'] },
   }, { raw: true });
 
+const updatePostById = async ({ title, content, id, idLoged }) => {
+  const { userId } = await Post.findOne({ where: { id } });
+
+  if (idLoged !== userId) return;
+
+  await Post.update({ title, content }, { where: { id } });
+
+  const editedPost = await Post.findOne({ where: { id } });
+
+  return editedPost;
+};
+
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
+  updatePostById,
 };
