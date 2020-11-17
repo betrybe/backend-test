@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   up: async (queryInterface, Sequelize) => queryInterface
     .createTable('Posts', {
@@ -7,7 +5,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        allowNull: false,
       },
       userId: {
         type: Sequelize.INTEGER,
