@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const controllers = require('./controllers');
+// const { default: rescue } = require('express-rescue');
 
 const app = express();
 
@@ -16,11 +17,10 @@ app.listen(PORT, () => console.log(`ouvindo porta ${PORT}!!`));
 app.get('/', (request, response) => {
   response.send('Vai');
 });
-
 app.use('/login', controllers.loginController);
-// app.use('/user', controllers.userController);
+app.use('/user', controllers.userController);
 // app.use('/post', controllers.postController);
-
+/*
 app.use((err, _req, res, _next) => {
   if (err.payload) return res.status(err.status).json(err.payload);
   if (err.message.match(/^duplicate./i)) {
@@ -28,3 +28,4 @@ app.use((err, _req, res, _next) => {
   }
   return res.status(500).json({ message: 'Internal Error' });
 });
+*/

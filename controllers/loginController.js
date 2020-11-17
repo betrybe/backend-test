@@ -31,7 +31,7 @@ user.post('/',
       if (!userLog) {
         res.status(400).json({ message: 'Campos inválidos' });
       } else {
-        res.json(createToken(userLog.id, email));
+        return res.status(201).json(createToken(userLog.id, email));
       }
     } catch (error) {
       console.error('erro aqui', error);
