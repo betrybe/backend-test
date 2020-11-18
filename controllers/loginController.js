@@ -2,13 +2,13 @@ const { Router } = require('express');
 const { User } = require('../models');
 const { createToken } = require('../middlewares');
 
-const user = Router();
+const login = Router();
 
-user.post('/',
+login.post('/',
   async (req, res, next) => {
+    const { email, password } = req.body;
     try {
-      console.log(req.body);
-      const { email, password } = req.body;
+      console.log('o que vem aqui:', req.body);
       if (email === undefined) {
         res.status(400).json({ message: '"email" is required' });
         throw new Error();
@@ -24,19 +24,23 @@ user.post('/',
       if (password === '') {
         res.status(400).json({ message: '"password" is not allowed to be empty' });
         throw new Error();
-      }
-      const userLog = await User.findOne({
-        where: { email, password },
-      });
-      if (!userLog) {
-        res.status(400).json({ message: 'Campos inválidos' });
       } else {
-        return res.status(201).json(createToken(userLog.id, email));
+        const logData = await User.findOne(
+          {
+            where: { email, password },
+          });
+        if (!logData) {
+          res.status(400).json({ message: 'Campos inválidos' });
+          throw new Error();
+        } else {
+          return res.status(200).json(createToken(password, email));
+        }
       }
     } catch (error) {
       console.error('erro aqui', error);
+      res.status(400);
       return next(error);
     }
   });
 
-module.exports = user;
+module.exports = login;
