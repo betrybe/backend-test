@@ -28,7 +28,8 @@ login.post('/',
         const logData = await User.findOne(
           {
             where: { email, password },
-          });
+          }
+        );
         if (!logData) {
           res.status(400).json({ message: 'Campos inválidos' });
           throw new Error();
