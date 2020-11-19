@@ -6,15 +6,15 @@ const validateEmail = (email) => {
 const validateUserData = (displayName, email, password) => {
   switch (true) {
     case (displayName.length < 8):
-      return { error: true, status: 400, message: '”displayName” length must be at least 8 characters long' };
-    case (!validateEmail(email)):
-      return { error: true, status: 400, message: '”email” must be a valid email' };
+      return { error: true, status: 400, message: '"displayName" length must be at least 8 characters long' };
     case (!email):
-      return { error: true, status: 400, message: '”email” is required' };
-    case (password.length < 6):
-      return { error: true, status: 400, message: '”password” length must be at least 6 characters long' };
+      return { error: true, status: 400, message: '"email" is required' };
+    case (!validateEmail(email)):
+      return { error: true, status: 400, message: '"email" must be a valid email' };
     case (!password):
-      return { error: true, status: 400, message: '”password” is required' };
+      return { error: true, status: 400, message: '"password" is required' };
+    case (password.length < 6):
+      return { error: true, status: 400, message: '"password" length must be 6 characters long' };
     default:
       return { error: false };
   }
