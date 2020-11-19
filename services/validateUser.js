@@ -20,6 +20,22 @@ const validateUserData = (displayName, email, password) => {
   }
 };
 
+const validateLoginData = (email, password) => {
+  switch (true) {
+    case (email === ''):
+      return { error: true, status: 400, message: '"email" is not allowed to be empty' };
+    case (!email):
+      return { error: true, status: 400, message: '"email" is required' };
+    case (password === ''):
+      return { error: true, status: 400, message: '"password" is not allowed to be empty' };
+    case (!password):
+      return { error: true, status: 400, message: '"password" is required' };
+    default:
+      return { error: false };
+  }
+};
+
 module.exports = {
   validateUserData,
+  validateLoginData,
 };
