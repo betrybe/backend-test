@@ -30,7 +30,16 @@ const getUsers = async (_req, res) => {
   res.status(200).json(users);
 };
 
+const getUserById = async (req, res) => {
+  const user = await User.findByPk(req.params.id);
+  if (!user) {
+    return res.status(404).json({ message: 'Usuário não existe' });
+  }
+  res.status(200).json(user);
+};
+
 router.post('/', rescue(createUser));
 router.get('/', authMiddleware, rescue(getUsers));
+router.get('/:id', authMiddleware, rescue(getUserById));
 
 module.exports = router;
