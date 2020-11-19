@@ -39,9 +39,8 @@ user.get('/',
   async (req, res, next) => {
     try {
       const userAll = await User.findAll();
-      console.log( 'esse e e e', userAll);
       return res.status(200).json(userAll.map((e) => e.dataValues));
-    } catch (err){
+    } catch (err) {
       return next(err);
     }
   });
