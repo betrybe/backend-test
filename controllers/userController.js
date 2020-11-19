@@ -10,20 +10,38 @@ const router = express.Router();
 const createUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;
 
-  const emailExists = await User.findOne({ where: { email } });
-  if (emailExists) {
-    return res.status(409).json({ message: 'Usuário já existe' });
-  }
-
   const validation = await validateUserData(displayName, email, password);
   if (validation.error) {
     return res.status(validation.status).json({ message: validation.message });
+  }
+
+  const emailExists = await User.findOne({ where: { email } });
+  if (emailExists) {
+    return res.status(409).json({ message: 'Usuário já existe' });
   }
 
   const { dataValues } = await User.create({ displayName, email, password, image });
   const token = createJWT(dataValues);
   res.status(201).json({ token });
 };
+
+// const login = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   const emailExists = await User.findOne({ where: { email } });
+//   if (emailExists) {
+//     return res.status(409).json({ message: 'Usuário já existe' });
+//   }
+
+//   const validation = await validateUserData(displayName, email, password);
+//   if (validation.error) {
+//     return res.status(validation.status).json({ message: validation.message });
+//   }
+
+//   const { dataValues } = await User.create({ displayName, email, password, image });
+//   const token = createJWT(dataValues);
+//   res.status(201).json({ token });
+// };
 
 const getUser = async (_req, res) => {
   const users = await User.findAll({});

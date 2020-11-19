@@ -12,6 +12,7 @@ app.get('/', (request, response) => {
 });
 
 app.use('/user', userController);
+app.use('/login', userController);
 
 // app.use(errorMiddleware(config.environment));
 
