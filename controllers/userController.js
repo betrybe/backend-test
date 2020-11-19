@@ -33,19 +33,17 @@ user.post('/',
       }
       return next(err);
     }
-  }
-);
+  });
 
 user.get('/',
   async (req, res, next) => {
     try {
-      const user = await User.findAll();
-      console.log( 'esse e e e', user);
-      return res.status(200).json(user.map( (e) => e.dataValues));
-    } catch (err) {
+      const userAll = await User.findAll();
+      console.log( 'esse e e e', userAll);
+      return res.status(200).json(userAll.map((e) => e.dataValues));
+    } catch (err){
       return next(err);
     }
-  }
-);
+  });
 
 module.exports = user;
