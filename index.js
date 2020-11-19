@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const controllers = require('./controllers');
+const { errorHandler } = require('./middlewares');
 
 const app = express();
 
@@ -16,5 +17,7 @@ app.get('/', (_request, response) => {
 app.use('/user', controllers.user);
 app.use('/login', controllers.login);
 app.use('/post', controllers.post);
+
+app.use(errorHandler);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));

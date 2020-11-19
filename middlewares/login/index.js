@@ -4,7 +4,9 @@ const config = require('./config');
 
 module.exports = async (req, res, next) => {
   try {
-    const { data } = req;
+    const { displayName, email, image } = req.body;
+
+    const data = { displayName, email, image };
 
     const validationToken = jwt.sign(
       { data },
@@ -12,8 +14,7 @@ module.exports = async (req, res, next) => {
       config.tokenConfig,
     );
 
-    res.status(200).json({ token: validationToken });
-    return next();
+    return res.status(req.status).json({ token: validationToken });
   } catch (error) {
     return next(error);
   }

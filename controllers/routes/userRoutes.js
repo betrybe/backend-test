@@ -8,7 +8,9 @@ const createUser = rescue(async (req, res, next) => {
 
   if (user.status) return next(user);
 
-  return res.status(201).json(user);
+  req.status = 201;
+
+  return next();
 });
 
 const loginUser = rescue(async (req, res, next) => {
@@ -18,7 +20,9 @@ const loginUser = rescue(async (req, res, next) => {
 
   if (user.status) return next(user);
 
-  return res.status(200).json(user);
+  req.status = 200;
+
+  return next();
 });
 
 const getAllUsers = rescue(async (_req, res) => {
