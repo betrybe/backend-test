@@ -34,7 +34,7 @@ login.post('/',
           res.status(400).json({ message: 'Campos inválidos' });
           throw new Error();
         } else {
-          return res.status(200).json(createToken(password, email));
+          return res.status(200).json({ token: createToken(password, email) });
         }
       }
     } catch (error) {

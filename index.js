@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const controllers = require('./controllers');
+const { verifyToken } = require('./middlewares');
 // const { default: rescue } = require('express-rescue');
 
 const app = express();
@@ -18,7 +19,7 @@ app.get('/', (request, response) => {
   response.send();
 });
 app.use('/login', controllers.loginController);
-app.use('/user', controllers.userController);
+app.use('/user', verifyToken, controllers.userController);
 // app.use('/post', controllers.postController);
 /*
 app.use((err, _req, res, _next) => {

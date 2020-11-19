@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { User } = require('../models');
-const { createToken, verifyToken } = require('../middlewares');
+const { createToken } = require('../middlewares');
 
 const user = Router();
 
@@ -39,10 +39,9 @@ user.post('/',
 user.get('/',
   async (req, res, next) => {
     try {
-      res.status(200);
-      verifyToken(req, res, next);
       const user = await User.findAll();
-      return res.json(user.map( (e) => e.dataValues));
+      console.log( 'esse e e e', user);
+      return res.status(200).json(user.map( (e) => e.dataValues));
     } catch (err) {
       return next(err);
     }
