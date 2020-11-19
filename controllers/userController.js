@@ -33,19 +33,20 @@ user.post('/',
       }
       return next(err);
     }
-  });
+  }
+);
 
-  user.get('/',
-    async (req, res, next) => {
-      try {
-        verifyToken(req, res, next);
-        res.status(200);
-        const user = await User.findAll();
-        return res.json(user.map( e => e.dataValues));
-      } catch(err) {
-        return next(err);
-      }
+user.get('/',
+  async (req, res, next) => {
+    try {
+      res.status(200);
+      verifyToken(req, res, next);
+      const user = await User.findAll();
+      return res.json(user.map( (e) => e.dataValues));
+    } catch (err) {
+      return next(err);
     }
-  );
+  }
+);
 
 module.exports = user;
