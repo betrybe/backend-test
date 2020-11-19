@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { User } = require('../models');
-const { createToken } = require('../middlewares');
+const { createToken, verifyToken } = require('../middlewares');
 
 const user = Router();
 
@@ -34,5 +34,18 @@ user.post('/',
       return next(err);
     }
   });
+
+  user.get('/',
+    async (req, res, next) => {
+      try {
+        verifyToken(req, res, next);
+        res.status(200);
+        const user = await User.findAll();
+        return res.json(user.map( e => e.dataValues));
+      } catch(err) {
+        return next(err);
+      }
+    }
+  );
 
 module.exports = user;

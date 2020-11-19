@@ -12,4 +12,7 @@ const createToken = (password, email) => {
   return token;
 };
 
-module.exports = createToken;
+module.exports = {
+  createToken,
+  secret,
+};
