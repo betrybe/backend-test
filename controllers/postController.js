@@ -34,7 +34,14 @@ const getPosts = async (_req, res) => {
 };
 
 const getPostById = async (req, res) => {
-  const post = await Post.findByPk(req.params.id);
+  const post = await Post.findByPk(req.params.id, {
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+  });
   if (!post) {
     return res.status(404).json({ message: 'Post não existe' });
   }
