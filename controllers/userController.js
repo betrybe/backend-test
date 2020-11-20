@@ -48,9 +48,20 @@ user.get('/', verifyToken,
 user.get('/:id', verifyToken,
   async (req, res, next) => {
     try {
-      const userId = await User.findOne( { where: { id: req.params.id }});
+      const userId = await User.findOne({ where: { id: req.params.id } });
       if (!userId) return res.status(404).json({ message: 'Usuário não existe' });
       return res.status(200).json(userId.dataValues);
+    } catch (err) {
+      return next(err);
+    }
+  });
+
+user.delete('/me', verifyToken,
+  async (req, res, next) => {
+    console.log('cheguei aqui:', req.user);
+    try {
+      await User.destroy({ where: { email: req.user.email}});
+      return res.status(204);
     } catch (err) {
       return next(err);
     }
