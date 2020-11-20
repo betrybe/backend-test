@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { Op } = require('sequelize');
 const { Post, User } = require('../models');
 const { verifyToken } = require('../middlewares');
 
@@ -31,6 +32,27 @@ post.get('/', verifyToken,
       const posts = await Post.findAll({ include: 'user' });
       return res.status(200).json(posts);
     } catch (err) {
+      return next(err);
+    }
+  });
+
+post.get('/search', verifyToken,
+  async (req, res, next) => {
+    console.log('PARAAAAAAMS', req.query);
+    try {
+      const { q: searchTerm } = req.query;
+      const mapper = await Post.findAll({
+        where: {
+          [Op.or]: [
+            { title: { [Op.like]: `%${searchTerm}%` } },
+            { content: { [Op.like]: `%${searchTerm}%` } },
+          ],
+        },
+        include: 'user',
+      });
+      console.log('retorno do mapper:', mapper);
+      return res.status(200).json(mapper || []);
+    } catch(err) {
       return next(err);
     }
   });
