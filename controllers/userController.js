@@ -45,4 +45,15 @@ user.get('/', verifyToken,
     }
   });
 
+user.get('/:id', verifyToken,
+  async (req, res, next) => {
+    try {
+      const userId = await User.findOne( { where: { id: req.params.id }});
+      if (!userId) return res.status(404).json({ message: 'Usuário não existe' });
+      return res.status(200).json(userId.dataValues);
+    } catch (err) {
+      return next(err);
+    }
+  });
+
 module.exports = user;
