@@ -1,6 +1,6 @@
 const express = require('express');
 const rescue = require('express-rescue');
-const { Post } = require('../models');
+const { User, Post } = require('../models');
 const authMiddleware = require('../middlewares/authMiddleware');
 const { validatePostData } = require('../services/validatePost');
 
@@ -22,7 +22,14 @@ const createPost = async (req, res) => {
 };
 
 const getPosts = async (_req, res) => {
-  const posts = await Post.findAll({});
+  const posts = await Post.findAll({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+  });
   res.status(200).json(posts);
 };
 
