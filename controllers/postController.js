@@ -25,4 +25,25 @@ post.post('/', verifyToken,
     }
   });
 
+post.get('/', verifyToken,
+  async (req, res, next) => {
+    try{
+      const posts = await Post.findAll({ include: 'user' });
+      return res.status(200).json(posts);
+      } catch (err) {
+      return next(err);
+    }
+  });
+
+post.get('/:id', verifyToken,
+  async (req, res, next) => {
+    try{
+      const postbyId = await Post.findOne({ where: { id: req.params.id }, include: 'user' });
+      if (!postbyId) return res.status(404).json({ message: 'Post não existe' });
+      return res.status(200).json(postbyId);
+      } catch (err) {
+      return next(err);
+    }
+  });
+
 module.exports = post;
