@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const controllers = require('./controllers');
-const { verifyToken } = require('./middlewares');
 // const { default: rescue } = require('express-rescue');
 
 const app = express();
