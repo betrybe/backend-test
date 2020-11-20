@@ -38,8 +38,15 @@ const getUserById = async (req, res) => {
   res.status(200).json(user);
 };
 
+const deleteUser = async (req, res) => {
+  const { id } = req.user;
+  await User.destroy({ where: { id } });
+  res.status(204).end();
+};
+
 router.post('/', rescue(createUser));
 router.get('/', authMiddleware, rescue(getUsers));
 router.get('/:id', authMiddleware, rescue(getUserById));
+router.delete('/me', authMiddleware, rescue(deleteUser));
 
 module.exports = router;
