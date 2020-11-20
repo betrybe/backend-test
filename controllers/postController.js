@@ -16,7 +16,6 @@ const createPost = async (req, res) => {
   }
 
   const post = await Post.create({ title, content, userId });
-  console.log('post: ', post);
   res.status(201).json(post);
 };
 
@@ -47,10 +46,35 @@ const getPostById = async (req, res) => {
   res.status(200).json(post);
 };
 
+const updatePostById = async (req, res) => {
+  const { title, content } = req.body;
+  const { id } = req.params;
+
+  const validation = await validatePostData(title, content);
+  if (validation.error) {
+    return res.status(validation.status).json({ message: validation.message });
+  }
+
+  const post = await Post.findByPk(id, {
+    attributes: { exclude: ['id', 'published', 'updated'] },
+  });
+  console.log('POSTUP: ', post);
+  if (!post) {
+    return res.status(404).json({ message: 'Post não existe' });
+  }
+
+  const { id: userId } = req.user;
+  if (post.userId !== userId) {
+    return res.status(401).json({ message: 'Usuário não autorizado' });
+  }
+
+  await Post.update({ title, content, userId }, { where: { id } });
+  res.status(200).json(post);
+};
+
 const deletePostById = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findByPk(id);
-  console.log('post2: ', post);
   if (!post) {
     return res.status(404).json({ message: 'Post não existe' });
   }
@@ -67,6 +91,7 @@ const deletePostById = async (req, res) => {
 router.post('/', authMiddleware, rescue(createPost));
 router.get('/', authMiddleware, rescue(getPosts));
 router.get('/:id', authMiddleware, rescue(getPostById));
+router.put('/:id', authMiddleware, rescue(updatePostById));
 router.delete('/:id', authMiddleware, rescue(deletePostById));
 
 module.exports = router;
