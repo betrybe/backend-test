@@ -52,7 +52,7 @@ post.get('/search', verifyToken,
       });
       console.log('retorno do mapper:', mapper);
       return res.status(200).json(mapper || []);
-    } catch(err) {
+    } catch (err) {
       return next(err);
     }
   });
