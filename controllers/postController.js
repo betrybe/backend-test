@@ -49,15 +49,37 @@ post.get('/:id', verifyToken,
 post.delete('/:id', verifyToken,
   async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const { id } = req.params;
       const userID = await User.findOne({ where: { email: req.user.email } });
       const postbyId = await Post.findOne({ where: { id }, include: 'user' });
       if (!postbyId) return res.status(404).json({ message: 'Post não existe' });
       if (userID.dataValues.id !== postbyId.dataValues.user.id) {
-          return res.status(401).json({ message: 'Usuário não autorizado' });
-      } 
+        return res.status(401).json({ message: 'Usuário não autorizado' });
+      }
       await Post.destroy({ where: { id } });
       return res.status(204).json();
+    } catch (err) {
+      return next(err);
+    }
+  });
+
+post.put('/:id', verifyToken,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const userID = await User.findOne({ where: { email: req.user.email } });
+      const postbyId = await Post.findOne({ where: { id }, include: 'user' });
+      const idbuffer = postbyId.dataValues.user;
+      if (!postbyId) return res.status(404).json({ message: 'Post não existe' });
+      if (userID.dataValues.id !== idbuffer.id) {
+        return res.status(401).json({ message: 'Usuário não autorizado' });
+      }
+      const { title, content } = req.body;
+      if (!title) return res.status(400).json({ message: '"title" is required' });
+      if (!content) return res.status(400).json({ message: '"content" is required' });
+      await Post.update({ title, content }, { where: { id } });
+      const buffer = idbuffer.id;
+      return res.status(200).json({ title, content, userId: buffer });
     } catch (err) {
       return next(err);
     }
