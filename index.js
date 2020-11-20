@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const controllers = require('./controllers');
-// const { default: rescue } = require('express-rescue');
 
 const app = express();
 
@@ -19,7 +18,7 @@ app.get('/', (request, response) => {
 });
 app.use('/login', controllers.loginController);
 app.use('/user', controllers.userController);
-// app.use('/post', controllers.postController);
+app.use('/post', controllers.postController);
 /*
 app.use((err, _req, res, _next) => {
   if (err.payload) return res.status(err.status).json(err.payload);

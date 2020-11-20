@@ -58,7 +58,6 @@ user.get('/:id', verifyToken,
 
 user.delete('/me', verifyToken,
   async (req, res, next) => {
-    console.log('cheguei aqui:', req.user);
     try {
       await User.destroy({ where: { email: req.user.email } });
       return res.status(204).json();

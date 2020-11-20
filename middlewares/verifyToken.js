@@ -8,7 +8,6 @@ module.exports = rescue(async (req, res, next) => {
   if (!token) return res.status(401).json({ message: 'Token não encontrado' });
   try {
     const decoded = jwt.verify(token, secret);
-    console.log('decoder:', decoded);
     const user = await User.findAll({ where: { email: decoded.email } });
     if (!user) return res.status(401).json({ message: 'Usuário não encontrado' });
     req.user = decoded;
