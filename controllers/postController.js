@@ -9,7 +9,6 @@ const router = express.Router();
 const createPost = async (req, res) => {
   const { title, content } = req.body;
   const { id: userId } = req.user;
-  console.log('dataValues: ', userId);
 
   const validation = await validatePostData(title, content);
   if (validation.error) {
@@ -51,12 +50,13 @@ const getPostById = async (req, res) => {
 const deletePostById = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findByPk(id);
+  console.log('post2: ', post);
   if (!post) {
     return res.status(404).json({ message: 'Post não existe' });
   }
 
-  const { userId } = req.user;
-  if (id !== userId) {
+  const { id: userId } = req.user;
+  if (post.userId !== userId) {
     return res.status(401).json({ message: 'Usuário não autorizado' });
   }
 
