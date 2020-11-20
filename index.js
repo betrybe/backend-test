@@ -24,5 +24,6 @@ app.post('/login', Validator.login, UserController.loginUser);
 app.post('/post', Validator.token, Validator.createPost, PostController.createPost);
 app.get('/post', Validator.token, PostController.getPosts);
 app.get('/post/:id', Validator.token, PostController.getPostsById);
+app.put('/post/:id', Validator.token, Validator.updatePost, PostController.updatePost);
 
 app.listen(3000, () => console.log('ouvindo porta 3000!'));

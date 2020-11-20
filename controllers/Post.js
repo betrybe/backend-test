@@ -42,4 +42,12 @@ async function getPostsById(req, res) {
   }
   return res.json(posts);
 }
-module.exports = { createPost, getPosts, getPostsById };
+
+async function updatePost(req, res) {
+  const { id } = req.params;
+  const { title, content } = req.body;
+  await Post.update({ title, content }, { where: { id } });
+  const updated = await Post.findOne({ where: { id } });
+  res.json(updated);
+}
+module.exports = { createPost, getPosts, getPostsById, updatePost };

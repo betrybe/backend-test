@@ -1,4 +1,5 @@
 const { validate, decode } = require('../services/jwt');
+const { Post } = require('../models');
 
 function createUser(req, res, next) {
   const { displayName, email, password } = req.body;
@@ -50,12 +51,11 @@ async function token(req, res, next) {
   }
 
   req.user = await decode(authorization).id;
-
   return next();
 }
 
 async function createPost(req, res, next) {
-  const { id, title, content, published, updated } = req.body;
+  const { title, content } = req.body;
   if (!title) {
     return res.status(400).json({ message: '"title" is required' });
   }
@@ -64,5 +64,24 @@ async function createPost(req, res, next) {
   }
   return next();
 }
+async function updatePost(req, res, next) {
+  const { title, content } = req.body;
+  const { id } = req.params;
+  const userId = req.user;
 
-module.exports = { createUser, login, token, createPost };
+  if (!title) {
+    return res.status(400).json({ message: '"title" is required' });
+  }
+  if (!content) {
+    return res.status(400).json({ message: '"content" is required' });
+  }
+
+  const creator = await Post.findOne({ where: { id } });
+  console.log(creator.id, userId, 'ids');
+  if (creator.id !== userId) {
+    return res.status(401).json({ message: 'Usuário não autorizado' });
+  }
+  return next();
+}
+
+module.exports = { createUser, login, token, createPost, updatePost };
