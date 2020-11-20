@@ -5,8 +5,9 @@ async function createUser(req, res) {
   try {
     const { displayName, email, password, image } = req.body;
     const newUser = await User.create({ displayName, email, password, image });
-    const token = encode(newUser).value;
-    res.status(201).json(token);
+    const token = encode(newUser);
+    console.log(token);
+    res.status(201).json({ token });
   } catch (e) {
     console.log(e);
     res.status(409).json({
