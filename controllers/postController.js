@@ -55,9 +55,7 @@ const updatePostById = async (req, res) => {
     return res.status(validation.status).json({ message: validation.message });
   }
 
-  const post = await Post.findByPk(id, {
-    attributes: { exclude: ['id', 'published', 'updated'] },
-  });
+  const post = await Post.findByPk(id);
   console.log('POSTUP: ', post);
   if (!post) {
     return res.status(404).json({ message: 'Post não existe' });
@@ -68,8 +66,12 @@ const updatePostById = async (req, res) => {
     return res.status(401).json({ message: 'Usuário não autorizado' });
   }
 
-  await Post.update({ title, content, userId }, { where: { id } });
-  res.status(200).json(post);
+  await Post.update({ title, content }, { where: { id } });
+  const newPost = await Post.findOne({
+    where: { id },
+    attributes: { exclude: ['id', 'published', 'updated'] },
+  });
+  res.status(200).json(newPost);
 };
 
 const deletePostById = async (req, res) => {
