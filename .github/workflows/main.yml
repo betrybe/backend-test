@@ -16,7 +16,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1.4.3	
+      - uses: actions/setup-node@v1.4.4	
         with:	
           node-version: '12'
       - name: Static code analysis step
