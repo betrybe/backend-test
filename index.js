@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const controllers = require('./controllers');
+const routes = require('./routes');
+
 const { errorHandler } = require('./middlewares');
 
 const app = express();
@@ -14,9 +15,9 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
-app.use('/user', controllers.user);
-app.use('/login', controllers.login);
-app.use('/post', controllers.post);
+app.use('/user', routes.user);
+app.use('/login', routes.login);
+app.use('/post', routes.post);
 
 app.use(errorHandler);
 

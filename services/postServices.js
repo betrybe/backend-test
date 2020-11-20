@@ -1,76 +1,57 @@
 const { Op } = require('sequelize');
-const { Post, User } = require('../models');
+const { Post } = require('../models');
 
-const createPost = async (title, content, userId) => {
-  await Post.create({ title, content, userId });
+const createPost = async ({ title, content }, id) => {
+  if (!title) return { errors: [{ message: '"title" is required' }] };
+  if (!content) return { errors: [{ message: '"content" is required' }] };
+  return Post.create({ userId: id, title, content });
+};
 
+const deletePost = async (id, userId) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { message: 'Post não existe', code: 404 };
+  if (post.user.id !== userId) return { message: 'Usuário não autorizado', code: 401 };
+  await Post.destroy({ where: { id } });
+};
+
+const getAllPosts = async () => Post.findAll({ include: 'user' });
+
+const getPostById = async (id) => {
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { message: 'Post não existe' };
+  return post;
+};
+
+const updatePost = async ({ title, content }, id, userId) => {
+  if (!title) return { message: '"title" is required' };
+  if (!content) return { message: '"content" is required' };
+  const post = await Post.findByPk(id, { include: 'user' });
+  if (!post) return { message: 'Post não existe' };
+  if (userId !== post.user.id) {
+    return { message: 'Usuário não autorizado', code: 401 };
+  }
+  await Post.update({ title, content }, { where: { id } });
   return { title, content, userId };
 };
 
-const getAllPosts = async () => {
+const searchPost = async (searchTerm) => {
   const posts = await Post.findAll({
-    include: [{ model: User, as: 'user', attributes: { exclude: 'password' } }],
-  });
-
-  return posts;
-};
-
-const getPostById = async (id) => {
-  const post = await Post.findOne({
-    where: { id },
-    include: [{ model: User, as: 'user', attributes: { exclude: 'password' } }],
-  });
-
-  if (!post) return { status: 404, message: 'Post não existe' };
-
-  return post;
-};
-
-const updateOnePost = async (title, content, id, userId) => {
-  const post = await Post.findOne({ where: { id } });
-
-  if (post.userId !== userId) return { status: 401, message: 'Usuário não autorizado' };
-
-  await Post.update({ title, content }, { where: { id } });
-
-  const updatedPost = await Post.findOne({ where: { id } });
-
-  return updatedPost;
-};
-
-const getPostsByQuery = async (query) => {
-  const post = await Post.findAll({
     where: {
       [Op.or]: [
-        { title: { [Op.like]: `%${query}%` } },
-        { content: { [Op.like]: `%${query}%` } },
+        { title: { [Op.like]: `%${searchTerm}%` } },
+        { content: { [Op.like]: `%${searchTerm}%` } },
       ],
     },
-    include: [{ model: User, as: 'user', attributes: { exclude: 'password' } }],
+    include: 'user',
   });
-
-  return post;
-};
-
-const deleteOnePost = async (id, userId) => {
-  const post = await Post.findOne({ where: { id } });
-
-  if (post.userId !== userId) return { status: 401, message: 'Usuário não autorizado' };
-
-  await Post.destroy({ where: { id } });
-
-  const checkPost = await Post.findOne({ where: { id } });
-
-  if (checkPost) return { status: 404, message: 'Post não deletado' };
-
-  return { status: false };
+  return { status: 200, response: posts || [] };
 };
 
 module.exports = {
   createPost,
   getAllPosts,
   getPostById,
-  updateOnePost,
-  getPostsByQuery,
-  deleteOnePost,
+  updatePost,
+  searchPost,
+  deletePost,
 };

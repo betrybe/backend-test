@@ -1,40 +1,30 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../../models');
 
-const services = require('../../services');
-const { tokenKey } = require('../login/config');
+const secret = 'tokendentrodasespecificacoesdesegurancamuitomaeniro';
 
-const validateTokenInfo = async (token, required) => {
-  try {
-    if (!required) return;
+module.exports = async (req, res, next) => {
+  const token = req.headers.authorization;
 
-    if (required && !token) throw new Error('missing auth token');
-
-    const decodedInfo = jwt.verify(token, tokenKey);
-    const { _id } = decodedInfo.data;
-
-    const userData = await services.SearchUser(null, _id);
-
-    if (!userData) throw new Error('invalid token');
-
-    const { password, ...user } = userData;
-
-    return { ...user };
-  } catch (error) {
-    throw new Error(error.message);
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
-};
 
-module.exports = (required = true) => async (req, _res, next) => {
   try {
-    const { authorization } = req.headers;
-
-    if (!required) return next();
-
-    const validateInfo = await validateTokenInfo(authorization, required);
-    req.user = validateInfo;
-
-    return next();
-  } catch (error) {
-    return next(error);
+    const {
+      user: {
+        dataValues: { id },
+      },
+    } = jwt.verify(token, secret);
+    const user = await User.findOne({ where: { id } });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: 'Erro ao procurar usuario do token.' });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Token expirado ou inválido' });
   }
 };

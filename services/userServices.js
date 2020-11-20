@@ -1,55 +1,66 @@
 const { User } = require('../models');
 
-const createUser = async (displayName, email, password, image) => {
-  const verifyUser = await User.findOne({ where: { email } });
+const userValidation = (displayName, email, password) => {
+  const regexEmail = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+  switch (true) {
+    case !email:
+      return { errors: [{ message: '"email" is required' }] };
+    case !password:
+      return { errors: [{ message: '"password" is required' }] };
+    case displayName.length < 8:
+      return {
+        errors: [
+          {
+            message: '"displayName" length must be at least 8 characters long',
+          },
+        ],
+      };
+    case !email.match(regexEmail):
+      return {
+        errors: [{ message: '"email" must be a valid email' }],
+      };
+    case password.length < 6:
+      return {
+        errors: [{ message: '"password" length must be 6 characters long' }],
+      };
+    default:
+      return false;
+  }
+};
 
-  if (verifyUser) return { status: 409, message: 'Usuário já existe' };
+const createUser = async ({ displayName, email, password, image }) => {
+  const validation = userValidation(displayName, email, password);
 
-  const user = User.create({ displayName, email, password, image });
+  if (validation) return validation;
 
+  return User.create({ displayName, email, password, image });
+};
+
+const userLogin = async (request) => {
+  const { email, password } = request;
+  if (typeof email === 'string' && email.length === 0) {
+    return { errors: [{ message: '"email" is not allowed to be empty' }] };
+  }
+  if (typeof password === 'string' && password.length === 0) {
+    return { errors: [{ message: '"password" is not allowed to be empty' }] };
+  }
+  if (!email) return { errors: [{ message: '"email" is required' }] };
+  if (!password) return { errors: [{ message: '"password" is required' }] };
+  const user = await User.findOne({ where: { email } });
+  if (!user || user.password !== password.toString()) {
+    return { errors: [{ message: 'Campos inválidos' }] };
+  }
   return user;
 };
 
-const loginUser = async (email, password) => {
-  const user = await User.findOne(
-    { where: { email, password } },
-    { attributes: { exclude: 'password' } },
-  );
-
-  if (!user) return { status: 400, message: 'Campos inválidos' };
-
-  return user;
-};
-
-const getAllUsers = async () => {
-  const users = await User.findAll({ attributes: { exclude: 'password' } });
-
-  return users;
-};
+const getAllUsers = async () => User.findAll({ attributes: { exclude: 'password' } });
 
 const getUserById = async (id) => {
-  const user = await User.findOne(
-    { where: { id } },
-    { attributes: { exclude: 'password' } },
-  );
-
-  if (!user) return { status: 404, message: 'Usuário não existe' };
-
+  const user = await User.findOne({ where: { id } }, { attributes: { exclude: 'password' } });
+  if (!user) return { message: 'Usuário não existe' };
   return user;
 };
 
-const deleteUser = async (email) => {
-  await User.destroy({ where: { email } });
+const deleteUser = async (id) => User.destroy({ where: { id } });
 
-  const user = await User.findOne({ where: { email } });
-
-  if (user) return { status: 400, message: 'Usuário não excluído' };
-};
-
-module.exports = {
-  createUser,
-  loginUser,
-  getAllUsers,
-  getUserById,
-  deleteUser,
-};
+module.exports = { createUser, userLogin, getAllUsers, getUserById, deleteUser };
