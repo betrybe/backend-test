@@ -84,4 +84,18 @@ async function updatePost(req, res, next) {
   return next();
 }
 
-module.exports = { createUser, login, token, createPost, updatePost };
+async function deletePost(req, res, next) {
+  const { id } = req.params;
+  const userId = req.user;
+
+  const creator = await Post.findOne({ where: { id } });
+  if (!creator) {
+    return res.status(404).json({ message: 'Post não existe' });
+  }
+  if (creator.id !== userId) {
+    return res.status(401).json({ message: 'Usuário não autorizado' });
+  }
+  return next();
+}
+
+module.exports = { createUser, login, token, createPost, updatePost, deletePost };

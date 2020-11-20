@@ -50,4 +50,30 @@ async function updatePost(req, res) {
   const updated = await Post.findOne({ where: { id } });
   res.json(updated);
 }
-module.exports = { createPost, getPosts, getPostsById, updatePost };
+
+async function queryPost(req, res) {
+  const { q } = req.query;
+  const posts = await Post.findAll({
+    include: [
+      {
+        model: User,
+        as: 'user',
+      },
+    ],
+  });
+  const filtered = posts.filter(
+    ({ title, content }) => title.includes(q) || content.includes(q),
+  );
+  res.json(filtered);
+}
+
+async function deletePost(req, res) {
+  const { id } = req.params;
+
+  const deleted = await Post.destroy({ where: { id } });
+  if (!deleted) {
+    return res.status(404).json({ message: 'Post não existe' });
+  }
+  res.status(204).json(deleted);
+}
+module.exports = { createPost, getPosts, getPostsById, updatePost, queryPost, deletePost };
