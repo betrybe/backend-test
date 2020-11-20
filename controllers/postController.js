@@ -7,8 +7,8 @@ const { validatePostData } = require('../services/validatePost');
 const router = express.Router();
 
 const createPost = async (req, res) => {
-  const { title, content } = req.body;
-  const { dataValues: { id: userId } } = req.user;
+  const { title, content, userId } = req.body;
+  // const { userId } = req.user;
 
   const validation = await validatePostData(title, content);
   if (validation.error) {
@@ -17,7 +17,7 @@ const createPost = async (req, res) => {
 
   const post = await Post.create({ title, content, userId });
   console.log('post: ', post);
-  res.status(201).json(post.dataValues);
+  res.status(201).json(post);
 };
 
 const getPosts = async (_req, res) => {
@@ -40,8 +40,8 @@ const deletePostById = async (req, res) => {
     return res.status(404).json({ message: 'Post não existe' });
   }
 
-  const { dataValues: { id: userId } } = req.user;
-  if (post.dataValues.userId !== userId) {
+  const { userId } = req.user;
+  if (id !== userId) {
     return res.status(401).json({ message: 'Usuário não autorizado' });
   }
 
