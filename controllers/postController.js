@@ -46,4 +46,21 @@ post.get('/:id', verifyToken,
     }
   });
 
+post.delete('/:id', verifyToken,
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const userID = await User.findOne({ where: { email: req.user.email } });
+      const postbyId = await Post.findOne({ where: { id }, include: 'user' });
+      if (!postbyId) return res.status(404).json({ message: 'Post não existe' });
+      if (userID.dataValues.id !== postbyId.dataValues.user.id) {
+          return res.status(401).json({ message: 'Usuário não autorizado' });
+      } 
+      await Post.destroy({ where: { id } });
+      return res.status(204).json();
+    } catch (err) {
+      return next(err);
+    }
+  });
+
 module.exports = post;
