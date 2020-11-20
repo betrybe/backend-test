@@ -19,7 +19,7 @@ app.get('/', (request, response) => {
   response.send();
 });
 app.use('/login', controllers.loginController);
-app.use('/user', verifyToken, controllers.userController);
+app.use('/user', controllers.userController);
 // app.use('/post', controllers.postController);
 /*
 app.use((err, _req, res, _next) => {

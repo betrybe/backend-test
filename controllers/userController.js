@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { User } = require('../models');
-const { createToken } = require('../middlewares');
+const { createToken, verifyToken } = require('../middlewares');
+
 
 const user = Router();
 
@@ -35,7 +36,7 @@ user.post('/',
     }
   });
 
-user.get('/',
+user.get('/', verifyToken,
   async (req, res, next) => {
     try {
       const userAll = await User.findAll();
@@ -44,5 +45,7 @@ user.get('/',
       return next(err);
     }
   });
+
+user
 
 module.exports = user;
