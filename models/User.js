@@ -14,11 +14,11 @@ const User = (sequelize, DataTypes) => {
     },
   );
 
-  //   user.associate = (models) => {
-  //     user.hasMany(models.Posts, {
-  //       foreignKey: 'id', as: 'user_post',
-  //     });
-  //   };
+  user.associate = (models) => {
+    user.hasMany(models.Post, {
+      foreignKey: 'id', as: 'user_id',
+    });
+  };
 
   return user;
 };

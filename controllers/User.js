@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { encode, validate } = require('../services/jwt');
+const { encode, validate, decode } = require('../services/jwt');
 
 async function createUser(req, res) {
   try {
@@ -37,7 +37,6 @@ async function getUsers(req, res) {
       return res.status(401).json({ message: 'Token não encontrado' });
     }
     const isValid = await validate(authorization);
-    console.log(isValid, 'valida');
     if (!isValid) {
       return res.status(401).json({ message: 'Token expirado ou inválido' });
     }
@@ -48,4 +47,39 @@ async function getUsers(req, res) {
   }
 }
 
-module.exports = { createUser, loginUser, getUsers };
+async function getUserById(req, res) {
+  try {
+    const { id } = req.params;
+    const { authorization } = req.headers;
+    if (!authorization) {
+      return res.status(401).json({ message: 'Token não encontrado' });
+    }
+    const isValid = await validate(authorization);
+    if (!isValid) {
+      return res.status(401).json({ message: 'Token expirado ou inválido' });
+    }
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não existe' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ message: 'user not found' });
+  }
+}
+
+async function deleteMe(req, res) {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  const isValid = await validate(authorization);
+  if (!isValid) {
+    return res.status(401).json({ message: 'Token expirado ou inválido' });
+  }
+  const { email } = await decode(authorization);
+  const userDeleted = await User.destroy({ where: { email } });
+  res.status(204).json(userDeleted);
+}
+
+module.exports = { createUser, loginUser, getUsers, getUserById, deleteMe };

@@ -1,3 +1,5 @@
+const { validate, decode } = require('../services/jwt');
+
 function createUser(req, res, next) {
   const { displayName, email, password } = req.body;
   if (displayName.length < 8) {
@@ -37,4 +39,30 @@ function login(req, res, next) {
   next();
 }
 
-module.exports = { createUser, login };
+async function token(req, res, next) {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  const isValid = await validate(authorization);
+  if (!isValid) {
+    return res.status(401).json({ message: 'Token expirado ou inválido' });
+  }
+
+  req.user = await decode(authorization).id;
+
+  return next();
+}
+
+async function createPost(req, res, next) {
+  const { id, title, content, published, updated } = req.body;
+  if (!title) {
+    return res.status(400).json({ message: '"title" is required' });
+  }
+  if (!content) {
+    return res.status(400).json({ message: '"content" is required' });
+  }
+  return next();
+}
+
+module.exports = { createUser, login, token, createPost };
