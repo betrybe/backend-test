@@ -7,8 +7,9 @@ const { validatePostData } = require('../services/validatePost');
 const router = express.Router();
 
 const createPost = async (req, res) => {
-  const { title, content, userId } = req.body;
-  // const { userId } = req.user;
+  const { title, content } = req.body;
+  const { id: userId } = req.user;
+  console.log('dataValues: ', userId);
 
   const validation = await validatePostData(title, content);
   if (validation.error) {
