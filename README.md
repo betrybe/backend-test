@@ -1,69 +1,8 @@
 # Boas vindas ao repositório do API de Blogs!
 
-Você já usa o GitHub diariamente para desenvolver os exercícios, certo? Agora, para desenvolver os projetos, você deverá seguir as instruções a seguir. Fique atento a cada passo, e se tiver qualquer dúvida, nos envie por Slack! #vqv 🚀
-
-Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu projeto a partir deste repositório, utilizando uma branch específica e um Pull Request para colocar seus códigos.
-
----
-
-## Instruções para entregar seu projeto:
-
-### ANTES DE COMEÇAR A DESENVOLVER:
-
-1. Clone o repositório
-  * `git clone https://github.com/betrybe/sd-03-project-blogs-api.git`.
-  * Entre na pasta do repositório que você acabou de clonar:
-    * `cd sd-03-project-blogs-api`
-
-2. Instale as dependências [**Caso existam**]
-  * `npm install`
-
-3. Crie uma branch a partir da branch `master`
-  * Verifique que você está na branch `master`
-    * Exemplo: `git branch`
-  * Se não estiver, mude para a branch `master`
-    * Exemplo: `git checkout master`
-  * Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
-    * Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
-    * Exemplo: `git checkout -b joaozinho-sd-03-project-blogs-api`
-
-4. Adicione as mudanças ao _stage_ do Git e faça um `commit`
-  * Verifique que as mudanças ainda não estão no _stage_
-    * Exemplo: `git status` (deve aparecer listada a pasta _joaozinho_ em vermelho)
-  * Adicione o novo arquivo ao _stage_ do Git
-      * Exemplo:
-        * `git add .` (adicionando todas as mudanças - _que estavam em vermelho_ - ao stage do Git)
-        * `git status` (deve aparecer listado o arquivo _joaozinho/README.md_ em verde)
-  * Faça o `commit` inicial
-      * Exemplo:
-        * `git commit -m 'iniciando o projeto x'` (fazendo o primeiro commit)
-        * `git status` (deve aparecer uma mensagem tipo _nothing to commit_ )
-
-5. Adicione a sua branch com o novo `commit` ao repositório remoto
-  * Usando o exemplo anterior: `git push -u origin joaozinho-sd-03-project-blogs-api`
-
-6. Crie um novo `Pull Request` _(PR)_
-  * Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-03-project-blogs-api/pulls)
-  * Clique no botão verde _"New pull request"_
-  * Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
-  * Clique no botão verde _"Create pull request"_
-  * Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
-  * **Não se preocupe em preencher mais nada por enquanto!**
-  * Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-03-project-blogs-api/pulls) e confira que o seu _Pull Request_ está criado
-
----
-
-# Entregáveis
-
-Para entregar o seu projeto você deverá criar um Pull Request neste repositório.
-
-Lembre-se que você pode consultar nosso conteúdo sobre [Git & GitHub](https://course.betrybe.com/intro/git/) sempre que precisar!
-
----
-
 ## O que deverá ser desenvolvido
 
-Você vai arquiteturar e desenvolver uma API de um CRUD de posts de blog (com o sequelize). Começando pela API, você vai desenvolver alguns endpoints (seguindo os principios do REST) que estarão conectados ao seu banco de dados. Lembre-se de aplicar os princípios SOLID!
+Você vai arquiteturar e desenvolver uma API de um CRUD de posts de blog. Começando pela API, você vai desenvolver alguns endpoints (seguindo os principios do REST) que estarão conectados ao seu banco de dados.
 
 Primeiro, você irá criar uma tabela para os usuários que desejam se cadastrar na aplicação. Após isso, a tabela blogPost será seu foco, guardando todas as informações dos posts realizados na plataforma. Essa é apenas uma recomendação!
 
@@ -71,77 +10,15 @@ Primeiro, você irá criar uma tabela para os usuários que desejam se cadastrar
 
 ### Data de Entrega
 
-O projeto tem até a seguinte data: `29/10/2020 - 14:00h`. Para ser entregue a avaliação final.
+O projeto deverá ser entregue até 7 dias depois de você ter recebido as instruções.
 
 ---
 
 ## Requisitos Obrigatórios:
 
-## ⚠️ Leia-os atentamente e siga à risca o que for pedido. ⚠️
+### 0 – Banco de Dados
 
-### 👀 Observações importantes:
-
-O não cumprimento de um requisito, total ou parcialmente, impactará em sua avaliação.
-
-Há um arquivo `index.js` no repositório. Não remova, nele, o seguinte trecho de código:
-
-```javascript
-app.get('/', (request, response) => {
-  response.send();
-});
-```
-
-**Você irá precisar configurar as variáveis globais do MySQL.** Você pode usar esse [Conteúdo de variáveis de ambiente com NodeJS](https://blog.rocketseat.com.br/variaveis-ambiente-nodejs/) como referência.
-
-**Faça essas configurações também para as variáveis de ambiente usadas nesses arquivo:**
-
-`sd-03-project-blogs-api/config/config.js`
-
-```
-module.exports = {
-  "development": {
-    "username": process.env.MYSQL_USER,
-    "password": process.env.MYSQL_PASSWORD, 
-    "database": 'blogs_api', 
-    "host": process.env.HOSTNAME,
-    "dialect": 'mysql',
-  },
-  "test": {
-    "username": process.env.MYSQL_USER,
-    "password": process.env.MYSQL_PASSWORD,
-    "database": 'blogs_api',
-    "host": process.env.HOSTNAME,
-    "dialect": "mysql",
-  },
-  "production": {
-    "username": process.env.MYSQL_USER,
-    "password": process.env.MYSQL_PASSWORD,
-    "database": 'blogs_api',
-    "host": process.env.HOSTNAME,
-    "dialect": 'mysql',
-  },
-};
-```
-
-**(Neste arquivo é obrigatório deixar o nome do database como `"database": 'blogs_api'`)**
-
-**É essencial usar essas 3 variávies no arquivo acima:**
-
-Variáveis:
-
-`host: process.env.HOSTNAME`
-
-`user: process.env.MYSQL_USER`
-
-`password: process.env.MYSQL_PASSWORD`
-
-**Com elas que iremos conseguir conectar ao banco do avaliador automático**
-
-#### Os seguintes pontos serão avaliados:
-
-- O seu projeto deverá usar um `ORM` para criar e atualizar o seu banco. A clonagem do projeto seguida de um comando de migrate deve deixá-lo em sua forma esperada.
-
-- Deve conter uma tabela chamada **Users**, contendo os seguinte dados:
+- Deve conter uma tabela chamada **Users**, com estrutura similar ao apresentado abaixo:
 
   ```json
   {
@@ -153,7 +30,7 @@ Variáveis:
   }
   ```
 
-- Deve conter uma tabela chamada **Posts**, contendo os seguinte dados:
+- Deve conter uma tabela chamada **Posts**, com estrutura similar ao apresentado abaixo:
 
   ```json
   {
@@ -165,18 +42,6 @@ Variáveis:
     "updated": "2011-08-01T19:58:51.947Z",
   }
   ```
-
-  **OBS: Os testes irão rodar atráves do seu migrate usando os seguintes comandos:**
-
-  "drop": "npx sequelize-cli db:drop $" -- Dropa o banco
-
-  "prestart": "npx sequelize-cli db:create && npx sequelize-cli db:migrate $" -- Cria o banco e gera as tabelas
-
-  "seed": "npx sequelize-cli db:seed:all $", -- Insere dados na tabela
-
-  **Então preste bastante atenção se estiver errado o avaliador não irá funcionar**
-
-  **Haverá um arquivo na pasta `/seeders` dentro dela irá conter as querys para inserir no banco `não remova ela o avaliador irá usar ela`.
 
 ### 1 - Sua aplicação deve ter o endpoint POST `/user`
 
@@ -769,39 +634,10 @@ Alguns exemplos:
 
 ---
 
-### DURANTE O DESENVOLVIMENTO
+## Instruções para entregar seu projeto:
 
-* Faça `commits` das alterações que você fizer no código regularmente
+Crie esse projeto em sua conta no **GitHub** e nos envie o link do repositório.
 
-* Lembre-se de sempre após um (ou alguns) `commits` atualizar o repositório remoto
-
-* Os comandos que você utilizará com mais frequência são:
-  1. `git status` _(para verificar o que está em vermelho - fora do stage - e o que está em verde - no stage)_
-  2. `git add` _(para adicionar arquivos ao stage do Git)_
-  3. `git commit` _(para criar um commit com os arquivos que estão no stage do Git)_
-  4. `git push -u nome-da-branch` _(para enviar o commit para o repositório remoto na primeira vez que fizer o `push` de uma nova branch)_
-  5. `git push` _(para enviar o commit para o repositório remoto após o passo anterior)_
-
----
-
-### DEPOIS DE TERMINAR O DESENVOLVIMENTO (OPCIONAL)
-
-Para sinalizar que o seu projeto está pronto para o _"Code Review"_ dos seus colegas, faça o seguinte:
-
-* Vá até a página **DO SEU** _Pull Request_, adicione a label de _"code-review"_ e marque seus colegas:
-
-  * No menu à direita, clique no _link_ **"Labels"** e escolha a _label_ **code-review**;
-
-  * No menu à direita, clique no _link_ **"Assignees"** e escolha **o seu usuário**;
-
-  * No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-03`.
-
-Caso tenha alguma dúvida, [aqui tem um video explicativo](https://vimeo.com/362189205).
-
----
-
-### REVISANDO UM PULL REQUEST
-
-Use o conteúdo sobre [Code Review](https://course.betrybe.com/real-life-engineer/code-review/) para te ajudar a revisar os _Pull Requests_.
+ps: Lembre-se de deixar o repositório público para que possamos ter acesso ao código
 
 #VQV
