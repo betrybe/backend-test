@@ -153,7 +153,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bcrypt (~> 3.1.7)
+  bcrypt (~> 3.1.13)
   bootsnap (>= 1.4.4)
   byebug
   jwt
