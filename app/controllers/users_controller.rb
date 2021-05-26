@@ -20,9 +20,9 @@ class UsersController < ApplicationController
 
     if @user && @user.password_digest == params[:password]
       token = encode_token({user_id: @user.id})
-      render json: {token: token}
+      render json: {token: token}, status: :ok
     else
-      render json: {error: "Invalid displayName or password"}
+      render json: validate_login_params, status: :bad_request
     end
   end
 
@@ -37,10 +37,17 @@ class UsersController < ApplicationController
   end
 
   def validate_login_params
-    { message: '"email" is required' } unless params.include? 'email'
-    { message: '"password" is required' } unless params.include? 'password'
-    { message: '"email" is not allowed to be empty' } if params['email'] == ''
-    { message: '"password" is not allowed to be empty' } if params['password'] == ''
+    if (params.include? 'email') == false
+      { message: '"email" is required' }
+    elsif (params.include? 'password') == false
+      { message: '"password" is required' }
+    elsif (params['email'] == '') == true
+      { message: '"email" is not allowed to be empty' }
+    elsif (params['password'] == '') == true
+      { message: '"password" is not allowed to be empty' }
+    elsif User.find_by(email: params[:email]).present? == false
+      { message: 'Campos inválidos' }
+    end
   end
 
 end
