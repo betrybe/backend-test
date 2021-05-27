@@ -1,5 +1,10 @@
 class UsersController < ApplicationController
-  before_action :authorized, only: [:auto_login]
+  before_action :authorized, only: [:auto_login, :index]
+
+  def index
+    @users = User.all
+    render json: @users, status: :ok
+  end
 
   # REGISTER
   def create

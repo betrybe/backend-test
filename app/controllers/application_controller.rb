@@ -5,7 +5,12 @@ class ApplicationController < ActionController::API
   SECRET = '8727ceb32b97af057db5e91aa24752f1e2e819b2'
 
   def encode_token(payload)
-    JWT.encode(payload, SECRET)
+    exp = Time.now.to_i + 4 * 3600
+    exp_payload = { data: payload, exp: exp }
+
+    jwt = JWT.encode(exp_payload, SECRET)
+    JwtToken.create!(expired_token: jwt, expiration_time: exp)
+    jwt
   end
 
   def auth_header
@@ -27,7 +32,7 @@ class ApplicationController < ActionController::API
 
   def logged_in_user
     if decoded_token
-      user_id = decoded_token[0]['user_id']
+      user_id = decoded_token[0]['data']['user_id']
       @user = User.find_by(id: user_id)
     end
   end
@@ -37,6 +42,11 @@ class ApplicationController < ActionController::API
   end
 
   def authorized
-    render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
+    token = auth_header.split(' ')[1]
+    if JwtToken.where(expired_token: token).exists? && JwtToken.find_by(expired_token: token).expiration_time < Time.now.to_i && !logged_in?
+      render json: {'message': 'Token expirado ou inválido'}
+    elsif !logged_in?
+      render json: { 'message': 'Token não encontrado' }, status: :unauthorized
+    end
   end
 end
