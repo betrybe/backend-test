@@ -1,6 +1,6 @@
 class BlogPostsController < ApplicationController
   before_action :authorized, only: [:index, :show, :destroy, :update, :search]
-  before_action :set_post, only: [:show, :update, :destroy]
+  before_action :set_post, only: [:update, :destroy]
 
   def index
     @posts = BlogPost.all
@@ -8,7 +8,21 @@ class BlogPostsController < ApplicationController
   end
 
   def show
-    render json: @post, status: :ok
+    if request.path == "/post/search"
+      searchTerm = request.url.split(/post/i, 2)[1].split(/=/i, 2)[1]
+      if searchTerm == ''
+        render json: BlogPost.all, status: :ok
+      else
+        posts_attributes = ['title', 'content']
+        queries = posts_attributes.map { |attr| "#{attr} LIKE '%#{searchTerm}%'" }
+        built_query = queries.join(" OR ")
+        posts = BlogPost.where(built_query)
+        render json: posts.all, status: :ok
+      end
+    else
+      set_post
+      render json: @post, status: :ok
+    end
   end
 
   def update
