@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authorized, only: [:auto_login, :index, :show]
+  before_action :authorized, only: [:auto_login, :index, :show, :destroy]
 
   def index
     @users = User.all
@@ -26,6 +26,13 @@ class UsersController < ApplicationController
     else
       render json: { "message": @user.errors.to_h.values[0] }, status: :bad_request
     end
+  end
+
+  def destroy
+    user_id = decoded_token[0]['data']['user_id']
+    @user = User.find_by(id: user_id)
+    @user.destroy!
+    render nothing: true, status: :no_content
   end
 
   # LOGGING IN
