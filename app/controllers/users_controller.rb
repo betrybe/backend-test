@@ -1,9 +1,14 @@
 class UsersController < ApplicationController
-  before_action :authorized, only: [:auto_login, :index]
+  before_action :authorized, only: [:auto_login, :index, :show]
 
   def index
     @users = User.all
     render json: @users, status: :ok
+  end
+
+  def show
+    @user = User.find(params[:id])
+    render json: @user, status: :ok
   end
 
   # REGISTER
