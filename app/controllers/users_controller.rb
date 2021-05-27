@@ -37,7 +37,11 @@ class UsersController < ApplicationController
 
   # LOGGING IN
   def login
-    @user = User.find_by(email: params[:email])
+    begin
+      @user = User.find_by(email: params[:email])
+    rescue ActiveRecord::RecordNotFound
+      render json: {"message": "Usuário não existe"}, status: :not_found
+    end
 
     if @user && @user.password_digest == params[:password]
       token = encode_token({user_id: @user.id})
