@@ -7,8 +7,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
-    render json: @user, status: :ok
+    begin
+      @user = User.find(params[:id])
+      render json: @user, status: :ok
+    rescue ActiveRecord::RecordNotFound
+      render json: {"message": "Usuário não existe"}, status: :not_found
+    end
   end
 
   # REGISTER

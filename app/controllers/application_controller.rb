@@ -45,11 +45,9 @@ class ApplicationController < ActionController::API
     @token = auth_header.split(' ')[1] unless auth_header.nil?
     
     if @token.nil?
-      render nothing: true, status: :unauthorized
-    elsif JwtToken.where(expired_token: @token).exists? && JwtToken.find_by(expired_token: @token).expiration_time < Time.now.to_i && !logged_in?
-      render json: {'message': 'Token expirado ou inválido'}, status: :unauthorized
-    elsif !logged_in?
       render json: { 'message': 'Token não encontrado' }, status: :unauthorized
+    elsif !logged_in? || JwtToken.where(expired_token: @token).exists? && JwtToken.find_by(expired_token: @token).expiration_time < Time.now.to_i && !logged_in?
+      render json: {'message': 'Token expirado ou inválido'}, status: :unauthorized
     end
   end
 end
