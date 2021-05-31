@@ -55,7 +55,7 @@ O projeto deverá ser entregue até 7 dias depois de você ter recebido as instr
   {
     "displayName": "Brett Wiltshire",
     "email": "brett@email.com",
-    "password": 123456,
+    "password": "123456",
     "image": "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png"
   }
   ```
@@ -63,7 +63,7 @@ O projeto deverá ser entregue até 7 dias depois de você ter recebido as instr
 
 - O campo `email` será considerado válido se tiver o formato `<prefixo>@<domínio>` e se for único. Ele é obrigatório.
 
-- A senha deverá conter 6 caracteres. Ela é obrigatória.
+- A senha deverá conter no mínimo 6 caracteres. Ela é obrigatória.
 
 - Caso exista uma pessoa com o mesmo email na base, deve-se retornar o seguinte erro:
 
