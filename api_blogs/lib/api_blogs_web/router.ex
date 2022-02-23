@@ -21,9 +21,12 @@ defmodule ApiBlogsWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", ApiBlogsWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", ApiBlogsWeb do
+    pipe_through :api
+
+    resources "/users", UserController, except: [:new, :edit]
+    resources "/posts", PostController, except: [:new, :edit]
+  end
 
   # Enables LiveDashboard only for development
   #

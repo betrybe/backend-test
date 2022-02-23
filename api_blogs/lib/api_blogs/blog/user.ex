@@ -1,4 +1,4 @@
-defmodule ApiBlogs.User do
+defmodule ApiBlogs.Blog.User do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -15,7 +15,10 @@ defmodule ApiBlogs.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:displayName, :email, :password, :image])
-    |> validate_required([:displayName, :email, :password, :image])
-    |> unique_constraint(:email)
+    |> validate_required([:email, :password])
+    |> unique_constraint(:email, message: "Usuário já existe")
+    |> validate_format(:email, ~r/.@./)
+    |> validate_length(:displayName, min: 8)
+    |> validate_length(:password, min: 6)
   end
 end

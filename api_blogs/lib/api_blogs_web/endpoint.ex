@@ -7,7 +7,7 @@ defmodule ApiBlogsWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_api_blogs_key",
-    signing_salt: "g0SSpQkl"
+    signing_salt: "JQNnm69L"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

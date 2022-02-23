@@ -1,4 +1,4 @@
-defmodule ApiBlogs.Post do
+defmodule ApiBlogs.Blog.Post do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -16,7 +16,6 @@ defmodule ApiBlogs.Post do
   def changeset(post, attrs) do
     post
     |> cast(attrs, [:title, :content, :published, :updated])
-    |> validate_required([:title, :content, :published])
-    |> foreign_key_constraint(:user_id)
+    |> validate_required([:title, :content, :published, :updated])
   end
 end
