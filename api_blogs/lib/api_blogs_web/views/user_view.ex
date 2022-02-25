@@ -19,4 +19,8 @@ defmodule ApiBlogsWeb.UserView do
       image: user.image
     }
   end
+
+  def render("jwt.json", %{jwt: jwt}) do
+    %{jwt: jwt}
+  end
 end

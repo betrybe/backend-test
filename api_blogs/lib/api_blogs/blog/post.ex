@@ -17,5 +17,6 @@ defmodule ApiBlogs.Blog.Post do
     post
     |> cast(attrs, [:title, :content, :published, :updated])
     |> validate_required([:title, :content, :published, :updated])
+    |> foreign_key_constraint(:user_id)
   end
 end

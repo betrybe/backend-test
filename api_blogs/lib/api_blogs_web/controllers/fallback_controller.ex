@@ -6,10 +6,21 @@ defmodule ApiBlogsWeb.FallbackController do
   """
   use ApiBlogsWeb, :controller
 
+  defp email_taken?({:email, {_, [constraint: :unique, constraint_name: _]}}), do: true
+  defp email_taken?(_), do: false
+
   # This clause handles errors returned by Ecto's insert/update/delete.
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
+    # Caso de tentativa de cadastro de email repetido
+    status_code =
+    if Enum.any?(changeset.errors, &email_taken?/1) do
+      :conflict
+    else
+      :bad_request
+    end
+
     conn
-    |> put_status(:unprocessable_entity)
+    |> put_status(status_code)
     |> put_view(ApiBlogsWeb.ChangesetView)
     |> render("error.json", changeset: changeset)
   end
