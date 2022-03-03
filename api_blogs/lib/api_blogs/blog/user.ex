@@ -16,7 +16,7 @@ defmodule ApiBlogs.Blog.User do
     user
     |> cast(attrs, [:displayName, :email, :password, :image])
     |> validate_required([:email, :password])
-    |> unique_constraint(:email, message: "Usuário já existe")
+    |> unique_constraint(:email, message: "Usuario ja existe")
     |> validate_format(:email, ~r/.@./)
     |> validate_length(:displayName, min: 8)
     |> validate_length(:password, min: 6)
