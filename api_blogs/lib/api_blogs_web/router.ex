@@ -27,7 +27,7 @@ defmodule ApiBlogsWeb.Router do
     resources "/users", UserController, except: [:new, :edit]
     resources "/posts", PostController, except: [:new, :edit]
 
-    post "/login", LoginController, :login
+    post "/login", UserController, :login
   end
 
   # Enables LiveDashboard only for development

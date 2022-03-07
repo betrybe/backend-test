@@ -37,13 +37,15 @@ defmodule ApiBlogsWeb.FallbackController do
     conn
     |> put_status(:bad_request)
     |> put_view(ApiBlogsWeb.ErrorView)
-    |> render("invalid_entry.json", conn: conn)
+    |> json(%{message: "Campos invalidos"})
+    #|> render("invalid_entry.json", conn: conn)
   end
 
   def call(conn, {:error, :login_missing_info}) do
     conn
     |> put_status(:bad_request)
     |> put_view(ApiBlogsWeb.ErrorView)
-    |> render("missing_info.json", conn: conn)
+    |> json(%{message: "email and password are required"})
+    #|> render("missing_info.json", conn: conn)
   end
 end

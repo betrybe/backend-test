@@ -1,4 +1,4 @@
-defmodule ApiBlogsWeb.LoginControllerTest do
+defmodule ApiBlogsWeb.LoginTest do
   use ApiBlogsWeb.ConnCase
 
   import ApiBlogs.BlogFixtures
@@ -22,7 +22,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
         email: "rubens@email.com",
         password: "123456"
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: valid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: valid_attrs)
       assert nil != json_response(conn, 200)["jwt"]
     end
 
@@ -30,7 +30,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
       invalid_attrs = %{
         password: "123456"
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: invalid_attrs)
       assert json_response(conn, 400) == %{"message" => "email and password are required"}
     end
 
@@ -38,7 +38,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
       invalid_attrs = %{
         email: "rubens@email.com"
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: invalid_attrs)
       assert json_response(conn, 400) == %{"message" => "email and password are required"}
     end
 
@@ -47,7 +47,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
         email: "",
         password: "123456"
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: invalid_attrs)
       assert json_response(conn, 400) == %{"message" => "email and password are required"}
     end
 
@@ -56,7 +56,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
         email: "rubens@email.com",
         password: ""
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: invalid_attrs)
       assert json_response(conn, 400) == %{"message" => "email and password are required"}
     end
 
@@ -65,7 +65,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
         email: "rubens@email.com",
         password: "1234567"
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: invalid_attrs)
       assert json_response(conn, 400) == %{"message" => "Campos invalidos"}
     end
 
@@ -74,7 +74,7 @@ defmodule ApiBlogsWeb.LoginControllerTest do
         email: "maria@email.com",
         password: "1234567"
       }
-      conn = post(conn, Routes.login_path(conn, :login), user: invalid_attrs)
+      conn = post(conn, Routes.user_path(conn, :login), user: invalid_attrs)
       assert json_response(conn, 400) == %{"message" => "Campos invalidos"}
     end
   end
