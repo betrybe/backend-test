@@ -197,4 +197,23 @@ defmodule ApiBlogs.Blog do
   def change_post(%Post{} = post, attrs \\ %{}) do
     Post.changeset(post, attrs)
   end
+
+  @doc """
+  User login.
+  """
+  def do_login(%{"email" => "", "password" => _password}) do {:error, :login_missing_info} end
+  def do_login(%{"email" => email, "password" => ""}) do {:error, :login_missing_info} end
+  def do_login(%{"email" => email, "password" => password}) do
+    user = Repo.get_by(User, email: email)
+    if user == nil do
+      {:error, :login_invalid_entry}
+    else
+      if user.password != password do
+        {:error, :login_invalid_entry}
+      else
+        {:ok, user}
+      end
+    end
+  end
+  def do_login(_attrs) do {:error, :login_missing_info} end
 end

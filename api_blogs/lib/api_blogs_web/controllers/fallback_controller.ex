@@ -32,4 +32,18 @@ defmodule ApiBlogsWeb.FallbackController do
     |> put_view(ApiBlogsWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :login_invalid_entry}) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(ApiBlogsWeb.ErrorView)
+    |> render("invalid_entry.json", conn: conn)
+  end
+
+  def call(conn, {:error, :login_missing_info}) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(ApiBlogsWeb.ErrorView)
+    |> render("missing_info.json", conn: conn)
+  end
 end
