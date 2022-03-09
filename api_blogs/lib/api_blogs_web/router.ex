@@ -1,6 +1,8 @@
 defmodule ApiBlogsWeb.Router do
   use ApiBlogsWeb, :router
 
+  alias ApiBlogs.Guardian
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -14,6 +16,10 @@ defmodule ApiBlogsWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :jwt_authenticated do
+    plug Guardian.AuthPipeline
+  end
+
   scope "/", ApiBlogsWeb do
     pipe_through :browser
 
@@ -24,10 +30,17 @@ defmodule ApiBlogsWeb.Router do
   scope "/api", ApiBlogsWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit]
+    #resources "/users", UserController, except: [:new, :edit]
     resources "/posts", PostController, except: [:new, :edit]
 
+    post "/user", UserController, :create
     post "/login", UserController, :login
+  end
+
+  scope "/api", ApiBlogsWeb do
+    pipe_through [:api, :jwt_authenticated]
+
+    get "/user", UserController, :index
   end
 
   # Enables LiveDashboard only for development

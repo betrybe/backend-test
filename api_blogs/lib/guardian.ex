@@ -12,7 +12,7 @@ defmodule ApiBlogs.Guardian do
 
   def resource_from_claims(claims) do
     id = claims["sub"]
-    resource = ApiBlogs.Accounts.get_user!(id)
+    resource = ApiBlogs.Blog.get_user!(id)
     {:ok,  resource}
   end
 
