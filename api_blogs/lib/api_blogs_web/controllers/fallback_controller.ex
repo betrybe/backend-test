@@ -46,4 +46,11 @@ defmodule ApiBlogsWeb.FallbackController do
     |> put_view(ApiBlogsWeb.ErrorView)
     |> json(%{message: "email and password are required"})
   end
+
+  def call(conn, {:error, :nonexistent_user}) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(ApiBlogsWeb.ErrorView)
+    |> json(%{message: "Usuario nao existe"})
+  end
 end

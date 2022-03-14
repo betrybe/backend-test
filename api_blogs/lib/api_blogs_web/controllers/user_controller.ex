@@ -22,25 +22,29 @@ defmodule ApiBlogsWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Blog.get_user!(id)
-    render(conn, "show.json", user: user)
-  end
-
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Blog.get_user!(id)
-
-    with {:ok, %User{} = user} <- Blog.update_user(user, user_params) do
+    try do
+      user = Blog.get_user!(id)
       render(conn, "show.json", user: user)
+    rescue
+      Ecto.NoResultsError -> {:error, :nonexistent_user}
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    user = Blog.get_user!(id)
+  # def update(conn, %{"id" => id, "user" => user_params}) do
+  #   user = Blog.get_user!(id)
 
-    with {:ok, %User{}} <- Blog.delete_user(user) do
-      send_resp(conn, :no_content, "")
-    end
-  end
+  #   with {:ok, %User{} = user} <- Blog.update_user(user, user_params) do
+  #     render(conn, "show.json", user: user)
+  #   end
+  # end
+
+  # def delete(conn, %{"id" => id}) do
+  #   user = Blog.get_user!(id)
+
+  #   with {:ok, %User{}} <- Blog.delete_user(user) do
+  #     send_resp(conn, :no_content, "")
+  #   end
+  # end
 
   def login(conn, %{"user" => user_params}) do
     with {:ok, %{} = user} <- Blog.do_login(user_params),

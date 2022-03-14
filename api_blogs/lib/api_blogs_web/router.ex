@@ -41,6 +41,7 @@ defmodule ApiBlogsWeb.Router do
     pipe_through [:api, :jwt_authenticated]
 
     get "/user", UserController, :index
+    get "/user/:id", UserController, :show
   end
 
   # Enables LiveDashboard only for development

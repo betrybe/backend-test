@@ -68,15 +68,27 @@ defmodule ApiBlogsWeb.UserControllerTest do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
       assert nil != json_response(conn, 201)["jwt"]
 
-      # conn = get(conn, Routes.user_path(conn, :show, id))
+      split_response_body = String.split(conn.resp_body, "\"")
+      [_ | [_ | [_ | [jwt | _]]]] = split_response_body
 
-      # assert %{
-      #          "id" => ^id,
-      #          "displayName" => "rubens silva",
-      #          "email" => "rubens@email.com",
-      #          "image" => "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png",
-      #          "password" => "123456"
-      #        } = json_response(conn, 200)["data"]
+      conn = build_conn()
+      conn = conn
+      |> put_req_header("authorization", "bearer " <> jwt)
+      |> get(Routes.user_path(conn, :index))
+
+      response_data = json_response(conn, 200)["data"]
+      id = hd(response_data)["id"]
+
+      conn = get(conn, Routes.user_path(conn, :show, id))
+      response_data = json_response(conn, 200)["data"]
+
+      assert %{
+               "id" => ^id,
+               "displayName" => "rubens silva",
+               "email" => "rubens@email.com",
+               "image" => "http://4.bp.blogspot.com/_YA50adQ-7vQ/S1gfR_6ufpI/AAAAAAAAAAk/1ErJGgRWZDg/S45/brett.png",
+               "password" => "123456"
+             } = response_data
     end
 
     test "renders errors when displayName has less than 8 characters", %{conn: conn} do
@@ -150,11 +162,52 @@ defmodule ApiBlogsWeb.UserControllerTest do
       conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
       assert json_response(conn, 409)["errors"] == %{"email" => ["Usuario ja existe"]}
     end
+  end
 
-    # test "renders errors when data is invalid", %{conn: conn} do
-    #   conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
-    #   assert json_response(conn, 422)["errors"] != %{}
-    # end
+  describe "get user by id" do
+    setup [:add_user]
+
+    test "returns correct user info", %{conn: conn, jwt: jwt} do
+      conn = build_conn()
+      conn = conn
+      |> put_req_header("authorization", "bearer " <> jwt)
+      |> get(Routes.user_path(conn, :index))
+
+      response_data = json_response(conn, 200)["data"]
+      id = hd(response_data)["id"]
+
+      conn = get(conn, Routes.user_path(conn, :show, id))
+      response_data = json_response(conn, 200)["data"]
+      assert response_data["email"] == "rubens@email.com"
+    end
+
+    test "returns error for nonexistent user", %{conn: conn, jwt: jwt} do
+      conn = build_conn()
+      conn = conn
+      |> put_req_header("authorization", "bearer " <> jwt)
+      |> get(Routes.user_path(conn, :index))
+
+      response_data = json_response(conn, 200)["data"]
+      id = hd(response_data)["id"] + 1
+
+      conn = get(conn, Routes.user_path(conn, :show, id))
+      assert json_response(conn, 404) == %{"message" => "Usuario nao existe"}
+    end
+
+    test "returns error for invalid jwt", %{conn: conn} do
+      conn = build_conn()
+      conn =
+      conn
+      |> put_req_header("authorization", "bearer abcd")
+      |> get(Routes.user_path(conn, :show, 1))
+
+      assert json_response(conn, 401) == %{"message" => "Token expirado ou invalido"}
+    end
+
+    test "returns error for missing jwt", %{conn: conn} do
+      conn = get(conn, Routes.user_path(conn, :show, 1))
+      assert json_response(conn, 401) == %{"message" => "Token nao encontrado"}
+    end
   end
 
   # describe "update user" do
@@ -265,6 +318,9 @@ defmodule ApiBlogsWeb.UserControllerTest do
   # end
 
   defp add_user %{conn: conn} do
-    {:ok, conn: post(conn, Routes.user_path(conn, :create), user: @create_attrs)}
+    conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
+    split_response_body = String.split(conn.resp_body, "\"")
+    [_ | [_ | [_ | [jwt | _]]]] = split_response_body
+    {:ok, conn: conn, jwt: jwt}
   end
 end
