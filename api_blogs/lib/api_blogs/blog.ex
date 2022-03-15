@@ -202,7 +202,7 @@ defmodule ApiBlogs.Blog do
   User login.
   """
   def do_login(%{"email" => "", "password" => _password}) do {:error, :login_missing_info} end
-  def do_login(%{"email" => email, "password" => ""}) do {:error, :login_missing_info} end
+  def do_login(%{"email" => _email, "password" => ""}) do {:error, :login_missing_info} end
   def do_login(%{"email" => email, "password" => password}) do
     user = Repo.get_by(User, email: email)
     if user == nil do
