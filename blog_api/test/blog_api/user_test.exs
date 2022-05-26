@@ -4,14 +4,14 @@ defmodule BlogApi.UserTest do
   alias BlogApi.User
 
   @valid_attrs %{
-    displayName: "Name Displayed",
+    display_name: "Name Displayed",
     email: "emailtest@gmail.com",
     password: "123456",
     image: "image"
   }
 
   @invalid_attrs %{
-    displayName: "Name Displayed",
+    display_name: "Name Displayed",
     password: "123456",
     image: "image"
   }

@@ -5,14 +5,14 @@ defmodule BlogApi.User do
   @primary_key {:id, Ecto.UUID, autogenerate: true}
 
   schema "users" do
-    field(:displayName, :string)
+    field(:display_name, :string)
     field(:email, :string)
     field(:password, :string)
     field(:image, :string)
     timestamps()
   end
 
-  @required_params [:displayName, :email, :password, :image]
+  @required_params [:display_name, :email, :password, :image]
   @unique_params [:email]
   def changeset(params) do
     %__MODULE__{}
