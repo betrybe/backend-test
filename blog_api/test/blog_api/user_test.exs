@@ -16,6 +16,8 @@ defmodule BlogApi.UserTest do
     image: "image"
   }
 
+  @email_is_required_message %{email: ["is required"]}
+
   describe "changeset/1" do
     test "when all params are valid, returns a valid changeset" do
       response = User.changeset(@valid_attrs)
@@ -39,7 +41,7 @@ defmodule BlogApi.UserTest do
                valid?: false
              } = response
 
-      assert errors_on(response) == %{email: ["can't be blank"]}
+      assert errors_on(response) == @email_is_required_message
     end
   end
 end

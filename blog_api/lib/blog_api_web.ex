@@ -62,7 +62,6 @@ defmodule BlogApiWeb do
     quote do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
-
       import BlogApiWeb.ErrorHelpers
       import BlogApiWeb.Gettext
       alias BlogApiWeb.Router.Helpers, as: Routes
