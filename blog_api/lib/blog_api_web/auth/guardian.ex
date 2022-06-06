@@ -7,7 +7,6 @@ defmodule BlogApiWeb.Auth.Guardian do
   end
 
   def resource_from_claims(%{"sub" => id}) do
-    id
-    |> BlogApi.fetch_user()
+    BlogApi.fetch_user(id)
   end
 end

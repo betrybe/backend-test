@@ -31,7 +31,7 @@ defmodule BlogApiWeb.Controllers.UserControllerTest do
       response =
         conn
         |> post(Routes.users_path(conn, :create, @invalid_attrs))
-        |> json_response(:bad_request)
+        |> json_response(:unprocessable_entity)
 
       assert @email_is_required_message = response
     end
@@ -42,7 +42,7 @@ defmodule BlogApiWeb.Controllers.UserControllerTest do
       response =
         conn
         |> post(Routes.users_path(conn, :create, @valid_attrs))
-        |> json_response(:conflict)
+        |> json_response(:bad_request)
 
       assert @user_already_existis_message = response
     end
