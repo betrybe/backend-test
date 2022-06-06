@@ -7,7 +7,8 @@ defmodule BlogApi.User do
   schema "users" do
     field(:display_name, :string)
     field(:email, :string)
-    field(:password, :string)
+    field(:password_hash, :string)
+    field(:password, :string, virtual: true)
     field(:image, :string)
     timestamps()
   end
@@ -40,5 +41,12 @@ defmodule BlogApi.User do
       message: "\"email\" must be a valid email"
     )
     |> unique_constraint(@unique_params)
+    |> put_pass_hash()
   end
+
+  defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, Argon2.add_hash(password))
+  end
+
+  defp put_pass_hash(changeset), do: changeset
 end

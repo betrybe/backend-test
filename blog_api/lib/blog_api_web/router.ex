@@ -26,5 +26,7 @@ defmodule BlogApiWeb.Router do
     pipe_through(:api)
 
     resources("/user", UsersController, only: [:create])
+
+    post("/login", UsersController, :login)
   end
 end
