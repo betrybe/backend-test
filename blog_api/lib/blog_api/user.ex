@@ -12,6 +12,10 @@ defmodule BlogApi.User do
     timestamps()
   end
 
+  @doc """
+   Verifica se os parametros de criação do usuário atendem aos requisitos do changeset
+  """
+  @spec build(map()) :: Ecto.Schema.t() | Ecto.Changeset.t()
   def build(params) do
     params
     |> changeset()

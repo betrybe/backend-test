@@ -11,7 +11,7 @@ defmodule BlogApiWeb.ErrorView do
     %{message: translate_errors(changeset)}
   end
 
-  def render("conflict.json", %{conflict: message}) do
+  def render("bad_request.json", %{message: message}) do
     %{message: message}
   end
 

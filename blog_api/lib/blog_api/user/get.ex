@@ -2,6 +2,11 @@ defmodule BlogApi.User.Get do
   alias BlogApi.{User, Repo}
   alias Ecto.UUID
 
+  @moduledoc """
+  Busca Users no banco de dados
+  """
+
+  @spec call(integer()) :: User.t()
   def call(id) do
     case UUID.cast(id) do
       :error -> {:error, "Invalid ID formart!"}
