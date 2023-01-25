@@ -9,6 +9,7 @@ defmodule BlogsApi.User do
     field :email, :string
     field :password, :string
     field :image, :string
+    timestamps()
   end
 
   @required_params [:display_name, :email, :password, :image]

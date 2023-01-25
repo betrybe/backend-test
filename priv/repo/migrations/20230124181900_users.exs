@@ -8,6 +8,7 @@ defmodule BlogsApi.Repo.Migrations.Users do
       add :email, :string
       add :password, :string
       add :image, :string
+      timestamps()
     end
   end
 end
