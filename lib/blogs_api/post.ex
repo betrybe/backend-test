@@ -14,7 +14,7 @@ defmodule BlogsApi.Post do
     timestamps()
   end
 
-  @required_params [:title, :content, :user_id]
+  @required_params ~w(title content user_id)a
   #@spec changeset(:invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
           #Ecto.Changeset.t()
   def changeset(params) do
