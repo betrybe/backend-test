@@ -1,4 +1,7 @@
 defmodule BlogsApi.User do
+  @moduledoc """
+  Criação do Squema do User, com as devidas validações
+  """
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,7 +12,6 @@ defmodule BlogsApi.User do
     field :email, :string
     field :password, :string
     field :image, :string
-    timestamps()
   end
 
   @required_params [:display_name, :email, :password, :image]
@@ -17,5 +19,11 @@ defmodule BlogsApi.User do
     %__MODULE__{}
     |> cast(params, @required_params)
     |> validate_required(@required_params)
+  end
+
+  def build(params) do
+    params
+    |> changeset()
+    |> apply_action(:insert)
   end
 end

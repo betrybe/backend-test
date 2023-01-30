@@ -5,8 +5,9 @@ defmodule BlogsApiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", BlogsApiWeb do
+  scope "/", BlogsApiWeb do
     pipe_through :api
+    resources "/user", UserController
   end
 
   # Enables LiveDashboard only for development
