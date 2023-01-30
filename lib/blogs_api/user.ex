@@ -14,7 +14,7 @@ defmodule BlogsApi.User do
     field :image, :string
   end
 
-  @required_params [:display_name, :email, :password, :image]
+  @required_params ~w(display_name email password image)a
   def changeset(params) do
     %__MODULE__{}
     |> cast(params, @required_params)
