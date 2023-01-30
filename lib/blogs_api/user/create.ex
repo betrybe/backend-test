@@ -7,6 +7,7 @@ Criação do Módulo bem encapsulado e específico para a ação do Create
 
   def call(params) do
     params
+   #IO.inspect(params)
     |> User.build()
     |> create_user()
   end

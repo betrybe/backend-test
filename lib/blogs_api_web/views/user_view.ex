@@ -1,4 +1,4 @@
-defmodule BlogsApiWeb.UsersView do
+defmodule BlogsApiWeb.UserView do
   use BlogsApiWeb, :view
 
   alias BlogsApi.User

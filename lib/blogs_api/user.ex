@@ -19,6 +19,10 @@ defmodule BlogsApi.User do
     %__MODULE__{}
     |> cast(params, @required_params)
     |> validate_required(@required_params)
+    |> validate_length(:display_name, min: 8)
+    |> validate_length(:password, min: 6)
+    |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:email)
   end
 
   def build(params) do
