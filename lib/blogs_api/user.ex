@@ -19,10 +19,12 @@ defmodule BlogsApi.User do
     %__MODULE__{}
     |> cast(params, @required_params)
     |> validate_required(@required_params)
-    |> validate_length(:display_name, min: 8)
-    |> validate_length(:password, min: 6)
-    |> validate_format(:email, ~r/@/)
-    |> unique_constraint(:email)
+    |> validate_required(:email, [{:message, "\"email\" is required"}])
+    |> validate_required(:password, [{:message, "\"password\" is required"}])
+    |> validate_length(:display_name, min: 8, message: "\"display_name\" length must be at least 8 characters long")
+    |> validate_length(:password, min: 6, message: "\"password\" length must be 6 characters long")
+    |> validate_format(:email, ~r/@/, [{:message, "\"email\" must be a valid email"}])
+    |> unique_constraint(:email, [{:message, "User already exists"}])
   end
 
   def build(params) do

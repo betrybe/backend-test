@@ -20,17 +20,10 @@ defmodule BlogsApiWeb.ErrorView do
   end
 
   defp translate_errors(changeset) do
-    #traverse_errors(changeset, fn {mgs, opts} ->
-      #Enum.reduce(opts, mgs, fn {key, value}, acc ->
-       # String.replace(acc, "%{#{key}}", to_string(value))
-      #end)
-
-      traverse_errors(changeset, fn {msg, opts} ->
-        Regex.replace(~r"%{(\w+)}", msg, fn _, key ->
-          opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
-        end)
+    traverse_errors(changeset, fn {msg, opts} ->
+      Regex.replace(~r"%{(\w+)}", msg, fn _, key ->
+        opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
       end)
-     # %{display_name: ["\"display_name\" length must be at least 8 characters long"]}
-
+    end)
   end
 end
