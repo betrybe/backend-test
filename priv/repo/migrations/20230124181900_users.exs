@@ -9,5 +9,7 @@ defmodule BlogsApi.Repo.Migrations.Users do
       add :password, :string
       add :image, :string
     end
+
+    create unique_index(:users, [:email], unique: true)
   end
 end

@@ -40,3 +40,7 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :blogs_api, BlogsApiWeb.Auth.Guardian,
+  issuer: "blogs_api",
+  secret_key: "NyMqjd71yM/iDM2vAmFpSAoyzliqfpeioMZjqNccwBujdHCiQ+dP0bDIRo593unk"

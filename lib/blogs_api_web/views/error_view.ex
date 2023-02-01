@@ -25,5 +25,7 @@ defmodule BlogsApiWeb.ErrorView do
         opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
       end)
     end)
+    %{email: ["\"email\" is required"]}
+    %{password: ["\"password\" is required"]}
   end
 end
