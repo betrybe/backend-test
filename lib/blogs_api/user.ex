@@ -14,7 +14,7 @@ defmodule BlogsApi.User do
     field :image, :string
   end
 
-  @required_params ~w(display_name email password image)a
+  @required_params ~w(display_name email password)a
   def changeset(params) do
     %__MODULE__{}
     |> cast(params, @required_params)
@@ -24,7 +24,7 @@ defmodule BlogsApi.User do
     |> validate_length(:display_name, min: 8, message: "\"display_name\" length must be at least 8 characters long")
     |> validate_length(:password, min: 6, message: "\"password\" length must be 6 characters long")
     |> validate_format(:email, ~r/@/, [{:message, "\"email\" must be a valid email"}])
-    |> unique_constraint(:email, [{:message, "User already exists"}])
+    |> unique_constraint(:email, error_key: :email, name: :users_email_index, message: "Usuário já existe")
   end
 
   def build(params) do

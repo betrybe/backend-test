@@ -10,6 +10,6 @@ defmodule BlogsApi.Repo.Migrations.Users do
       add :image, :string
     end
 
-    create unique_index(:users, [:email], unique: true)
+    create unique_index(:users, [:email])
   end
 end

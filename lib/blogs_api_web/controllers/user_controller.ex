@@ -34,5 +34,9 @@ defmodule BlogsApiWeb.UserController do
   end
 
   defp handle_response({:error, _changeset} = error, _conn), do: error
-"""
+
+  defp handle_response({:error, changeset}) do
+    %{status: :conflict, result: changeset}
+  end
+  """
 end
