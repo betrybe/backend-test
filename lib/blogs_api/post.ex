@@ -15,8 +15,7 @@ defmodule BlogsApi.Post do
   end
 
   @required_params ~w(title content user_id)a
-  #@spec changeset(:invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
-          #Ecto.Changeset.t()
+
   def changeset(params) do
     %__MODULE__{}
     |> cast(params, @required_params)

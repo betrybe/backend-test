@@ -4,9 +4,9 @@ defmodule BlogsApi.Repo.Migrations.Users do
   def change do
     create table(:users, primary_key: false) do
       add :id, :uuid, primary_key: true
-      add :display_name, :string
-      add :email, :string
-      add :password, :string
+      add :display_name, :string, null: false
+      add :email, :string, null: false
+      add :password, :string, null: false
       add :image, :string
     end
 
