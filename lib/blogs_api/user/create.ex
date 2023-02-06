@@ -7,8 +7,8 @@ defmodule BlogsApi.User.Create do
   def call(params) do
     params
     |> User.changeset()
-    |> Repo.insert()
     |> email_exists?()
+    |> Repo.insert()
   end
 
   defp email_exists?({:ok, user}), do: {:ok, user}
