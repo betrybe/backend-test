@@ -1,6 +1,6 @@
 defmodule BlogsApi.User do
   @moduledoc """
-  Criação do Squema do User, com as devidas validações
+  Criação do schema do User, com as devidas validações
   """
   use Ecto.Schema
   import Ecto.Changeset
